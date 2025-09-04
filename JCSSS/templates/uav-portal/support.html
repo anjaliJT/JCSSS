@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}My UAVs - UAV Support Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="mb-0">My UAVs</h2>
+        <p class="text-muted">Manage your registered UAVs and view their status</p>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Register New UAV
+        </button>
+    </div>
+</div>
+
+<!-- UAVs Grid -->
+<div class="row">
+    <!-- UAV 1 -->
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">DJI-AR-112</h5>
+                <span class="badge bg-danger">In Repair</span>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-drone fa-3x text-primary"></i>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Model:</span>
+                        <span class="fw-bold">Mark IV</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Serial:</span>
+                        <span class="fw-bold">2389XZ</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Status:</span>
+                        <span class="badge bg-danger">In Repair</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Last Service:</span>
+                        <span>Jun 15, 2023</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary">View Details</a>
+                    <a href="#" class="btn btn-outline-secondary">Service History</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- UAV 2 -->
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">DJI-AR-108</h5>
+                <span class="badge bg-warning">Awaiting Parts</span>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-drone fa-3x text-primary"></i>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Model:</span>
+                        <span class="fw-bold">Mark III</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Serial:</span>
+                        <span class="fw-bold">1987YZ</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Status:</span>
+                        <span class="badge bg-warning">Awaiting Parts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Last Service:</span>
+                        <span>Jul 22, 2023</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary">View Details</a>
+                    <a href="#" class="btn btn-outline-secondary">Service History</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- UAV 3 -->
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">DJI-AR-105</h5>
+                <span class="badge bg-success">Active</span>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-drone fa-3x text-primary"></i>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Model:</span>
+                        <span class="fw-bold">Mark IV</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Serial:</span>
+                        <span class="fw-bold">2456AB</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Status:</span>
+                        <span class="badge bg-success">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Last Service:</span>
+                        <span>Aug 12, 2023</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary">View Details</a>
+                    <a href="#" class="btn btn-outline-secondary">Service History</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UAV Status Details -->
+<div class="card mt-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">UAV Status Details</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- UAV 1 Status -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="card-title">DJI-AR-112</h6>
+                                <p class="text-muted small">Mark IV • Serial: 2389XZ</p>
+                            </div>
+                            <span class="badge bg-danger">In Repair</span>
+                        </div>
+                        <div class="bg-light p-3 rounded">
+                            <p class="small text-muted mb-1">Current Status</p>
+                            <p class="mb-2">Motor assembly replacement</p>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p class="small text-muted mb-0">Estimated completion: Aug 18, 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UAV 2 Status -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="card-title">DJI-AR-108</h6>
+                                <p class="text-muted small">Mark III • Serial: 1987YZ</p>
+                            </div>
+                            <span class="badge bg-warning">Awaiting Parts</span>
+                        </div>
+                        <div class="bg-light p-3 rounded">
+                            <p class="small text-muted mb-1">Current Status</p>
+                            <p class="mb-2">GPS module replacement</p>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p class="small text-muted mb-0">Parts expected: Aug 16, 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

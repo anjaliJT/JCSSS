@@ -1,0 +1,274 @@
+{% extends "uav-portal/base.html" %}
+
+{% block title %}Dashboard - UAV Support Portal{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="mb-0">Customer Dashboard</h2>
+        <p class="text-muted">Welcome back! Here's your support overview</p>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newComplaintModal">
+            <i class="fas fa-plus-circle me-2"></i>New Complaint
+        </button>
+    </div>
+</div>
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">Active Complaints</h6>
+                        <h3 class="fw-bold">5</h3>
+                        <p class="card-text text-success small"><i class="fas fa-arrow-down me-1"></i>2 resolved this week</p>
+                    </div>
+                    <div class="bg-primary p-3 rounded">
+                        <i class="fas fa-ticket-alt fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">UAVs Registered</h6>
+                        <h3 class="fw-bold">3</h3>
+                        <p class="card-text text-muted small">All in service</p>
+                    </div>
+                    <div class="bg-success p-3 rounded">
+                        <!-- <i class="fas fa-drone fa-2x text-white"></i> -->
+                        <i class="fas fa-pen fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">Pending Approvals</h6>
+                        <h3 class="fw-bold">2</h3>
+                        <p class="card-text text-danger small">1 requires your action</p>
+                    </div>
+                    <div class="bg-warning p-3 rounded">
+                        <i class="fas fa-clock fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">Avg. Resolution</h6>
+                        <h3 class="fw-bold">3.2d</h3>
+                        <p class="card-text text-success small"><i class="fas fa-arrow-down me-1"></i>0.8d from last month</p>
+                    </div>
+                    <div class="bg-info p-3 rounded">
+                        <i class="fas fa-chart-line fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Complaints -->
+<div class="row mb-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Complaints</h5>
+                {% comment %} <div>
+                    <button class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-sort"></i>
+                    </button>
+                </div> {% endcomment %}
+            </div>
+            <div class="card-body">
+                <!-- Complaint 1 -->
+                <div class="ticket-card card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span class="badge bg-primary status-badge mb-2">In Progress</span>
+                                <h5>0111F2X(161)140820230003</h5>
+                                <p class="text-muted">UAV Tail No: DJI-AR-112 • Flight Mode: Auto • Phase: Landing</p>
+                                <p class="mb-2">Issue: Motor failure during landing sequence</p>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    <span>Submitted: Aug 14, 2023 • Last Update: Today, 11:30 AM</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <button class="btn btn-outline-primary btn-sm">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Complaint 2 -->
+                <div class="ticket-card card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span class="badge bg-warning status-badge mb-2">Awaiting Parts</span>
+                                <h5>0111F2X(161)100820230002</h5>
+                                <p class="text-muted">UAV Tail No: DJI-AR-108 • Flight Mode: Manual • Phase: Takeoff</p>
+                                <p class="mb-2">Issue: GPS module replacement needed</p>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    <span>Submitted: Aug 10, 2023 • Estimated: Aug 18, 2023</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <button class="btn btn-outline-primary btn-sm">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Complaint 3 -->
+                <div class="ticket-card card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <span class="badge bg-success status-badge mb-2">Resolved</span>
+                                <h5>0111F2X(161)050820230001</h5>
+                                <p class="text-muted">UAV Tail No: DJI-AR-105 • Flight Mode: FBW A • Phase: Cruise</p>
+                                <p class="mb-2">Issue: Camera stabilization malfunction</p>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    <span>Submitted: Aug 5, 2023 • Resolved: Aug 12, 2023</span>
+                                </div>
+                                <a href="#" class="text-primary small"><i class="fas fa-download me-1"></i>Download Repair Report</a>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <button class="btn btn-outline-secondary btn-sm">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- UAV Status -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">My UAVs Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- UAV 1 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h6 class="card-title">DJI-AR-112</h6>
+                                        <p class="text-muted small">Mark IV • Serial: 2389XZ</p>
+                                    </div>
+                                    <span class="badge bg-danger">In Repair</span>
+                                </div>
+                                <div class="bg-light p-3 rounded">
+                                    <p class="small text-muted mb-1">Current Status</p>
+                                    <p class="mb-2">Motor assembly replacement</p>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar" role="progressbar" style="width: 60%"></div>
+                                    </div>
+                                    <p class="small text-muted mb-0">Estimated completion: Aug 18, 2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- UAV 2 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h6 class="card-title">DJI-AR-108</h6>
+                                        <p class="text-muted small">Mark III • Serial: 1987YZ</p>
+                                    </div>
+                                    <span class="badge bg-warning">Awaiting Parts</span>
+                                </div>
+                                <div class="bg-light p-3 rounded">
+                                    <p class="small text-muted mb-1">Current Status</p>
+                                    <p class="mb-2">GPS module replacement</p>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 30%"></div>
+                                    </div>
+                                    <p class="small text-muted mb-0">Parts expected: Aug 16, 2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- UAV 3 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h6 class="card-title">DJI-AR-105</h6>
+                                        <p class="text-muted small">Mark IV • Serial: 2456AB</p>
+                                    </div>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <div class="bg-light p-3 rounded">
+                                    <p class="small text-muted mb-1">Last Service</p>
+                                    <p class="mb-2">Camera stabilization fix</p>
+                                    <p class="small text-muted mb-1">Completed: Aug 12, 2023</p>
+                                    <p class="small text-success mb-0">Next maintenance: Oct 12, 2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Support Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card support-card">
+            <div class="card-body text-center">
+                <div class="py-4">
+                    <i class="fas fa-phone-alt fa-3x mb-3"></i>
+                    <h4>Offline Support</h4>
+                    <p>Contact our support team directly for immediate assistance</p>
+                    <div class="bg-white text-dark p-3 rounded mt-3">
+                        <h5 class="text-primary">+1 (800) 123-4567</h5>
+                        <p class="small mb-0">Available 24/7 for emergency support</p>
+                    </div>
+                    <button class="btn btn-light mt-4">
+                        <i class="fas fa-download me-2"></i>Download Manuals
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
