@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>product Form</title>
+    </head>
+<body>
+    <h2>Create Product</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">save</button>
+    </form>
+    <h2>Upload CSV File to Import Products</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" accept=".csv,.xlsx">
+        <button type="submit">Upload</button>
+         <p><a href="{% url 'product_list' %}">View Product List</a></p>
+    </form>
+</body>
+    </html>
