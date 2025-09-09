@@ -1,0 +1,126 @@
+<!-- New Complaint Modal -->
+<div class="modal fade" id="newComplaintModal" tabindex="-1" aria-labelledby="newComplaintModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newComplaintModalLabel">Raise New Complaint</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'create_complaint' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="uavSelect" class="form-label">Select UAV</label>
+                            <select class="form-select" id="uavSelect" name="uav" required>
+                                <option value="">Select a UAV</option>
+                                {% for uav in user_uavs %}
+                                <option value="{{ uav.id }}">{{ uav.tail_number }} ({{ uav.model }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="issueType" class="form-label">Issue Type</label>
+                            <select class="form-select" id="issueType" name="issue_type" required>
+                                <option value="">Select issue type</option>
+                                <option value="mechanical">Mechanical</option>
+                                <option value="electrical">Electrical</option>
+                                <option value="software">Software</option>
+                                <option value="navigation">Navigation</option>
+                                <option value="camera">Camera/Imaging</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="issueDescription" class="form-label">Issue Description</label>
+                        <textarea class="form-control" id="issueDescription" name="description" rows="4" placeholder="Please describe the issue in detail..." required></textarea>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="flightMode" class="form-label">Flight Mode During Issue</label>
+                            <select class="form-select" id="flightMode" name="flight_mode">
+                                <option value="">Select flight mode</option>
+                                <option value="manual">Manual</option>
+                                <option value="fbw_a">FBW A</option>
+                                <option value="rtl">RTL</option>
+                                <option value="auto">Auto</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="flightPhase" class="form-label">Flight Phase During Issue</label>
+                            <select class="form-select" id="flightPhase" name="flight_phase">
+                                <option value="">Select flight phase</option>
+                                <option value="takeoff">Takeoff</option>
+                                <option value="landing">Landing</option>
+                                <option value="cruise">Cruise</option>
+                                <option value="hover">Hover</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Upload Supporting Files (Optional)</label>
+                        <div class="border-2 border-dashed rounded p-3 text-center">
+                            <i class="fas fa-cloud-upload-alt text-muted fa-2x mb-2"></i>
+                            <p class="text-muted">Drag & drop files here or click to browse</p>
+                            <p class="small text-muted">Maximum file size: 10MB (images, videos, logs)</p>
+                            <input type="file" class="d-none" id="fileInput" name="files" multiple>
+                            <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()">
+                                Select Files
+                            </button>
+                            <div id="fileList" class="mt-3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Complaint</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // File input handling
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = '';
+        
+        if (this.files.length > 0) {
+            const list = document.createElement('ul');
+            list.className = 'list-group';
+            
+            for (let i = 0; i < this.files.length; i++) {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                
+                const fileName = document.createTextNode(this.files[i].name);
+                const fileSize = document.createElement('span');
+                fileSize.className = 'badge bg-secondary rounded-pill';
+                fileSize.textContent = formatFileSize(this.files[i].size);
+                
+                listItem.appendChild(fileName);
+                listItem.appendChild(fileSize);
+                list.appendChild(listItem);
+            }
+            
+            fileList.appendChild(list);
+        }
+    });
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+</script>
+

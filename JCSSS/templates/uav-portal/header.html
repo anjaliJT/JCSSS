@@ -1,0 +1,36 @@
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark mb-4 rounded">
+    <div class="container-fluid">
+        <button id="navbarToggle" class="btn btn-dark navbar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="d-flex align-items-center">
+            <div class="dropdown me-3">
+                <a href="#" class="text-white dropdown-toggle" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1">3</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                    <li><a class="dropdown-item" href="#">New complaint update</a></li>
+                    <li><a class="dropdown-item" href="#">UAV repair completed</a></li>
+                    <li><a class="dropdown-item" href="#">Payment received</a></li>
+                </ul>
+            </div>
+            
+            <div class="dropdown">
+                <a href="#" class="text-white dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://ui-avatars.com/api/?name=Customer+User&background=random" class="rounded-circle me-2" width="32" height="32">
+                    {{ user.username|default:"Customer User" }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+

@@ -1,0 +1,70 @@
+<!-- Sidebar -->
+<div class="sidebar collapsed" id="sidebar">
+    <div class="sidebar-header">
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+                <i class="fas fa-drone fa-2x text-accent"></i>
+            </div>
+            <div>
+                <h5 class="mb-0">UAV Support</h5>
+                <small class="text-white-50">Customer Portal</small>
+            </div>
+        </div>
+        <div class="sidebar-toggle" id="sidebarToggleInner">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+    </div>
+    
+    <div class="sidebar-menu">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="{% url 'dashboard' %}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/complaints/' %}active{% endif %}" href="{% url 'complaints' %}">
+                    <i class="fas fa-ticket-alt"></i> My Complaints
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/uavs/' %}active{% endif %}" href="{% url 'uavs' %}">
+                    <i class="fas fa-drone"></i> My UAVs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/history/' %}active{% endif %}" href="#">
+                    <i class="fas fa-history"></i> Service History
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/payments/' %}active{% endif %}" href="#">
+                    <i class="fas fa-file-invoice-dollar"></i> Payments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.path == '/settings/' %}active{% endif %}" href="#">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link support-card rounded mx-2" href="{% url 'support' %}">
+                    <i class="fas fa-phone-alt"></i> Offline Support
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="sidebar-footer mt-auto p-3 position-absolute bottom-0 w-100">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <img src="https://ui-avatars.com/api/?name=Customer+User&background=random" class="rounded-circle" width="40" height="40">
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <span class="d-block">{{ user.username|default:"Customer User" }}</span>
+                <small class="text-white-50">Regular User</small>
+            </div>
+        </div>
+    </div>
+</div>
+
