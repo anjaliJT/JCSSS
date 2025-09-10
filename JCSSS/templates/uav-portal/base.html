@@ -223,27 +223,32 @@
         <div class="sidebar-menu">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link {% if request.path == '/users/fetch/' %}active{% endif %}" href="{% url 'user-details' %}">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-ticket-alt"></i> My Complaints
+                    <a class="nav-link {% if request.path == '/product/' %}active{% endif %}" href="{% url 'product_list' %}">
+                        <i class="fas fa-box"></i> Products
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link {% if 'complaints' in request.path %}active{% endif %}" href="{% url 'user-details-dummy' %}">
+                        <i class="fas fa-ticket-alt"></i> Complaints
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user-details' %}">
                         <i class="fas fa-drone"></i> My UAVs
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'user-details' %}">
                         <i class="fas fa-history"></i> Service History
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'user-details' %}">
                         <i class="fas fa-file-invoice-dollar"></i> Payments
                     </a>
                 </li>

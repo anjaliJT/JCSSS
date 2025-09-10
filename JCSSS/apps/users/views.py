@@ -34,7 +34,7 @@ class Login(View):
 class SignupView(CreateView):
     model = CustomUser
     form_class = CustomUserSignupForm
-    template_name = "signup.html"
+    template_name = "uav-portal/signup.html"
     success_url = reverse_lazy("login")  # redirect after successful signup
 
     def form_valid(self, form):
@@ -50,6 +50,10 @@ class SignupView(CreateView):
 class UserDetails(View):
     def get(self, request):
         return render(request, "uav-portal/dashboard.html", {"user": None})
+
 class UserDetails_dummy(View):
     def get(self, request):
-        return render(request, "uav-portal/dashboard_dummy.html", {"user": None})
+        return render(request, "uav-portal/complaints.html", {
+            "user": None
+            # "complaints": []
+        })
