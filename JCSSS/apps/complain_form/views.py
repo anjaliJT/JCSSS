@@ -11,11 +11,13 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.db import transaction
 
-from .models import Event, Meteorology, Attachment
+from .models import Event, Meteorology, Attachment, EventSeverityClassification
+
+from apps.oem.tasks import send_mail_csm
 
 
 class ComplaintRegister(View):
-    template_name = "users/complain_form.html"
+    template_name = "users/complain.html"
 
     def get(self, request):
         return render(request, self.template_name)
@@ -27,8 +29,10 @@ class ComplaintRegister(View):
                 event = Event.objects.create(
                     pilot_name=request.POST.get("pilot_name"),
                     certificate_number=request.POST.get("certificate_number"),
+                    user = request.user,
                     filed_by=request.POST.get("filed_by"),   # Email / Person who filed
                     designation=request.POST.get("designation"),
+                    model_number=request.POST.get("model_number"),
                     date_of_occurrence=request.POST.get("date_of_occurrence"),
                     time_of_occurrence=request.POST.get("time_of_occurrence"),
                     field_site=request.POST.get("field_site"),
@@ -52,10 +56,10 @@ class ComplaintRegister(View):
                     event=event,
                     wind=request.POST.get("wind"),
                     temperature=request.POST.get("temperature"),
-                    pressure_qnh=request.POST.get("pressure"),
-                    # visibility=request.POST.get("visibility"),
-                    # clouds=request.POST.get("clouds"),
-                    # humidity=request.POST.get("humidity"),
+                    pressure_qnh=request.POST.get("pressure_qnh"),
+                    visibility=request.POST.get("visibility"),
+                    clouds=request.POST.get("clouds"),
+                    humidity=request.POST.get("humidity"),
                     turbulence=bool(request.POST.get("turbulence")),
                     windshear=bool(request.POST.get("windshear")),
                     rain=bool(request.POST.get("rain")),
@@ -71,9 +75,16 @@ class ComplaintRegister(View):
                     file_image2=request.FILES.get("photo2"),
                     file_image3=request.FILES.get("photo3"),
                     file_log=request.FILES.get("log_file"),
+                    )
+                
+                # 4️⃣ create EventSeverityClassification
+                EventSeverityClassification.objects.create(
+                    event=event,
+                    damage_potential = request.POST.get("damage_level"),
                 )
 
                 messages.success(request, "Complaint submitted successfully!")
+                send_mail_csm.delay(event.id)   # ✅ send to Celery worker
                 # return redirect("complain_form")  # replace with your success URL
                 return HttpResponse("Submitted")  # replace with your success URL
 

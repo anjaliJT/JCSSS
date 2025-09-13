@@ -29,12 +29,12 @@ class Login(View):
             return redirect("user-details")
         else:
             messages.error(request, "Invalid email or password")
-            return render(request, "login.html", {"email": email})
+            return render(request, "uav-portal/login.html", {"email": email})
         
 class SignupView(CreateView):
     model = CustomUser
     form_class = CustomUserSignupForm
-    template_name = "signup.html"
+    template_name = "uav-portal/signup.html"
     success_url = reverse_lazy("login")  # redirect after successful signup
 
     def form_valid(self, form):
