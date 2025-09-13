@@ -2,43 +2,66 @@ from django.db import models
 import uuid
 import hashlib
 
-# class Token(models.Model):
-    
-
+from datetime import datetime
+from django.db import models
+from apps.users.models import CustomUser
 class Event(models.Model):
     unique_token = models.CharField(max_length=100, unique=True, blank=True)
     pilot_name = models.CharField(max_length=250)
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     certificate_number = models.CharField(max_length=100, blank=True, null=True)
-    filed_by = models.CharField(max_length=250, blank= True, null=True)
+    filed_by = models.CharField(max_length=250, blank=True, null=True)
     designation = models.CharField(max_length=150, blank=True, null=True)
-    date_of_occurrence = models.DateField(auto_now_add=True)
-    time_of_occurrence = models.TimeField(auto_now_add=True)
-    field_site = models.CharField(max_length=250, blank= True)
-    event_type = models.CharField(max_length=50, blank= True)
-    damage_level = models.CharField(max_length=50, blank= True)
-    flight_mode = models.CharField(max_length=50, blank= True)
-    event_phase = models.CharField(max_length=50, blank= True)
-    uav_type = models.CharField(max_length=150, blank= True)
-    tail_number = models.CharField(max_length=50, blank= True)
-    gcs_type = models.CharField(max_length=100, blank= True)
-    gcs_number = models.CharField(max_length=50, blank= True)
+    model_number = models.CharField(max_length=50)
+    date_of_occurrence = models.DateField(blank=True)
+    time_of_occurrence = models.TimeField(blank=True)
+    field_site = models.CharField(max_length=250, blank=True)
+    event_type = models.CharField(max_length=50, blank=True)
+    damage_level = models.CharField(max_length=50, blank=True)
+    flight_mode = models.CharField(max_length=50, blank=True)
+    event_phase = models.CharField(max_length=50, blank=True)
+    uav_type = models.CharField(max_length=150, blank=True)
+    tail_number = models.CharField(max_length=50, blank=True)
+    gcs_type = models.CharField(max_length=100, blank=True)
+    gcs_number = models.CharField(max_length=50, blank=True)
     uav_weight = models.FloatField(help_text="Weight in kg")
-    event_description = models.TextField(blank= True)
-    initial_actions_taken = models.TextField(blank= True)
+    event_description = models.TextField(blank=True)
+    initial_actions_taken = models.TextField(blank=True)
     remarks = models.TextField(blank=True, null=True)
     organization = models.CharField(max_length=200)
     reported_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.event_type} - {self.date_of_occurrence} ({self.pilot_name})"
+    
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # First save to get the ID
+        # Always store model_number in uppercase
+        if self.model_number:
+            self.model_number = self.model_number.upper()
 
+        # First save to get the ID
+        super().save(*args, **kwargs)
+
+        # Generate unique_token only if not set
         if not self.unique_token:
-            raw_string = f"{self.id}-{self.date_of_occurrence}-{self.tail_number}"
-            hash_part = hashlib.sha1(raw_string.encode()).hexdigest()[:8]  # short hash
-            self.unique_token = f"JTPLRD-{self.date_of_occurrence.strftime('%Y%m%d')}-{self.id}-{hash_part}".upper()
+            # Ensure date_of_occurrence is a date object
+            if isinstance(self.date_of_occurrence, str):
+                self.date_of_occurrence = datetime.strptime(self.date_of_occurrence, "%Y-%m-%d").date()
+
+            # Count how many events already exist for this model
+            count = Event.objects.filter(model_number=self.model_number).count()
+
+            # Use next serial number (count is including current, so it's correct)
+            serial_number = str(count).zfill(4)  # 0001, 0002, etc.
+
+            # Build unique token
+            self.unique_token = (
+                f"0{self.id}-{self.date_of_occurrence.strftime('%Y%m%d')}-"
+                f"{self.model_number}-{serial_number}".upper()
+            )
+
+            # Save again only for unique_token
             super().save(update_fields=["unique_token"])
 
 class Meteorology(models.Model):
@@ -48,9 +71,9 @@ class Meteorology(models.Model):
     wind = models.CharField(max_length=100, help_text="Wind condition")
     temperature = models.CharField(max_length=50, help_text="Temperature")
     pressure_qnh = models.CharField(max_length=50, help_text="QNH Pressure")
-    # visibility = models.CharField(max_length=100)
-    # clouds = models.CharField(max_length=100)
-    # humidity = models.CharField(max_length=50)
+    visibility = models.CharField(max_length=100, blank=True)
+    clouds = models.CharField(max_length=100, blank=True)
+    humidity = models.CharField(max_length=50, blank=True)
     turbulence = models.BooleanField(default=False)
     windshear = models.BooleanField(default=False)
     rain = models.BooleanField(default=False)
@@ -83,9 +106,9 @@ class EventSeverityClassification(models.Model):
     damage_potential = models.CharField(
         max_length=20, choices=[("Minor", "Minor"), ("Moderate", "Moderate"), ("Severe", "Severe")]
     )
-    incident_severity = models.CharField(
-        max_length=20, choices=[("High", "High"), ("Medium", "Medium"), ("Low", "Low")]
-    )
+    # incident_severity = models.CharField(
+    #     max_length=20, choices=[("High", "High"), ("Medium", "Medium"), ("Low", "Low")]
+    # )
 
     def __str__(self):
         return f"{self.incident_severity} severity for {self.event}"

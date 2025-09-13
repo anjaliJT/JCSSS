@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wh2+caj(i(t^pclf1%yri&inrbps+(lc8c_^rhnly3e^l3_bz3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.product',
     'apps.complain_form',
+    'apps.oem',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# email setup
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'asr@johnnette.com'  # Your email
+EMAIL_HOST_PASSWORD = 'xbvr fogy alax nnaw'  # Your app password
+DEFAULT_FROM_EMAIL = 'asr@johnnette.com'
+
+
+# Celery task
+CELERY_TASK_ALWAYS_EAGER = True
