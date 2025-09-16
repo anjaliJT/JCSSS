@@ -14,12 +14,12 @@ def create_product(request):
     else:
         form = productForm()    
     
-    return render(request,"product_form.html",{"form":form})
+    return render(request,"products/product_form.html",{"form":form})
         
 
 def product_list(request):
     products = Product.objects.all() 
-    return render(request, "product_list.html",{"products":products})
+    return render(request, "products/products_main_page.html",{"products":products})
 
 def import_products(request): 
     if request.method == "POST": 
@@ -51,7 +51,7 @@ def import_products(request):
         
             return HttpResponse("No file uploaded", status=400)
 
-    return render(request, "product_form.html")
+    return render(request, "products/product_form.html")
     
 def export_products(request): 
     product_values = Product.objects.all().values()

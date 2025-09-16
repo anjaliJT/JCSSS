@@ -15,7 +15,7 @@ from .models import Event, Meteorology, Attachment
 
 
 class ComplaintRegister(View):
-    template_name = "users/complain_form.html"
+    template_name = "complaints/complain_form.html"
 
     def get(self, request):
         return render(request, self.template_name)

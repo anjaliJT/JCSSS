@@ -1,0 +1,243 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="../style/base.css"> -->
+    <title>JCS3 Login</title>
+    
+
+    {% block extra_css %}
+    
+    {% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <i class="fas fa-drone fa-2x text-accent"></i>
+                </div>
+                <div>
+                    <h5 class="mb-0">UAV Support</h5>
+                    <small class="text-white-50">Customer Portal</small>
+                </div>
+            </div>
+            <!-- <div class="sidebar-toggle" id="sidebarToggleInner">
+                <i class="fas fa-chevron-left"></i>
+            </div> -->
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/users/fetch/' %}active{% endif %}" href="{% url 'user-details' %}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/product/' %}active{% endif %}" href="{% url 'product_list' %}">
+                        <i class="fas fa-box"></i> Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'complaints' in request.path %}active{% endif %}" href="{% url 'user-details-dummy' %}">
+                        <i class="fas fa-ticket-alt"></i> Complaints
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user-details' %}">
+                        <i class="fas fa-drone"></i> My UAVs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user-details' %}">
+                        <i class="fas fa-history"></i> Service History
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user-details' %}">
+                        <i class="fas fa-file-invoice-dollar"></i> Payments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+                <li class="nav-item mt-3">
+                    <a class="nav-link support-card rounded mx-2" href="#">
+                        <i class="fas fa-phone-alt"></i> Offline Support
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content expanded" id="mainContent">
+        <!-- Header/Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark mb-4 rounded">
+            <div class="container-fluid">
+                <button id="navbarToggle" class="btn-nav btn-dark-nav me-3">
+                    <i class="fas fa-bars" id="navbarToggleIcon"></i>
+                </button>
+
+
+                <div class="d-flex align-items-center">
+                    <div class="dropdown me-3">
+                        <a href="#" class="text-white dropdown-toggle" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1">3</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><a class="dropdown-item" href="#">New complaint update</a></li>
+                            <li><a class="dropdown-item" href="#">UAV repair completed</a></li>
+                            <li><a class="dropdown-item" href="#">Payment received</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <a href="#" class="text-white dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://ui-avatars.com/api/?name=Customer+User&background=random" class="rounded-circle me-2" width="32" height="32">
+                            <!-- {% if user and user.username %}
+                                {{ user.username }}
+                            {% else %}
+                                Customer User
+                            {% endif %} -->
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Content Area -->
+        <div class="container-fluid">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Keep your new_complaint_modal.html as a separate file or include its content here -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const sidebarToggleInner = document.getElementById('sidebarToggleInner');
+        const navbarToggle = document.getElementById('navbarToggle');
+        const navbarToggleIcon = document.getElementById('navbarToggleIcon');
+
+        // Function to switch icon
+        function toggleIcon(isOpen) {
+            if (isOpen) {
+                navbarToggleIcon.classList.remove('fa-bars');
+                navbarToggleIcon.classList.add('fa-times');
+            } else {
+                navbarToggleIcon.classList.remove('fa-times');
+                navbarToggleIcon.classList.add('fa-bars');
+            }
+        }
+
+        // Inner toggle (arrow inside sidebar)
+        if (sidebarToggleInner) {
+            sidebarToggleInner.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+                toggleIcon(!sidebar.classList.contains('collapsed'));
+            });
+        }
+
+        // Hamburger toggle (desktop + mobile)
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', function() {
+                if (window.innerWidth < 993) {
+                    sidebar.classList.toggle('mobile-visible');
+                    toggleIcon(sidebar.classList.contains('mobile-visible'));
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                    toggleIcon(!sidebar.classList.contains('collapsed'));
+                }
+            });
+        }
+
+        // Auto collapse on small screens
+ function checkWidth() {
+    if (window.innerWidth < 993) {
+        // Mobile behavior
+        sidebar.classList.add('collapsed');
+        mainContent.classList.add('expanded');
+        sidebar.classList.remove('mobile-visible');
+        toggleIcon(false);
+    } else {
+        // Desktop behavior - keep expanded
+        sidebar.classList.remove('collapsed');  // Remove collapsed class
+        mainContent.classList.remove('expanded');  // Remove expanded from main content
+        sidebar.classList.remove('mobile-visible');
+        toggleIcon(true);  // Show close icon since sidebar is expanded
+    }
+}
+        checkWidth();
+        window.addEventListener('resize', checkWidth);
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth < 993 &&
+                sidebar.classList.contains('mobile-visible') &&
+                !sidebar.contains(event.target) &&
+                event.target !== navbarToggle &&
+                !navbarToggle.contains(event.target)) {
+                sidebar.classList.remove('mobile-visible');
+                toggleIcon(false);
+            }
+        });
+    });
+
+
+    </script>
+    {% block extra_js %}{% endblock %}
+    <!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">User Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="profileModalBody">
+                <!-- Profile content will be loaded here -->
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>
