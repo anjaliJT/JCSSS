@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class Login(View):
     def get(self, request):
-        return render(request, "uav-portal/login.html")
+        return render(request, "auth/login.html")
     
     def post(self, request):
         email = request.POST.get("email")
@@ -29,12 +29,12 @@ class Login(View):
             return redirect("user-details")
         else:
             messages.error(request, "Invalid email or password")
-            return render(request, "uav-portal/login.html", {"email": email})
+            return render(request, "auth/login.html", {"email": email})
         
 class SignupView(CreateView):
     model = CustomUser
     form_class = CustomUserSignupForm
-    template_name = "uav-portal/signup.html"
+    template_name = "auth/signup.html"
     success_url = reverse_lazy("login")  # redirect after successful signup
 
     def form_valid(self, form):
@@ -49,7 +49,20 @@ class SignupView(CreateView):
     
 class UserDetails(View):
     def get(self, request):
-        return render(request, "uav-portal/dashboard.html", {"user": None})
+        return render(request, "dashboard.html", {"user": None})
+
 class UserDetails_dummy(View):
     def get(self, request):
-        return render(request, "uav-portal/dashboard_dummy.html", {"user": None})
+        return render(request, "complaints/complaints_main_page.html", {
+            "user": None
+            # "complaints": []
+        })
+
+class profileView(View): 
+    def get(self,request):
+        context = {
+            'user': request.user,
+        }
+
+        return render(request,'users/profile.html',context)
+    

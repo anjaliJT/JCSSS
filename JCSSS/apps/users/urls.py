@@ -1,11 +1,12 @@
 # urls.py
 from django.urls import path
-from apps.users.views import *
+from apps.users import views
 
 urlpatterns = [
-    path('fetch/', UserDetails.as_view(), name='user-details'),
-    path('fetch-dummy/', UserDetails_dummy.as_view(), name='user-details-dummy'),
-    path('login/',Login.as_view(), name="login"),
-    path("signup/", SignupView.as_view(), name="signup"),
+    path('fetch/', views.UserDetails.as_view(), name='user-details'),
+    path('fetch-dummy/', views.UserDetails_dummy.as_view(), name='user-details-dummy'),
+    path('login/',views.Login.as_view(), name="login"),
+    path("signup/", views.SignupView.as_view(), name="signup"),
+    path('profile/',views.profileView.as_view(),name="profile"),
 ]
 

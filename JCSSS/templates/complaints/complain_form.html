@@ -1,11 +1,11 @@
-{% extends "uav-portal/base.html" %}
+{% extends "base.html" %}
 
 {% block title %} Complaint Form {% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <h3>Raise New Complaint</h3>
-    <form method="post" action="{% url 'submit' %}" enctype="multipart/form-data" class = " border border-primary rounded-4 p-4">
+    <form method="post" action="{% url 'complain_submit' %}" enctype="multipart/form-data" class = " border border-primary rounded-4 p-4">
         {% csrf_token %}
         
         <!-- UAV Selection -->

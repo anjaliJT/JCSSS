@@ -10,9 +10,9 @@
         <p class="text-muted">View and manage all your support tickets</p>
     </div>
     <div class="col-auto">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newComplaintModal">
+        <a class="btn btn-primary" href="{% url 'complain_submit' %}" role="botton">
             <i class="fas fa-plus-circle me-2"></i>New Complaint
-        </button>
+    </a>
     </div>
 </div>
 
@@ -105,9 +105,9 @@
             <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">No complaints found</h5>
             <p class="text-muted">You haven't submitted any complaints yet.</p>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newComplaintModal">
+              <a class="btn btn-primary" href="{% url 'complain_submit' %}" role="botton">
                 Submit Your First Complaint
-            </button>
+              </a>
         </div>
         {% endfor %}
         

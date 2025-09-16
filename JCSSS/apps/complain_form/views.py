@@ -17,7 +17,7 @@ from apps.oem.tasks import send_mail_csm
 
 
 class ComplaintRegister(View):
-    template_name = "users/complain.html"
+    template_name = "complaints/complain_form.html"
 
     def get(self, request):
         return render(request, self.template_name)
