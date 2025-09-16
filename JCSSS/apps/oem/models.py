@@ -64,6 +64,10 @@ class ReviewReport(models.Model):
     submitted_at = models.DateTimeField(blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)
 
+    class Meta:                                                                                                                                                                                                                                                                                                                                                                                
+        constraints = [
+            models.UniqueConstraint(fields=["event", "assigned_team"], name="unique_report_per_team_per_event")
+        ]
 
     def __str__(self):
         return f"QAQC Review for {self.event.unique_token}"
@@ -71,11 +75,12 @@ class ReviewReport(models.Model):
 
 class RepairTask(models.Model):
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('active', 'Active'),
-        ('completed', 'Completed'),
+        ('PENDING', 'Pending'),
+        ('ACTIVE', 'Active'),
+        ('COMPLETED', 'Completed'),
     ]
 
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
@@ -85,13 +90,17 @@ class RepairTask(models.Model):
     def start_task(self):
         self.status = "active"
         self.start_date = timezone.now()
-        self.end_date = self.start_date + timedelta(days=7)
+        self.end_date = self.start_date + timedelta(days=8)
         self.save()
 
 
 class Payment(models.Model):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    approved = models.BooleanField(default=False)   # ✅ Boolean approval
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2)
+    cost_to_customer = models.DecimalField(max_digits=10, decimal_places=2)
+    additional_charges = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    approved = models.BooleanField(default=False)   # ✅ Boolean approval                                                                                       
     created_at = models.DateTimeField(auto_now_add=True)
     approved_at = models.DateTimeField(null=True, blank=True)
 
