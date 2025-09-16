@@ -25,7 +25,11 @@ class CustomUser(AbstractUser):
         ("CUSTOMER", "Customer"),
         ("CSM", "CSM"),
         ("DIRECTOR", "Director"),
-        ("EMPLOYEE", "Employee"),
+        ("EMP-IT", "Emp-IT"),
+        ("EMP-STR", "Emp-Structure"),
+        ("EMP-ELE", "Emp-Electronics"),
+        ("EMP-QAQC", "Emp-QAQC"),
+        ("EMP-OPS", "Emp-Opearations"),
     ]
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='CUSTOMER')
     
