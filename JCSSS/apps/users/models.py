@@ -21,6 +21,18 @@ class CustomUser(AbstractUser):
     command_name = models.CharField(max_length=250, blank=True, null=True)
     username = None
     
+    ROLE_CHOICES = [
+        ("CUSTOMER", "Customer"),
+        ("CSM", "CSM"),
+        ("DIRECTOR", "Director"),
+        ("EMP-IT", "Emp-IT"),
+        ("EMP-STR", "Emp-Structure"),
+        ("EMP-ELE", "Emp-Electronics"),
+        ("EMP-QAQC", "Emp-QAQC"),
+        ("EMP-OPS", "Emp-Opearations"),
+    ]
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='CUSTOMER')
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     
