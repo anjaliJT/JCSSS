@@ -6,10 +6,12 @@ from django.views import View
 from apps.users.forms import CustomUserSignupForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-
+from django.contrib.auth import get_user_model
 import logging
+from django.contrib.auth import logout
 
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 
 class Login(View):
@@ -30,6 +32,10 @@ class Login(View):
         else:
             messages.error(request, "Invalid email or password")
             return render(request, "auth/login.html", {"email": email})
+    
+def logout_view(request):
+    logout(request)  # Clears the session and logs out the user
+    return redirect('login')
         
 class SignupView(CreateView):
     model = CustomUser
@@ -51,12 +57,7 @@ class UserDetails(View):
     def get(self, request):
         return render(request, "dashboard.html", {"user": None})
 
-class UserDetails_dummy(View):
-    def get(self, request):
-        return render(request, "complaints/complaints_main_page.html", {
-            "user": None
-            # "complaints": []
-        })
+
 
 class profileView(View): 
     def get(self,request):
@@ -66,3 +67,15 @@ class profileView(View):
 
         return render(request,'users/profile.html',context)
     
+    def post(self, request):
+            user = request.user
+            user.first_name = request.POST.get("firstName")
+            user.last_name = request.POST.get("lastName")
+            user.email = request.POST.get("email")
+            user.phone_number = request.POST.get("phone_number")  # must exist in your custom user model
+            user.designation = request.POST.get("designation")
+            user.command_name = request.POST.get("command_name")
+            user.save()
+
+            messages.success(request, "Profile updated successfully ✅")
+            return redirect("profile")  # reload page with updated info

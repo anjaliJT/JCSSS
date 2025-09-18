@@ -90,7 +90,7 @@
     <!-- Main Content -->
     <div class="main-content expanded" id="mainContent">
         <!-- Header/Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark mb-4 rounded">
+        <nav class="navbar navbar-expand-lg navbar-dark mb-4">
             <div class="container-fluid">
                 <button id="navbarToggle" class="btn-nav btn-dark-nav me-3">
                     <i class="fas fa-bars" id="navbarToggleIcon"></i>
@@ -113,23 +113,47 @@
                     <div class="dropdown">
                         <a href="#" class="text-white dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="https://ui-avatars.com/api/?name=Customer+User&background=random" class="rounded-circle me-2" width="32" height="32">
-                            <!-- {% if user and user.username %}
-                                {{ user.username }}
-                            {% else %}
-                                Customer User
-                            {% endif %} -->
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </nav>
-        
+            
+       {% if messages %}
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    {% for message in messages %}
+    <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ message }}
+            </div>
+            <!-- Close button -->
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Bootstrap Toast Init -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        toastElList.forEach(function(toastEl) {
+            let t = new bootstrap.Toast(toastEl, { delay: 3000 }) // auto close after 3s
+            t.show()
+        })
+    });
+</script>
+
+
+
         <!-- Main Content Area -->
         <div class="container-fluid">
             {% block content %}

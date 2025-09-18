@@ -20,7 +20,7 @@ class ComplaintRegister(View):
     template_name = "complaints/complain_form.html"
 
     def get(self, request):
-        return render(request, self.template_name)
+        return render(request, "complaints/complaints_main_page.html")
 
     def post(self, request):
         try:
@@ -30,7 +30,7 @@ class ComplaintRegister(View):
                     pilot_name=request.POST.get("pilot_name"),
                     certificate_number=request.POST.get("certificate_number"),
                     user = request.user,
-                    filed_by=request.POST.get("filed_by"),   # Email / Person who filed
+                    filed_by=request.POST.get("filed_by"),   # Person who filed
                     designation=request.POST.get("designation"),
                     model_number=request.POST.get("model_number"),
                     date_of_occurrence=request.POST.get("date_of_occurrence"),
@@ -57,9 +57,9 @@ class ComplaintRegister(View):
                     wind=request.POST.get("wind"),
                     temperature=request.POST.get("temperature"),
                     pressure_qnh=request.POST.get("pressure_qnh"),
-                    visibility=request.POST.get("visibility"),
-                    clouds=request.POST.get("clouds"),
-                    humidity=request.POST.get("humidity"),
+                    # visibility=request.POST.get("visibility"),
+                    # clouds=request.POST.get("clouds"),
+                    # humidity=request.POST.get("humidity"),
                     turbulence=bool(request.POST.get("turbulence")),
                     windshear=bool(request.POST.get("windshear")),
                     rain=bool(request.POST.get("rain")),
@@ -93,3 +93,8 @@ class ComplaintRegister(View):
             print(str(e))
             # return render(request, self.template_name)
             return HttpResponse("Error") 
+
+
+class UserDetails_dummy(View):
+    def get(self, request):
+        return render(request, "complaints/complaints_main_page.html")

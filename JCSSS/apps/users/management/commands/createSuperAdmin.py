@@ -13,9 +13,9 @@ class Command(BaseCommand):
         # admin_role, _ = Role.objects.get_or_create(name="SUPERADMIN")
         # default_department, _ = Department.objects.get_or_create(name="OPERATIONS")
 
-        if not User.objects.filter(email="jims@johnnette.com").exists():
+        if not User.objects.filter(email="jcsss@johnnette.com").exists():
             superadmin = User.objects.create_superuser(
-                email='jims@johnnette.com',
+                email='jcsss@johnnette.com',
                 password=password,
                 first_name='Super',
                 last_name='Admin',
