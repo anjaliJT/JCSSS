@@ -1,9 +1,8 @@
 from django.urls import path
-from apps.complain_form.views import *
+from apps.complain_form.views import ComplaintRegister, ComplaintListView
 
 urlpatterns = [
-    path('fetch/', ComplaintRegister.as_view(), name='complain_details'),
-    path('submit/', ComplaintRegister.as_view(), name='complain_submit'),
-    path('fetch-dummy/', UserDetails_dummy.as_view(), name='user-details-dummy'),
-    
+    path('', ComplaintListView.as_view(), name='complaint-list'),  # Main complaints page
+    path('submit/', ComplaintRegister.as_view(), name='complain_submit'),  # Submit new complaint
+    path('fetch/', ComplaintRegister.as_view(), name='complain_details'),  # Keeping for backward compatibility
 ]
