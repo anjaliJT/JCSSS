@@ -6,8 +6,16 @@ from datetime import datetime
 from django.db import models
 from apps.users.models import CustomUser
 class Event(models.Model):
+    STATUS_CHOICES = (
+        ('new', 'New'),
+        ('in-progress', 'In Progress'),
+        ('awaiting-parts', 'Awaiting Parts'),
+        ('resolved', 'Resolved'),
+    )
+    
     unique_token = models.CharField(max_length=100, unique=True, blank=True)
     pilot_name = models.CharField(max_length=250)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     certificate_number = models.CharField(max_length=100, blank=True, null=True)
     filed_by = models.CharField(max_length=250, blank=True, null=True)
@@ -71,9 +79,9 @@ class Meteorology(models.Model):
     wind = models.CharField(max_length=100, help_text="Wind condition")
     temperature = models.CharField(max_length=50, help_text="Temperature")
     pressure_qnh = models.CharField(max_length=50, help_text="QNH Pressure")
-    visibility = models.CharField(max_length=100, blank=True)
-    clouds = models.CharField(max_length=100, blank=True)
-    humidity = models.CharField(max_length=50, blank=True)
+    # visibility = models.CharField(max_length=100, blank=True)
+    # clouds = models.CharField(max_length=100, blank=True)
+    # humidity = models.CharField(max_length=50, blank=True)
     turbulence = models.BooleanField(default=False)
     windshear = models.BooleanField(default=False)
     rain = models.BooleanField(default=False)
