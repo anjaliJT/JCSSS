@@ -8,7 +8,6 @@ phone_regex = RegexValidator(
     message="Phone number must be 10 digits"
 )
 
-# Create your models here.
 class CustomUser(AbstractUser):
     """Custom user model extending AbstractUser.
     - email: Email field, unique for each user.

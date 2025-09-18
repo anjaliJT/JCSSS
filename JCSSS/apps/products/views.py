@@ -16,8 +16,9 @@ def create_product(request):
     
     return render(request,"products/product_form.html",{"form":form})
         
-
+from django.contrib import messages
 def product_list(request):
+    messages.success(request, "Products loaded successfully!") 
     products = Product.objects.all() 
     return render(request, "products/products_main_page.html",{"products":products})
 
