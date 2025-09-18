@@ -14,14 +14,14 @@
                     <p class="text-muted">Manage and track all UAV products in your inventory</p>
                 </div>
                 <div class="col-auto">
-                    <div class="view-toggle me-3">
+                    <!-- <div class="view-toggle me-3">
                         <button class="view-toggle-btn active" id="gridViewBtn">
                             <i class="fas fa-th-large"></i>
                         </button>
                         <button class="view-toggle-btn" id="tableViewBtn">
                             <i class="fas fa-table"></i>
                         </button>
-                    </div>
+                    </div> -->
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importExportModal">
                         <i class="fas fa-file-csv me-2"></i>Import/Export
                     </button>
@@ -29,7 +29,7 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="row mb-4">
+            <!-- <div class="row mb-4">
                 <div class="col-md-3 col-sm-6 mb-3">
                     <div class="card stats-card available h-100">
                         <div class="card-body">
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Filters and Search -->
             <div class="card mb-4">
@@ -135,7 +135,7 @@
                             <label class="form-label">Date Range</label>
                             <input type="text" class="form-control" placeholder="Select date range" id="dateRangePicker">
                         </div>
-                        <div class="col-md-2 mb-2 d-flex align-items-end">
+                        <div class="col-md-2 mt-4 d-flex align-items-end">
                             <button class="btn btn-outline-primary w-100">
                                 <i class="fas fa-filter me-1"></i> Apply
                             </button>
@@ -145,9 +145,8 @@
             </div>
 
             <!-- Products Grid View -->
-            <div id="gridView">
+            <!-- <div id="gridView">
                 <div class="row">
-                    <!-- Product 1 -->
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card product-card h-100">
                             <span class="warranty-badge badge bg-success">Warranty Active</span>
@@ -190,7 +189,6 @@
                         </div>
                     </div>
                     
-                    <!-- Product 2 -->
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card product-card h-100">
                             <span class="warranty-badge badge bg-success">Warranty Active</span>
@@ -233,7 +231,6 @@
                         </div>
                     </div>
                     
-                    <!-- Product 3 -->
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card product-card h-100">
                             <span class="warranty-badge badge bg-danger">Warranty Expired</span>
@@ -281,7 +278,6 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
                 <nav aria-label="Products pagination" class="mt-4">
                     <ul class="pagination justify-content-center">
                         <li class="page-item disabled">
@@ -301,115 +297,68 @@
                         </li>
                     </ul>
                 </nav>
-            </div>
+            </div> -->
 
             <!-- Products Table View -->
-            <div id="tableView" class="d-none">
+            <div id="tableView">
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <input class="form-check-input" type="checkbox" id="selectAll">
-                                        </th>
+                                        <th><input class="form-check-input" type="checkbox" id="selectAll"></th>
                                         <th>Product Code</th>
                                         <th>Model</th>
                                         <th>Order Name</th>
                                         <th>Manufacturing Date</th>
-                                        <th>Status</th>
-                                        <th>Warranty Status</th>
-                                        <th>Warranty Expiry</th>
+                                        <!-- <th>Status</th> -->
+                                        <!-- <th>Warranty Status</th> -->
+                                        <!-- <th>Warranty Expiry</th> -->
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for product in products %}
                                     <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox">
-                                        </td>
-                                        <td>DJI-AR-112</td>
-                                        <td>Mark IV</td>
-                                        <td>Advanced Recon UAV</td>
-                                        <td>Jan 15, 2023</td>
-                                        <td><span class="badge bg-success">Available</span></td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>Jan 15, 2024</td>
+                                        <td><input class="form-check-input" type="checkbox"></td>
+                                        <td>{{ product.product_code }}</td>
+                                        <td>{{ product.product_model.name }}</td>
+                                        <td>{{ product.order_name }}</td>
+                                        <td>{{ product.manufecturing_Date|date:"M d, Y" }}</td>
+
+                                        <!-- Status -->
+                                        <!-- <td>
+                                            {% if product.status == "Available" %}
+                                                <span class="badge bg-success">{{ product.status }}</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ product.status }}</span>
+                                            {% endif %}
+                                        </td> -->
+
+                                        <!-- Warranty Status -->
+                                        <!-- <td>
+                                            {% if product.warranty_status == "Active" %}
+                                                <span class="badge bg-success">{{ product.warranty_status }}</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ product.warranty_status }}</span>
+                                            {% endif %}
+                                        </td> -->
+
+                                        <!-- Warranty Expiry -->
+                                        <!-- <td>{{ product.warranty_expiry|date:"M d, Y" }}</td> -->
+
                                         <td>
                                             <button class="btn btn-sm btn-outline-primary">View</button>
                                             <button class="btn btn-sm btn-outline-secondary">Edit</button>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox">
-                                        </td>
-                                        <td>DJI-AR-108</td>
-                                        <td>Mark III</td>
-                                        <td>Standard Recon UAV</td>
-                                        <td>Mar 22, 2023</td>
-                                        <td><span class="badge bg-success">Available</span></td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>Mar 22, 2024</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">View</button>
-                                            <button class="btn btn-sm btn-outline-secondary">Edit</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox">
-                                        </td>
-                                        <td>DJI-AR-105</td>
-                                        <td>Mark II</td>
-                                        <td>Basic Recon UAV</td>
-                                        <td>Aug 12, 2022</td>
-                                        <td><span class="badge bg-secondary">Sold</span></td>
-                                        <td><span class="badge bg-danger">Expired</span></td>
-                                        <td>Aug 12, 2023</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">View</button>
-                                            <button class="btn btn-sm btn-outline-secondary">Edit</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox">
-                                        </td>
-                                        <td>DJI-AR-120</td>
-                                        <td>Mark IV Pro</td>
-                                        <td>Advanced Recon UAV Pro</td>
-                                        <td>May 5, 2023</td>
-                                        <td><span class="badge bg-success">Available</span></td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>Nov 5, 2024</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">View</button>
-                                            <button class="btn btn-sm btn-outline-secondary">Edit</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox">
-                                        </td>
-                                        <td>DJI-AR-095</td>
-                                        <td>Mark III</td>
-                                        <td>Standard Recon UAV</td>
-                                        <td>Oct 10, 2022</td>
-                                        <td><span class="badge bg-secondary">Sold</span></td>
-                                        <td><span class="badge bg-warning">Expiring Soon</span></td>
-                                        <td>Oct 10, 2023</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary">View</button>
-                                            <button class="btn btn-sm btn-outline-secondary">Edit</button>
-                                        </td>
-                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                         
-                        <div class="d-flex justify-content-between align-items-center mt-3">
+                        <!-- <div class="d-flex justify-content-between align-items-center mt-3">
                             <div>
                                 <select class="form-select form-select-sm d-inline-block w-auto">
                                     <option>5 rows</option>
@@ -441,7 +390,7 @@
                                     </li>
                                 </ul>
                             </nav>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -579,54 +528,18 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            const sidebarToggleInner = document.getElementById('sidebarToggleInner');
-            const navbarToggle = document.getElementById('navbarToggle');
-            const gridViewBtn = document.getElementById('gridViewBtn');
-            const tableViewBtn = document.getElementById('tableViewBtn');
-            const gridView = document.getElementById('gridView');
-            const tableView = document.getElementById('tableView');
+
             const csvFileInput = document.getElementById('csvFileInput');
             const fileInfo = document.getElementById('fileInfo');
             const importBtn = document.getElementById('importBtn');
             const selectAll = document.getElementById('selectAll');
             
             // Toggle sidebar with inner toggle button
-            if (sidebarToggleInner) {
-                sidebarToggleInner.addEventListener('click', function() {
-                    sidebar.classList.toggle('collapsed');
-                    mainContent.classList.toggle('expanded');
-                });
-            }
-            
-            // Toggle sidebar with navbar toggle (hamburger)
-            if (navbarToggle) {
-                navbarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('mobile-visible');
-                });
-            }
             
             // View toggle functionality
-            if (gridViewBtn && tableViewBtn) {
-                gridViewBtn.addEventListener('click', function() {
-                    gridViewBtn.classList.add('active');
-                    tableViewBtn.classList.remove('active');
-                    gridView.classList.remove('d-none');
-                    tableView.classList.add('d-none');
-                });
-                
-                tableViewBtn.addEventListener('click', function() {
-                    tableViewBtn.classList.add('active');
-                    gridViewBtn.classList.remove('active');
-                    tableView.classList.remove('d-none');
-                    gridView.classList.add('d-none');
-                });
-            }
             
             // CSV file input handling
             if (csvFileInput) {

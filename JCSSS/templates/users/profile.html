@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UAV Support Portal - User Profile</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} UAV Support Portal - User Profile {% endblock %}
+
+{% block extra_css %}
     <style>
-        :root {
-            --primary: #1e40af;
-            --secondary: #3b82f6;
-            --accent: #f59e0b;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
+        
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,7 +18,6 @@
         .profile-container {
             max-width: 1000px;
             margin: 2rem auto;
-            padding: 20px;
         }
         
         .card {
@@ -158,8 +149,9 @@
             }
         }
     </style>
-</head>
-<body>
+{% endblock %}
+
+    {% block content %}
     <!-- Profile Content -->
     <div class="profile-container">
         <!-- Page Header -->
@@ -174,14 +166,16 @@
         <div class="row mb-4">
             <div class="col">
                 <div class="profile-header">
-                    <div class="d-flex align-items-center">
-                        <div class="me-4">
-                            <img src="https://ui-avatars.com/api/?name=John+Doe&background=random&size=120" class="profile-avatar" alt="User Avatar">
+                    <div class="d-flex flex-column flex-md-row align-items-center">
+                        <div class="me-md-4 mb-3 mb-md-0">
+                            <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=random&size=120" 
+                                class="profile-avatar rounded-circle shadow" 
+                                alt="{{ user.get_full_name }}">
                         </div>
-                        <div>
-                            <h3 class="mb-1">John Doe</h3>
-                            <p class="mb-1">UAV Operator</p>
-                            <p class="mb-0"><i class="fas fa-envelope me-2"></i>john.doe@example.com</p>
+                        <div class="text-center text-md-start">
+                            <h3 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h3>
+                            <p class="mb-1">{{ user.designation|default:"No Designation" }}</p>
+                            <p class="mb-0"><i class="fas fa-envelope me-2"></i>{{ user.email }}</p>
                         </div>
                     </div>
                 </div>
@@ -189,179 +183,94 @@
         </div>
 
         <!-- Profile Details -->
-        <div class="row">
-            <!-- Personal Information -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Personal Information</h5>
-                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#profileModal">
-                            <i class="fas fa-edit me-1"></i>Edit All
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-section">
-                            <!-- First Name -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">First Name</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="firstNameValue">John</span>
-                                        <input type="text" class="inline-edit-input" id="firstNameInput" value="John">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('firstName')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('firstName')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#profileModal">
+                                <i class="fas fa-edit me-1"></i>Edit All
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-section">
+                                
+                                <!-- First Name -->
+                                <div class="info-item">
+                                    <div class="info-content">
+                                        <p class="detail-label mb-1">First Name</p>
+                                        <div class="inline-edit-container">
+                                            <span class="inline-edit-value" id="firstNameValue">{{ user.first_name }}</span>
+                                            <input type="text" class="inline-edit-input" id="firstNameInput" value="{{ user.first_name }}">
                                         </div>
                                     </div>
                                 </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('firstName')"></i>
-                            </div>
-                            
-                            <!-- Last Name -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">Last Name</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="lastNameValue">Doe</span>
-                                        <input type="text" class="inline-edit-input" id="lastNameInput" value="Doe">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('lastName')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('lastName')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
+
+                                <!-- Last Name -->
+                                <div class="info-item">
+                                    <div class="info-content">
+                                        <p class="detail-label mb-1">Last Name</p>
+                                        <div class="inline-edit-container">
+                                            <span class="inline-edit-value" id="lastNameValue">{{ user.last_name }}</span>
+                                            <input type="text" class="inline-edit-input" id="lastNameInput" value="{{ user.last_name }}">
                                         </div>
                                     </div>
                                 </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('lastName')"></i>
-                            </div>
-                            
-                            <!-- Email -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">Email Address</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="emailValue">john.doe@example.com</span>
-                                        <input type="email" class="inline-edit-input" id="emailInput" value="john.doe@example.com">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('email')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('email')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
+
+                                <!-- Email -->
+                                <div class="info-item">
+                                    <div class="info-content">
+                                        <p class="detail-label mb-1">Email Address</p>
+                                        <div class="inline-edit-container">
+                                            <span class="inline-edit-value" id="emailValue">{{ user.email }}</span>
+                                            <input type="email" class="inline-edit-input" id="emailInput" value="{{ user.email }}">
                                         </div>
                                     </div>
                                 </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('email')"></i>
-                            </div>
-                            
-                            <!-- Phone Number -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">Phone Number</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="phoneValue">9876543210</span>
-                                        <input type="tel" class="inline-edit-input" id="phoneInput" value="9876543210">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('phone')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('phone')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
+
+                                <!-- Phone Number -->
+                                <div class="info-item">
+                                    <div class="info-content">
+                                        <p class="detail-label mb-1">Phone Number</p>
+                                        <div class="inline-edit-container">
+                                            <span class="inline-edit-value" id="phoneValue">{{ user.phone_number|default:"No number" }}</span>
+                                            <input type="tel" class="inline-edit-input" id="phoneInput" value="{{ user.phone_number }}">
                                         </div>
                                     </div>
                                 </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('phone')"></i>
+
+                                <!-- Designation -->
+                                <div class="info-item">
+                                    <div class="info-content">
+                                        <p class="detail-label mb-1">Designation</p>
+                                        <div class="inline-edit-container">
+                                            <span class="inline-edit-value" id="designationValue">{{ user.designation }}</span>
+                                            <input type="text" class="inline-edit-input" id="designationInput" value="{{ user.designation }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Command Name -->
+                                <div class="info-item">
+                                    <div class="info-content">
+                                        <p class="detail-label mb-1">Command Name</p>
+                                        <div class="inline-edit-container">
+                                            <span class="inline-edit-value" id="commandValue">{{ user.command_name }}</span>
+                                            <input type="text" class="inline-edit-input" id="commandInput" value="{{ user.command_name }}">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Professional Information -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Professional Information</h5>
-                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#profileModal">
-                            <i class="fas fa-edit me-1"></i>Edit All
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-section">
-                            <!-- Certificate Number -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">Certificate Number</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="certificateValue">CERT-123456789</span>
-                                        <input type="text" class="inline-edit-input" id="certificateInput" value="CERT-123456789">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('certificate')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('certificate')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('certificate')"></i>
-                            </div>
-                            
-                            <!-- Designation -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">Designation</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="designationValue">UAV Operator</span>
-                                        <input type="text" class="inline-edit-input" id="designationInput" value="UAV Operator">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('designation')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('designation')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('designation')"></i>
-                            </div>
-                            
-                            <!-- Command Name -->
-                            <div class="info-item">
-                                <div class="info-content">
-                                    <p class="detail-label mb-1">Command Name</p>
-                                    <div class="inline-edit-container">
-                                        <span class="inline-edit-value" id="commandValue">Northern Command UAV Division</span>
-                                        <input type="text" class="inline-edit-input" id="commandInput" value="Northern Command UAV Division">
-                                        <div class="inline-edit-buttons">
-                                            <button class="btn btn-success btn-icon" onclick="saveField('command')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                            <button class="btn btn-secondary btn-icon" onclick="cancelEdit('command')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-edit edit-icon" onclick="enableEdit('command')"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Account Security -->
-            <div class="col-12 mb-4">
+            <!-- <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Account Security</h5>
@@ -382,9 +291,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
-    </div>
 
     <!-- Profile Modal (for Edit All) -->
     <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
@@ -395,57 +303,61 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form method="POST">
+                        {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" value="John" required>
+                                <input type="text" class="form-control" name="firstName" id="firstName" 
+                                    value="{{ user.first_name }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" value="Doe" required>
+                                <input type="text" class="form-control" name="lastName" id="lastName" 
+                                    value="{{ user.last_name }}" required>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" value="john.doe@example.com" required>
+                                <input type="email" class="form-control" name="email" id="email" 
+                                    value="{{ user.email }}" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="phoneNumber" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phoneNumber" value="9876543210" required>
+                                <input type="tel" class="form-control" name="phone_number" id="phoneNumber" 
+                                    value="{{ user.phone_number }}">
                             </div>
                         </div>
-                        
+
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="certificateNumber" class="form-label">Certificate Number</label>
-                                <input type="text" class="form-control" id="certificateNumber" value="CERT-123456789">
+                                <label for="designation" class="form-label">Designation</label>
+                                <input type="text" class="form-control" name="designation" id="designation" 
+                                    value="{{ user.designation }}">
                             </div>
                             <div class="col-md-6">
-                                <label for="designation" class="form-label">Designation</label>
-                                <input type="text" class="form-control" id="designation" value="UAV Operator">
+                                <label for="commandName" class="form-label">Command Name</label>
+                                <input type="text" class="form-control" name="command_name" id="commandName" 
+                                    value="{{ user.command_name }}">
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="commandName" class="form-label">Command Name</label>
-                            <input type="text" class="form-control" id="commandName" value="Northern Command UAV Division">
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Save Changes</button>
-                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+    {% endblock %}
+
+    {% block extra_js %}
     <script>
         // Enable inline editing for a field
         function enableEdit(fieldName) {
@@ -507,5 +419,7 @@
             editIcon.style.display = 'block';
         }
     </script>
-</body>
-</html>
+
+    {% endblock %}
+<!-- </body>
+</html> -->

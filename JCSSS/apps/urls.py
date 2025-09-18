@@ -6,5 +6,3 @@ urlpatterns = [
     path('product/',include('apps.products.urls')),
     path('csm/', include('apps.oem.urls')),
 ]
-
-

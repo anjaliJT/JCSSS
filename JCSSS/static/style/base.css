@@ -62,7 +62,7 @@ body {
 .main-content {
   margin-left: 250px;
   transition: all 0.3s ease;
-  padding: 20px;
+  /* padding: 20px; */
   min-height: 100vh;
 }
 
