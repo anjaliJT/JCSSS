@@ -93,9 +93,6 @@
                     </div>
                     <div class="col-md-4 text-md-end mt-3 mt-md-0">
                         <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
-                        {% if complaint.status != 'resolved' %}
-                        <button class="btn btn-outline-secondary btn-sm mt-2">Add Update</button>
-                        {% endif %}
                     </div>
                 </div>
             </div>

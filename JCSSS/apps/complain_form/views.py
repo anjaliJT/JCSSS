@@ -59,7 +59,7 @@ class ComplaintRegister(View):
     template_name = "complaints/complain_form.html"
 
     def get(self, request):
-        return render(request, "complaints/complaints_main_page.html")
+        return render(request, "complaints/complain_form.html")
 
     def post(self, request):
         try:
@@ -125,7 +125,7 @@ class ComplaintRegister(View):
                 messages.success(request, "Complaint submitted successfully!")
                 send_mail_csm.delay(event.id)   # ✅ send to Celery worker
                 # return redirect('complaint-list')
-                return HttpResponse("submitted!") 
+                return redirect("complaint_list") 
 
         except Exception as e:
             messages.error(request, f"Error submitting complaint: {str(e)}")
@@ -133,3 +133,24 @@ class ComplaintRegister(View):
             # return render(request, self.template_name)
             return HttpResponse(f"Error : {e}") 
 
+from django.shortcuts import get_object_or_404, render
+class ComplaintDetailView(View):
+    template_name = "complaints/complain_form.html"
+
+    def get(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        meteorology = get_object_or_404(Meteorology, pk=pk)
+
+        attachments = Attachment.objects.filter(event=event)
+        messages.info(request,"You only view your details.")
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "event": event,
+                "meteorology": meteorology,
+                "attachments": attachments,
+                "is_readonly": True,
+            },
+        )

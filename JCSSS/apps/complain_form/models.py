@@ -119,4 +119,4 @@ class EventSeverityClassification(models.Model):
     # )
 
     def __str__(self):
-        return f"{self.incident_severity} severity for {self.event}"
+        return f"{self.event}"
