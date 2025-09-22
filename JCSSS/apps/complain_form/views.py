@@ -12,6 +12,9 @@ from apps.oem.tasks import send_mail_csm
 
 
 class ComplaintListView(LoginRequiredMixin, View):
+    login_url = 'login'
+    redirect_field_name = 'next'
+    
     template_name = "complaints/complaints_main_page.html"
     
     def get(self, request):
@@ -55,7 +58,9 @@ class ComplaintListView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class ComplaintRegister(View):
+class ComplaintRegister(LoginRequiredMixin,View):
+    login_url = 'login'
+    redirect_field_name = 'next'
     template_name = "complaints/complain_form.html"
 
     def get(self, request):
@@ -134,7 +139,7 @@ class ComplaintRegister(View):
             return HttpResponse(f"Error : {e}") 
 
 from django.shortcuts import get_object_or_404, render
-class ComplaintDetailView(View):
+class ComplaintDetailView(LoginRequiredMixin,View):
     template_name = "complaints/complain_form.html"
 
     def get(self, request, pk):

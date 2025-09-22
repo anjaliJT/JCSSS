@@ -7,6 +7,7 @@ from apps.users.forms import CustomUserSignupForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 import logging
 from django.contrib.auth import logout
 
@@ -16,6 +17,8 @@ User = get_user_model()
 
 class Login(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('user-details')
         return render(request, "auth/login.html")
     
     def post(self, request):
@@ -53,13 +56,17 @@ class SignupView(CreateView):
         return super().form_invalid(form)
     
     
-class UserDetails(View):
+class UserDetails(LoginRequiredMixin,View):
+    login_url = 'login'
+    redirect_field_name = 'next'
     def get(self, request):
         return render(request, "dashboard.html", {"user": None})
 
 
 
-class profileView(View): 
+class profileView(LoginRequiredMixin,View): 
+    login_url = 'login'
+    redirect_field_name = 'next'
     def get(self,request):
         context = {
             'user': request.user,
