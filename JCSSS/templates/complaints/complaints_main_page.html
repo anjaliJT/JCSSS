@@ -3,110 +3,147 @@
 {% block title %}My Complaints - UAV Support Portal{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<div class="row mb-4">
-    <div class="col">
-        <h2 class="mb-0">My Complaints</h2>
-        <p class="text-muted">View and manage all your support tickets</p>
+<!-- Main Content Area -->
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-0">My Complaints</h2>
+            <p class="text-muted">View and manage all your support tickets</p>
+        </div>
+        <div class="col-auto">
+            <a class="btn btn-primary" href="{% url 'complain_submit' %}">
+                <i class="fas fa-plus-circle me-2"></i>New Complaint
+            </a>
+        </div>
     </div>
-    <div class="col-auto">
-        <a class="btn btn-primary" href="{% url 'complain_submit' %}" role="botton">
-            <i class="fas fa-plus-circle me-2"></i>New Complaint
-    </a>
-    </div>
-</div>
 
-<!-- Filters and Search -->
-<div class="card mb-4">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-3 mb-2">
-                <label class="form-label">Status</label>
-                <select class="form-select">
-                    <option value="">All Statuses</option>
-                    <option value="new">New</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="awaiting-parts">Awaiting Parts</option>
-                    <option value="resolved">Resolved</option>
-                </select>
-            </div>
-            <div class="col-md-3 mb-2">
-                <label class="form-label">UAV</label>
-                <select class="form-select">
-                    <option value="">All UAVs</option>
-                    <option value="dji-ar-112">DJI-AR-112</option>
-                    <option value="dji-ar-108">DJI-AR-108</option>
-                    <option value="dji-ar-105">DJI-AR-105</option>
-                </select>
-            </div>
-            <div class="col-md-4 mb-2">
-                <label class="form-label">Search</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search complaints...">
-                    <button class="btn btn-outline-secondary" type="button">
-                        <i class="fas fa-search"></i>
-                    </button>
+    <!-- Filters and Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-end">
+                <div class="col-md-3 mb-2">
+                    <label class="form-label">Status</label>
+                    <select class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="new">New</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="awaiting-parts">Awaiting Parts</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
                 </div>
-            </div>
-            <div class="col-md-2 mb-2 d-flex align-items-end">
-                <button class="btn btn-outline-secondary w-100">
-                    <i class="fas fa-filter me-1"></i> Filter
-                </button>
+                <div class="col-md-3 mb-2">
+                    <label class="form-label">UAV Type</label>
+                    <select class="form-select">
+                        <option value="">All UAVs</option>
+                        <option value="dji-ar-112">DJI-AR-112</option>
+                        <option value="dji-ar-108">DJI-AR-108</option>
+                        <option value="dji-ar-105">DJI-AR-105</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label class="form-label">Date Range</label>
+                    <input type="text" class="form-control" placeholder="Select date range" id="dateRangePicker">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search complaints...">
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <!-- Complaints List -->
 <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">All Complaints</h5>
         <div class="btn-group" role="group">
-            <button type="button" class="btn btn-outline-secondary active">All</button>
-            <button type="button" class="btn btn-outline-secondary">Active</button>
-            <button type="button" class="btn btn-outline-secondary">Closed</button>
+            <button type="button" class="btn btn-outline-primary active">All</button>
+            <button type="button" class="btn btn-outline-primary">Active</button>
+            <button type="button" class="btn btn-outline-primary">Resolved</button>
         </div>
     </div>
     <div class="card-body">
-        <!-- Django template loop would go here -->
-        {% for complaint in complaints %}
-        <div class="ticket-card card mb-3">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <span class="badge {% if complaint.status == 'new' %}bg-primary{% elif complaint.status == 'in-progress' %}bg-info{% elif complaint.status == 'awaiting-parts' %}bg-warning{% else %}bg-success{% endif %} status-badge mb-2">
-                            {{ complaint.get_status_display }}
-                        </span>
-                        <h5>{{ complaint.ticket_number }}</h5>
-                        <p class="text-muted">UAV Tail No: {{ complaint.uav.tail_number }} • Flight Mode: {{ complaint.flight_mode }} • Phase: {{ complaint.phase }}</p>
-                        <p class="mb-2">Issue: {{ complaint.issue_description|truncatewords:10 }}</p>
-                        <div class="d-flex align-items-center text-muted small">
-                            <i class="fas fa-calendar-alt me-2"></i>
-                            <span>Submitted: {{ complaint.created_at|date:"M d, Y" }} • 
-                                {% if complaint.status == 'resolved' %}
-                                Resolved: {{ complaint.resolved_at|date:"M d, Y" }}
-                                {% else %}
-                                Last Update: {{ complaint.updated_at|date:"M d, Y" }}
-                                {% endif %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 12%">Ticket ID</th>
+                        <th style="width: 10%">Status</th>
+                        <th style="width: 15%">Uav Details</th>
+                        <!-- <th style="width: 25%">Command name</th> -->
+                        <th style="width: 12%">Complaint Date</th>
+                        <th style="width: 12%">Last Updated Person</th> 
+                        <th style="width: 14%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for complaint in complaints %}
+                    <tr>
+                        <td>{{ complaint.unique_token }}</td>
+                        <td>
+                            <span class="badge {% if complaint.status == 'new' %}bg-primary{% elif complaint.status == 'in-progress' %}bg-info{% elif complaint.status == 'awaiting-parts' %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ complaint.get_status_display }}
                             </span>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                        <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                        <td>
+                            <div>Model: {{ complaint.model_number }}</div>
+                            <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>
+                        </td>
+                        <td>{{ complaint.issue_description|truncatewords:10 }}</td>
+                        <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            {% if complaint.status == 'resolved' %}
+                            <span class="text-success">Resolved: {{ complaint.resolved_at|date:"M d, Y" }}</span>
+                            {% else %}
+                            {{ complaint.updated_at|date:"M d, Y" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if complaint.status == 'new' %}
+                                <button type="button" class="btn btn-outline-success btn-sm" title="Approve Complaint">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                {% endif %}
+                                {% if complaint.status != 'resolved' %}
+                                <button type="button" class="btn btn-outline-info btn-sm" title="Update Status">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-warning btn-sm" title="Request Parts">
+                                    <i class="fas fa-tools"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-success btn-sm" title="Mark as Resolved">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3 d-block"></i>
+                            <h5 class="text-muted">No complaints found</h5>
+                            <p class="text-muted">You haven't submitted any complaints yet.</p>
+                            <a class="btn btn-primary" href="{% url 'complain_submit' %}">
+                                Submit Your First Complaint
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        {% empty %}
-        <div class="text-center py-5">
-            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">No complaints found</h5>
-            <p class="text-muted">You haven't submitted any complaints yet.</p>
-              <a class="btn btn-primary" href="{% url 'complain_submit' %}" role="botton">
-                Submit Your First Complaint
-              </a>
-        </div>
-        {% endfor %}
+    </div>
+</div>
         
         <!-- Pagination -->
         {% if complaints.has_other_pages %}
