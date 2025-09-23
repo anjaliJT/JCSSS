@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .models import CSMApproval, CSMApprovalHistory
+from .models import CSMApproval, CSMApprovalHistory, ReviewReport
 from django.contrib import messages
 
 class CSMViews(View):
@@ -41,3 +41,22 @@ class CSMViews(View):
             messages.error(request, "Approval not found.")
 
         return redirect("csm")  # redirect to same view (give name in urls.py)
+
+
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+
+@login_required
+def submit_report(request, event_id):
+    if request.method == "POST":
+        ReviewReport.objects.create(
+            event_id=event_id,
+            assigned_team=request.POST.get("assigned_team"),
+            user=request.user,
+            department=request.POST.get("department"),
+            report_file=request.FILES.get("report_file"),
+            submitted_at=now(),
+            remarks=request.POST.get("remarks"),
+        )
+        return redirect("event_detail", event_id=event_id)  # redirect back
+    return render(request, "event_detail.html")

@@ -3746,3 +3746,107 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
 TypeError: info() missing 1 required positional argument: 'message'
 "GET /complain/complain/1/ HTTP/1.1" 500 82454
+Internal Server Error: /product/export/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 63, in export_products
+    df.to_excel(response,index=False)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\core\generic.py", line 2436, in to_excel
+    formatter.write(
+    ~~~~~~~~~~~~~~~^
+        excel_writer,
+        ^^^^^^^^^^^^^
+    ...<6 lines>...
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\io\formats\excel.py", line 943, in write
+    writer = ExcelWriter(
+        writer,
+    ...<2 lines>...
+        engine_kwargs=engine_kwargs,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 57, in __init__
+    from openpyxl.workbook import Workbook
+ModuleNotFoundError: No module named 'openpyxl'
+"GET /product/export/?from_date=2025-09-01&to_date=2025-09-15 HTTP/1.1" 500 96959
+Internal Server Error: /product/export/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 69, in export_products
+    products = products.filter(created_at__range=[from_date, to_date])  # assuming you have created_at field
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\query.py", line 1526, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\query.py", line 1333, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\query.py", line 1805, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: id, is_sold, manufecturing_Date, order_name, product_code, product_model, product_model_id, sold_date, source_location, warranty_period
+"GET /product/export/?from_date=2025-09-01&to_date=2025-09-15 HTTP/1.1" 500 114418
+Internal Server Error: /product/export/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 74, in export_products
+    df.to_excel(response, index=False)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\core\generic.py", line 2436, in to_excel
+    formatter.write(
+    ~~~~~~~~~~~~~~~^
+        excel_writer,
+        ^^^^^^^^^^^^^
+    ...<6 lines>...
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\io\formats\excel.py", line 943, in write
+    writer = ExcelWriter(
+        writer,
+    ...<2 lines>...
+        engine_kwargs=engine_kwargs,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 57, in __init__
+    from openpyxl.workbook import Workbook
+ModuleNotFoundError: No module named 'openpyxl'
+"GET /product/export/?from_date=2025-09-01&to_date=2025-09-15 HTTP/1.1" 500 96162
