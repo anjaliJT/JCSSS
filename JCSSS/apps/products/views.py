@@ -3,8 +3,10 @@ from django.http import request, HttpResponse
 from .models import Product
 from .Forms.product_form import productForm, uploadFileForm
 import pandas as pd 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
-
+@login_required(login_url = 'login')
 def create_product(request): 
     if request.method == "POST": 
         form  = productForm(request.POST)
@@ -16,18 +18,17 @@ def create_product(request):
     
     return render(request,"products/product_form.html",{"form":form})
         
-from django.contrib import messages
+
+@login_required(login_url='login')
 def product_list(request):
     messages.success(request, "Products loaded successfully!") 
     products = Product.objects.all() 
     return render(request, "products/products_main_page.html",{"products":products})
 
 
-import pandas as pd
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Product
 
+
+@login_required(login_url='login')
 def import_products(request): 
     if request.method == "POST": 
         if "import_file" not in request.FILES:
@@ -62,10 +63,8 @@ def import_products(request):
 
 
    
-import pandas as pd
-from django.http import HttpResponse
-# from .models import Product
 
+@login_required(login_url='login')
 def export_products(request):
     from_date = request.GET.get("from_date")
     to_date = request.GET.get("to_date")
