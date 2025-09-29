@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Event, Meteorology, Attachment, EventSeverityClassification
+from apps.oem.models import CSMApproval, CSMApprovalHistory
 
 from apps.oem.tasks import send_mail_csm
 
@@ -18,9 +19,10 @@ class ComplaintListView(LoginRequiredMixin, View):
     template_name = "complaints/complaints_main_page.html"
     
     def get(self, request):
-        # Get all complaints and order by most recent first
+        # --- Complaints ---
         complaints = Event.objects.all().order_by('-date_of_occurrence')
-        # Apply filters if present
+
+        # Filters
         status = request.GET.get('status')
         uav = request.GET.get('uav')
         search = request.GET.get('search')
@@ -37,13 +39,25 @@ class ComplaintListView(LoginRequiredMixin, View):
                 Q(model_number__icontains=search)
             )
 
-        # Pagination
-        paginator = Paginator(complaints, 10)  # Show 10 complaints per page
-        page = request.GET.get('page')
-        complaints_page = paginator.get_page(page)
+        # Pagination for complaints
+        complaints_paginator = Paginator(complaints, 10)
+        complaints_page_number = request.GET.get('complaints_page')
+        complaints_page = complaints_paginator.get_page(complaints_page_number)
 
-        # Get unique UAV numbers for filter dropdown
+        # Unique UAVs
         uavs = Event.objects.values_list('tail_number', flat=True).distinct()
+
+        # --- Approvals ---
+        approvals = CSMApproval.objects.all().order_by("-id")
+        approvals_paginator = Paginator(approvals, 10)
+        approvals_page_number = request.GET.get('approvals_page')
+        approvals_page = approvals_paginator.get_page(approvals_page_number)
+
+        # --- Histories ---
+        histories = CSMApprovalHistory.objects.all().order_by("-id")
+        histories_paginator = Paginator(histories, 10)
+        histories_page_number = request.GET.get('histories_page')
+        histories_page = histories_paginator.get_page(histories_page_number)
 
         context = {
             'complaints': complaints_page,
@@ -52,10 +66,13 @@ class ComplaintListView(LoginRequiredMixin, View):
                 'status': status,
                 'uav': uav,
                 'search': search,
-            }
+            },
+            'approvals': approvals_page,
+            'histories': histories_page,
         }
         
         return render(request, self.template_name, context)
+
 
 
 class ComplaintRegister(LoginRequiredMixin,View):
@@ -129,7 +146,6 @@ class ComplaintRegister(LoginRequiredMixin,View):
 
                 messages.success(request, "Complaint submitted successfully!")
                 send_mail_csm.delay(event.id)   # ✅ send to Celery worker
-                # return redirect('complaint-list')
                 return redirect("complaint_list") 
 
         except Exception as e:
