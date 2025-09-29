@@ -76,8 +76,8 @@
                         <th style="width: 10%">Status</th>
                         <th style="width: 15%">Uav Details</th>
                         <!-- <th style="width: 25%">Command name</th> -->
-                        <th style="width: 12%">Complaint Date</th>
-                        <th style="width: 12%">Last Updated Person</th> 
+                        <!-- <th style="width: 12%">Complaint Date</th> -->
+                        <!-- <th style="width: 12%">Last Updated Person</th>  -->
                         <th style="width: 14%">Actions</th>
                     </tr>
                 </thead>
@@ -94,15 +94,15 @@
                             <div>Model: {{ complaint.model_number }}</div>
                             <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>
                         </td>
-                        <td>{{ complaint.issue_description|truncatewords:10 }}</td>
-                        <td>{{ complaint.created_at|date:"M d, Y" }}</td>
-                        <td>
+                        <!-- <td>{{ complaint.issue_description|truncatewords:10 }}</td> -->
+                        <!-- <td>{{ complaint.created_at|date:"M d, Y" }}</td> -->
+                        <!-- <td>
                             {% if complaint.status == 'resolved' %}
                             <span class="text-success">Resolved: {{ complaint.resolved_at|date:"M d, Y" }}</span>
                             {% else %}
                             {{ complaint.updated_at|date:"M d, Y" }}
                             {% endif %}
-                        </td>
+                        </td> -->
                         <td>
                             <div class="btn-group">
                                 <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
