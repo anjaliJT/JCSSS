@@ -406,87 +406,52 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <!-- Import Section -->
-                        <div class="col-md-6">
-                            <div class="card import-export-card mb-4">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-file-import fa-3x mb-3"></i>
-                                    <h4>Import Products</h4>
-                                    <p>Upload a CSV file to import products into the system</p>
-                                    
-                                    <div class="border-2 border-dashed border-light rounded p-4 mt-3">
-                                        <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                                        <p>Drag & drop CSV file here or click to browse</p>
-                                        <p class="small">Maximum file size: 10MB</p>
-                                        <input type="file" class="d-none" id="csvFileInput" accept=".csv">
-                                        <button type="button" class="btn btn-light" onclick="document.getElementById('csvFileInput').click()">
-                                            Select CSV File
-                                        </button>
-                                        <div id="fileInfo" class="mt-3 small"></div>
-                                    </div>
-                                    
-                                    <div class="form-check mt-3">
-                                        <input class="form-check-input" type="checkbox" id="overwriteExisting">
-                                        <label class="form-check-label" for="overwriteExisting">
-                                            Overwrite existing products with same product code
-                                        </label>
-                                    </div>
-                                    
-                                    <button class="btn btn-light mt-3 w-100" disabled id="importBtn">
-                                        <i class="fas fa-upload me-2"></i>Import Products
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Export Section -->
-                        <div class="col-md-6">
-                            <div class="card h-100">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-file-export fa-3x mb-3 text-primary"></i>
-                                    <h4>Export Products</h4>
-                                    <p>Export product data to CSV format for external use</p>
-                                    
-                                    <div class="mt-4">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="exportAll" checked>
-                                            <label class="form-check-label" for="exportAll">
-                                                Export all products
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="exportAvailable">
-                                            <label class="form-check-label" for="exportAvailable">
-                                                Only available products
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="exportSold">
-                                            <label class="form-check-label" for="exportSold">
-                                                Only sold products
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" id="exportActiveWarranty">
-                                            <label class="form-check-label" for="exportActiveWarranty">
-                                                Only products with active warranty
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-4">
-                                        <label class="form-label">Date Range</label>
-                                        <input type="text" class="form-control" placeholder="Select date range" id="exportDateRange">
-                                    </div>
-                                    
-                                    <button class="btn btn-primary mt-4 w-100">
-                                        <i class="fas fa-download me-2"></i>Export to CSV
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="row align-items-stretch">
+    <!-- Import Section -->
+    <div class="col-md-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-body text-center">
+                <i class="fas fa-file-import fa-3x mb-3"></i>
+                <h4>Import Products</h4>
+                <p>Upload a CSV file to import products into the system</p>
+
+                <form method="post" action="{% url 'import_products' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" class="form-control mb-3" name="import_file" accept=".csv" required>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-upload me-2"></i>Import Products
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="col-md-6 d-flex">
+        <div class="card flex-fill">
+            <div class="card-body text-center">
+                <i class="fas fa-file-export fa-3x mb-3 text-primary"></i>
+                <h4>Export Products</h4>
+                <p>Export product data to CSV format for external use</p>
+
+                <form method="get" action="{% url 'export_products' %}">
+                    <div class="mt-1">
+                        <label class="form-label">Date Range (From - To)</label>
+                        <input type="date" class="form-control" id="fromDate" name="from_date" max="{{ today }}">
                     </div>
+                    <div class="mt-1">
+                        <input type="date" class="form-control" id="toDate" name="to_date" max="{{ today }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-4 w-100">
+                        <i class="fas fa-download me-2"></i>Export to CSV
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
                     
                     <!-- CSV Format Guide -->
                     <div class="card mt-4">
@@ -570,34 +535,9 @@
                 });
             }
             
-            // Automatically collapse sidebar on small screens
-            function checkWidth() {
-                if (window.innerWidth < 993) {
-                    sidebar.classList.add('collapsed');
-                    mainContent.classList.add('expanded');
-                    sidebar.classList.remove('mobile-visible');
-                } else {
-                    sidebar.classList.remove('collapsed');
-                    mainContent.classList.remove('expanded');
-                }
-            }
+
             
-            // Initial check
-            checkWidth();
-            
-            // Listen for window resize
-            window.addEventListener('resize', checkWidth);
-            
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth < 993 && 
-                    sidebar.classList.contains('mobile-visible') &&
-                    !sidebar.contains(event.target) &&
-                    event.target !== navbarToggle &&
-                    !navbarToggle.contains(event.target)) {
-                    sidebar.classList.remove('mobile-visible');
-                }
-            });
+
             
             function formatFileSize(bytes) {
                 if (bytes === 0) return '0 Bytes';
@@ -606,6 +546,30 @@
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let fromDate = document.getElementById("fromDate");
+            let toDate = document.getElementById("toDate");
+
+            // today's date in YYYY-MM-DD
+            let today = new Date().toISOString().split("T")[0];
+            fromDate.setAttribute("max", today);
+            toDate.setAttribute("max", today);
+
+            // when from date changes → set min for toDate
+            fromDate.addEventListener("change", function () {
+                toDate.min = fromDate.value;
+            });
+
+            // when to date changes → validate it
+            toDate.addEventListener("change", function () {
+                if (toDate.value < fromDate.value) {
+                    alert("⚠️ To Date cannot be earlier than From Date.");
+                    toDate.value = "";
+                }
+            });
         });
     </script>
 {% endblock %}

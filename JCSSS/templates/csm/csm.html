@@ -1,4 +1,4 @@
-{% extends "uav-portal/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Dashboard - CSM{% endblock %}
 
@@ -59,7 +59,7 @@
                     <textarea name="remarks" class="form-control" rows="1"
                         {% if request.user.role != "CSM" %}readonly{% endif %}>
                         {% if approval.history.last %}
-                        <!-- {{ approval.history.last.remarks }} -->
+                        {% comment %} <!-- {{ approval.history.last.remarks }} --> {% endcomment %}
                         
                         {% endif %}
                     </textarea>
