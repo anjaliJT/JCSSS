@@ -325,56 +325,7 @@
         </div>
 
 
-        <!-- File Uploads Card -->
-        <div class="card mb-4" id="fileUploads">
-            <div class="card-header bg-white">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-file-upload me-2"></i>Supporting Documents
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-
-
-    <!-- Show uploaded attachments -->
-    {% if attachments %}
-        <div class="col-md-12 mt-4">
-            <h5>Uploaded Attachments</h5>
-            <ul class="list-group">
-                {% for attach in attachments %}
-                    {% if attach.file_video %}
-                        <li class="list-group-item">
-                            🎥 <a href="{{ attach.file_video.url }}" target="_blank">Video Evidence</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_image1 %}
-                        <li class="list-group-item">
-                            🖼 <a href="{{ attach.file_image1.url }}" target="_blank">Photo 1</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_image2 %}
-                        <li class="list-group-item">
-                            🖼 <a href="{{ attach.file_image2.url }}" target="_blank">Photo 2</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_image3 %}
-                        <li class="list-group-item">
-                            🖼 <a href="{{ attach.file_image3.url }}" target="_blank">Photo 3</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_log %}
-                        <li class="list-group-item">
-                            📄 <a href="{{ attach.file_log.url }}" target="_blank">Flight Log</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-</div>
-
-            </div>
-        </div>
+        
 
         <!-- Description Card -->
         <div class="card mb-4" id="description">
@@ -409,7 +360,17 @@
             </div>
         </div>
 
-                    <!-- Upload inputs (only enabled if not readonly) -->
+        <!-- File Uploads Card -->
+        <div class="card mb-4" id="fileUploads">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-file-upload me-2"></i>Supporting Documents
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                <!-- Upload inputs (only enabled if not readonly) -->
                 {% if not is_readonly %}
                     <div class="col-md-12 mb-4">
                         <label class="form-label d-flex justify-content-between">
@@ -461,14 +422,56 @@
                     </div>
                 {% endif %}
 
+
+    <!-- Show uploaded attachments -->
+    {% if attachments %}
+        <div class="col-md-12 mt-4">
+            <h5>Uploaded Attachments</h5>
+            <ul class="list-group">
+                {% for attach in attachments %}
+                    {% if attach.file_video %}
+                        <li class="list-group-item">
+                            🎥 <a href="{{ attach.file_video.url }}" target="_blank">Video Evidence</a>
+                        </li>
+                    {% endif %}
+                    {% if attach.file_image1 %}
+                        <li class="list-group-item">
+                            🖼 <a href="{{ attach.file_image1.url }}" target="_blank">Photo 1</a>
+                        </li>
+                    {% endif %}
+                    {% if attach.file_image2 %}
+                        <li class="list-group-item">
+                            🖼 <a href="{{ attach.file_image2.url }}" target="_blank">Photo 2</a>
+                        </li>
+                    {% endif %}
+                    {% if attach.file_image3 %}
+                        <li class="list-group-item">
+                            🖼 <a href="{{ attach.file_image3.url }}" target="_blank">Photo 3</a>
+                        </li>
+                    {% endif %}
+                    {% if attach.file_log %}
+                        <li class="list-group-item">
+                            📄 <a href="{{ attach.file_log.url }}" target="_blank">Flight Log</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+            </div>
+        </div>
+                    
+
         <!-- Submit Button -->
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Trigger button -->
-                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#submitReportModal">
+                    <!-- <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#submitReportModal">
                         <i class="fas fa-save me-2"></i> Submit Report
-                    </button>
+                    </button> -->
 
                     <button type="submit" class="btn btn-primary" {% if is_readonly %}disabled{% endif %}>
                         <i class="fas fa-paper-plane me-2" ></i>Submit Complaint
@@ -479,56 +482,7 @@
     </form>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="submitReportModal" tabindex="-1" aria-labelledby="submitReportLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      
-      <div class="modal-header">
-        <h5 class="modal-title" id="submitReportLabel">Submit QAQC Review Report</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
 
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="modal-body">
-          
-          <div class="mb-3">
-            <label class="form-label">Assigned Team <span class="text-danger">*</span></label>
-            <select class="form-select" name="assigned_team" required>
-              <option value="STRUCTURE">Structure</option>
-              <option value="ELECTRONICS">Electronics</option>
-              <option value="QAQC" selected>QAQC</option>
-              <option value="IT">IT</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Department</label>
-            <input type="text" class="form-control" name="department">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Upload Report File</label>
-            <input type="file" class="form-control" name="report_file">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Remarks</label>
-            <textarea class="form-control" name="remarks" rows="3"></textarea>
-          </div>
-
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
 
 {% endblock %}
 

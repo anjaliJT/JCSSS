@@ -65,8 +65,8 @@ class Event(models.Model):
 
             # Build unique token
             self.unique_token = (
-                f"0{self.id}-{self.date_of_occurrence.strftime('%Y%m%d')}-"
-                f"{self.model_number}-{serial_number}".upper()
+                f"0{self.id}-{self.model_number}-"
+                f"{self.reported_at.strftime('%Y%m%d')}-{serial_number}".upper()
             )
 
             # Save again only for unique_token
