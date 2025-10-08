@@ -1,6 +1,6 @@
 from django.core.mail import send_mail
 from django.conf import settings
-from apps.oem.models import CSMApproval, CSMApprovalHistory
+from apps.oem.models import  CSMApprovalHistory
 from apps.users.models import CustomUser
 
 
@@ -8,7 +8,7 @@ from apps.users.models import CustomUser
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import Event, CSMApproval, CSMApprovalHistory
+from .models import Event, CSMApprovalHistory
 from apps.users.models import CustomUser  # adjust import
 
 @shared_task
@@ -50,10 +50,10 @@ def send_mail_csm(event_id):
         )
 
     # ✅ Create approval + history
-    csm_approval = CSMApproval.objects.create(event=event)
+    # csm_approval = CSMApproval.objects.create(event=event)
 
     CSMApprovalHistory.objects.create(
-        csm_approval=csm_approval,
+        event=event,
         status="REVIEW",
         location="COMPANY_SITE",
         remarks="Complaint registered, pending review",

@@ -58,10 +58,7 @@
                 <td>
                     <textarea name="remarks" class="form-control" rows="1"
                         {% if request.user.role != "CSM" %}readonly{% endif %}>
-                        {% if approval.history.last %}
-                        {% comment %} <!-- {{ approval.history.last.remarks }} --> {% endcomment %}
-                        
-                        {% endif %}
+                        {% if approval.history.last %}{% comment %} <!-- {{ approval.history.last.remarks }} --> {% endcomment %}{% endif %}
                     </textarea>
                 </td>
 

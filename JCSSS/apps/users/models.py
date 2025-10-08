@@ -1,8 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .managers import CustomUserManager
-
+from django.utils import timezone
 from django.core.validators import RegexValidator
+
+
 phone_regex = RegexValidator(
     regex=r'^\d{10}$',
     message="Phone number must be 10 digits"
@@ -44,3 +46,12 @@ class CustomUser(AbstractUser):
         
     def __str__(self):
         return f"{self.first_name}, {self.last_name} - {self.email}"
+
+
+class ForgotPasswordOTP(models.Model):
+    email = models.EmailField()
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.email} - {self.otp}"

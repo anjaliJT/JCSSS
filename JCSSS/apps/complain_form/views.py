@@ -7,70 +7,99 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Event, Meteorology, Attachment, EventSeverityClassification
-from apps.oem.models import CSMApproval, CSMApprovalHistory
-
+from apps.oem.models import  CSMApprovalHistory
 from apps.oem.tasks import send_mail_csm
 
 
+# class ComplaintListView(LoginRequiredMixin, View):
+#     login_url = 'login'
+#     redirect_field_name = 'next'
+    
+#     template_name = "complaints/complaints_main_page.html"
+    
+#     def get(self, request):
+#         # Get page number from request (default = 1)
+#         page_number = request.GET.get('page', 1)
+
+#         # Complaints
+#         complaints = Event.objects.all().order_by('-date_of_occurrence')
+#         status = request.GET.get('status')
+#         uav = request.GET.get('uav')
+#         search = request.GET.get('search')
+
+#         if status:
+#             complaints = complaints.filter(status=status)
+#         if uav:
+#             complaints = complaints.filter(tail_number=uav)
+
+#         complaint_paginator = Paginator(complaints, 10)
+#         complaints_page = complaint_paginator.get_page(page_number)
+
+#         # Histories
+#         histories = CSMApprovalHistory.objects.all().order_by("-id")
+#         history_paginator = Paginator(histories, 10)
+#         histories_page = history_paginator.get_page(page_number)
+
+#         # Unique UAVs
+#         uavs = Event.objects.values_list('uav_type', flat=True).distinct()
+
+#         context = {
+#             'complaints': complaints_page,
+#             # 'approvals': approvals_page,
+#             'histories': histories_page,
+#             'uavs': uavs,
+#             'current_filters': {
+#                 'status': status,
+#                 'uav': uav,
+#                 'search': search,
+#             },
+#         }
+        
+#         return render(request, self.template_name, context)
+
+from django.utils.dateparse import parse_date
+
 class ComplaintListView(LoginRequiredMixin, View):
     login_url = 'login'
-    redirect_field_name = 'next'
-    
     template_name = "complaints/complaints_main_page.html"
-    
+
     def get(self, request):
-        # --- Complaints ---
+        page_number = request.GET.get('page', 1)
         complaints = Event.objects.all().order_by('-date_of_occurrence')
 
-        # Filters
-        status = request.GET.get('status')
-        uav = request.GET.get('uav')
-        search = request.GET.get('search')
+        status = request.GET.get('status') or ''
+        uav = request.GET.get('uav') or ''
+        search = request.GET.get('search') or ''
 
         if status:
             complaints = complaints.filter(status=status)
+
         if uav:
-            complaints = complaints.filter(tail_number=uav)
+            complaints = complaints.filter(uav_type=uav)
+
         if search:
-            complaints = complaints.filter(
-                Q(pilot_name__icontains=search) |
-                Q(tail_number__icontains=search) |
-                Q(event_description__icontains=search) |
-                Q(model_number__icontains=search)
-            )
+            complaints = complaints.filter(model_number__icontains=search)
 
-        # Pagination for complaints
-        complaints_paginator = Paginator(complaints, 10)
-        complaints_page_number = request.GET.get('complaints_page')
-        complaints_page = complaints_paginator.get_page(complaints_page_number)
+        complaint_paginator = Paginator(complaints, 10)
+        complaints_page = complaint_paginator.get_page(page_number)
 
-        # Unique UAVs
-        uavs = Event.objects.values_list('tail_number', flat=True).distinct()
-
-        # --- Approvals ---
-        approvals = CSMApproval.objects.all().order_by("-id")
-        approvals_paginator = Paginator(approvals, 10)
-        approvals_page_number = request.GET.get('approvals_page')
-        approvals_page = approvals_paginator.get_page(approvals_page_number)
-
-        # --- Histories ---
         histories = CSMApprovalHistory.objects.all().order_by("-id")
-        histories_paginator = Paginator(histories, 10)
-        histories_page_number = request.GET.get('histories_page')
-        histories_page = histories_paginator.get_page(histories_page_number)
+        history_paginator = Paginator(histories, 10)
+        histories_page = history_paginator.get_page(page_number)
+
+        uavs = Event.objects.values_list('uav_type', flat=True).distinct()
 
         context = {
             'complaints': complaints_page,
+            'histories': histories_page,
             'uavs': uavs,
             'current_filters': {
                 'status': status,
                 'uav': uav,
                 'search': search,
             },
-            'approvals': approvals_page,
-            'histories': histories_page,
         }
-        
+
         return render(request, self.template_name, context)
 
 
@@ -165,6 +194,8 @@ class ComplaintDetailView(LoginRequiredMixin,View):
         attachments = Attachment.objects.filter(event=event)
         messages.info(request,"You only view your details.")
 
+        is_completed = bool(event and meteorology and attachments)
+
         return render(
             request,
             self.template_name,
@@ -173,5 +204,6 @@ class ComplaintDetailView(LoginRequiredMixin,View):
                 "meteorology": meteorology,
                 "attachments": attachments,
                 "is_readonly": True,
+                "is_completed": is_completed,
             },
         )
