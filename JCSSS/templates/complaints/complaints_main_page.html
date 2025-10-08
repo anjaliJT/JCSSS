@@ -4,7 +4,7 @@
 
 {% block content %}
 <!-- Main Content Area -->
-<div class="container-fluid">
+<div class="container-main">
     <!-- Page Header -->
     <div class="row mb-4">
         <div class="col">
@@ -21,39 +21,43 @@
     <!-- Filters and Search -->
     <div class="card mb-4">
         <div class="card-body">
-            <div class="row align-items-end">
-                <div class="col-md-3 mb-2">
-                    <label class="form-label">Status</label>
-                    <select class="form-select">
-                        <option value="">All Statuses</option>
-                        <option value="new">New</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="awaiting-parts">Awaiting Parts</option>
-                        <option value="resolved">Resolved</option>
-                    </select>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <label class="form-label">UAV Type</label>
-                    <select class="form-select">
-                        <option value="">All UAVs</option>
-                        <option value="dji-ar-112">DJI-AR-112</option>
-                        <option value="dji-ar-108">DJI-AR-108</option>
-                        <option value="dji-ar-105">DJI-AR-105</option>
-                    </select>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <label class="form-label">Date Range</label>
-                    <input type="text" class="form-control" placeholder="Select date range" id="dateRangePicker">
-                </div>
-                <div class="col-md-3 mb-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search complaints...">
-                        <button class="btn btn-outline-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <form method="get" id="filterForm" class="row g-3">
+  <div class="row align-items-end">
+    <!-- Status Filter -->
+    <div class="col-md-4 mb-2">
+      <label class="form-label">Status</label>
+      <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
+        <option value="">All Statuses</option>
+        <option value="new" {% if current_filters.status == 'new' %}selected{% endif %}>New</option>
+        <option value="in-progress" {% if current_filters.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+        <option value="awaiting-parts" {% if current_filters.status == 'awaiting-parts' %}selected{% endif %}>Awaiting Parts</option>
+        <option value="resolved" {% if current_filters.status == 'resolved' %}selected{% endif %}>Resolved</option>
+      </select>
+    </div>
+
+    <!-- UAV Filter -->
+    <div class="col-md-4 mb-2">
+      <label class="form-label">UAV Type</label>
+      <select class="form-select" name="uav" onchange="document.getElementById('filterForm').submit()">
+        <option value="">All UAVs</option>
+        {% for uav_name in uavs %}
+          <option value="{{ uav_name }}" {% if current_filters.uav == uav_name %}selected{% endif %}>{{ uav_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Search -->
+    <div class="col-md-4 mb-2">
+      <div class="input-group">
+        <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
+        <button class="btn btn-outline-primary" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
         </div>
     </div>
 
@@ -102,12 +106,7 @@
 <!-- Complaints List -->
 <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">All Complaints</h5>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-outline-primary active">All</button>
-            <button type="button" class="btn btn-outline-primary">Active</button>
-            <button type="button" class="btn btn-outline-primary">Resolved</button>
-        </div>
+        <h5 class="mb-0">Complaints</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -118,8 +117,8 @@
                         <th style="width: 10%">Status</th>
                         <th style="width: 15%">Uav Details</th>
                         <!-- <th style="width: 25%">Command name</th> -->
-                        <th style="width: 12%">Complaint Date</th>
-                        <th style="width: 12%">Last Updated Person</th> 
+                        <!-- <th style="width: 12%">Complaint Date</th> -->
+                        <!-- <th style="width: 12%">Last Updated Person</th>  -->
                         <th style="width: 14%">Actions</th>
                     </tr>
                 </thead>
@@ -136,15 +135,15 @@
                             <div>Model: {{ complaint.model_number }}</div>
                             <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>
                         </td>
-                        <td>{{ complaint.issue_description|truncatewords:10 }}</td>
-                        <td>{{ complaint.created_at|date:"M d, Y" }}</td>
-                        <td>
+                        <!-- <td>{{ complaint.issue_description|truncatewords:10 }}</td> -->
+                        <!-- <td>{{ complaint.created_at|date:"M d, Y" }}</td> -->
+                        <!-- <td>
                             {% if complaint.status == 'resolved' %}
                             <span class="text-success">Resolved: {{ complaint.resolved_at|date:"M d, Y" }}</span>
                             {% else %}
                             {{ complaint.updated_at|date:"M d, Y" }}
                             {% endif %}
-                        </td>
+                        </td> -->
                         <td>
                             <div class="btn-group">
                                 <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
@@ -227,4 +226,3 @@
     </div>
 </div>
 {% endblock %}
-

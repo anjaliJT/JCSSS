@@ -77,10 +77,51 @@
                 <button id="loginBtn" type="submit" class="btn btn-primary mt-2 w-100">Submit</button>
                 <br>
                 <hr>
-                <a href="#" class=" pt-2 text-center"><b>Forgot password?</b></a><br>
+                <a href="#" class="pt-2 text-center" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal"><b>Forgot password?</b></a><br>
                 <b>Don't have an account? <a href="{% url 'signup' %}" class=" pt-2">Sign up</a><br></b>
                 
             </form>
+
+<!-- Forgot Password Modal (place this inside <body>) -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Inline message -->
+        <div id="otpMessage" class="alert d-none" role="alert"></div>
+
+        <form id="forgotPasswordForm" onsubmit="return false;">
+          {% csrf_token %}
+          <!-- Step 1: Enter Email -->
+          <div id="emailStep">
+            <label for="emailInput" class="form-label">Enter your registered Email ID</label>
+            <input type="email" id="emailInput" name="email" class="form-control mb-3" required>
+            <button id="sendOtpBtn" type="button" class="btn btn-primary w-100">Send OTP</button>
+          </div>
+
+          <!-- Step 2: Enter OTP and new password (hidden initially) -->
+          <div id="otpStep" style="display: none;">
+            <label for="otpInput" class="form-label">Enter OTP</label>
+            <input type="text" id="otpInput" name="otp" class="form-control mb-3" placeholder="Enter OTP" required>
+
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" id="newPassword" name="new_password" class="form-control mb-3" required>
+
+            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+            <input type="password" id="confirmPassword" name="confirm_password" class="form-control mb-3" required>
+
+            <button id="resetPasswordBtn" type="button" class="btn btn-primary w-100">Reset Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
         </div>
@@ -93,5 +134,195 @@ function disableButton(form) {
     btn.innerText = "Please wait..."; // optional, gives feedback
 }
 </script>
+
+<!-- Place this script just before </body> -->
+<script>
+/* Helper: read csrftoken from cookie */
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i=0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+document.addEventListener('DOMContentLoaded', function() {
+  const sendBtn = document.getElementById('sendOtpBtn');
+  const resetBtn = document.getElementById('resetPasswordBtn');
+
+  if (sendBtn) sendBtn.addEventListener('click', sendOTP);
+  if (resetBtn) resetBtn.addEventListener('click', resetPassword);
+});
+
+/* send OTP */
+async function sendOTP(e) {
+  const btn = e.currentTarget;
+  const email = document.getElementById('emailInput').value.trim();
+  const msgBox = document.getElementById('otpMessage');
+
+  msgBox.classList.add('d-none');
+
+  if (!email) {
+    msgBox.className = 'alert alert-warning';
+    msgBox.textContent = 'Please enter your email.';
+    msgBox.classList.remove('d-none');
+    return;
+  }
+
+  // disable button + show spinner
+  btn.disabled = true;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...';
+
+  try {
+    const resp = await fetch("{% url 'forgot-password-send-otp' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({ email })
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text().catch(()=>null);
+      console.error('sendOTP non-200:', resp.status, txt);
+      msgBox.className = 'alert alert-danger';
+      msgBox.textContent = 'Server error while sending OTP. Try again later.';
+      msgBox.classList.remove('d-none');
+      btn.disabled = false;
+      btn.innerHTML = orig;
+      return;
+    }
+
+    const data = await resp.json().catch(()=>({ success: false, error: 'Invalid server response' }));
+
+    if (data.success) {
+      msgBox.className = 'alert alert-success';
+      msgBox.textContent = 'OTP sent to your registered email.';
+      msgBox.classList.remove('d-none');
+
+      // move to OTP step
+      document.getElementById('emailStep').style.display = 'none';
+      document.getElementById('otpStep').style.display = 'block';
+    } else {
+      msgBox.className = 'alert alert-danger';
+      msgBox.textContent = data.error || 'Failed to send OTP.';
+      msgBox.classList.remove('d-none');
+      btn.disabled = false;
+      btn.innerHTML = orig;
+    }
+  } catch (err) {
+    console.error('sendOTP fetch error:', err);
+    msgBox.className = 'alert alert-danger';
+    msgBox.textContent = 'Network error. Please try again.';
+    msgBox.classList.remove('d-none');
+    btn.disabled = false;
+    btn.innerHTML = orig;
+  }
+}
+
+/* reset password (verify OTP + set new password) */
+async function resetPassword(e) {
+  const btn = e.currentTarget;
+  const email = document.getElementById('emailInput').value.trim();
+  const otp = document.getElementById('otpInput').value.trim();
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const msgBox = document.getElementById('otpMessage');
+
+  msgBox.classList.add('d-none');
+
+  if (!otp || !newPassword || !confirmPassword) {
+    msgBox.className = 'alert alert-warning';
+    msgBox.textContent = 'Please fill all fields.';
+    msgBox.classList.remove('d-none');
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    msgBox.className = 'alert alert-warning';
+    msgBox.textContent = 'Passwords do not match.';
+    msgBox.classList.remove('d-none');
+    return;
+  }
+
+  // disable + spinner
+  btn.disabled = true;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Resetting...';
+
+  try {
+    const resp = await fetch("{% url 'forgot-password-verify' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        email,
+        otp,
+        new_password: newPassword
+      })
+    });
+
+  const data = await resp.json().catch(() => ({ success: false, error: 'Invalid server response' }));
+
+  if (!resp.ok) {
+    console.error('resetPassword non-200:', resp.status, data);
+    msgBox.className = 'alert alert-danger';
+    msgBox.textContent = data.error || 'Server error while resetting password.';
+    msgBox.classList.remove('d-none');
+    btn.disabled = false;
+    btn.innerHTML = orig;
+    return;
+  }
+
+
+    /* const data = await resp.json().catch(()=>({ success: false, error: 'Invalid server response' }));*/
+
+    if (data.success) {
+      msgBox.className = 'alert alert-success';
+      msgBox.textContent = 'Password reset successful. You can now log in.';
+      msgBox.classList.remove('d-none');
+
+      // hide modal after short delay
+      setTimeout(() => {
+        const modalEl = document.getElementById('forgotPasswordModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modalInstance.hide();
+
+        // reset fields and UI
+        document.getElementById('forgotPasswordForm').reset();
+        document.getElementById('otpStep').style.display = 'none';
+        document.getElementById('emailStep').style.display = 'block';
+        msgBox.classList.add('d-none');
+      }, 1000);
+    } else {
+      msgBox.className = 'alert alert-danger';
+      msgBox.textContent = data.error || 'Invalid OTP or request failed.';
+      msgBox.classList.remove('d-none');
+      btn.disabled = false;
+      btn.innerHTML = orig;
+    }
+  } catch (err) {
+    console.error('resetPassword fetch error:', err);
+    msgBox.className = 'alert alert-danger';
+    msgBox.textContent = 'Network error. Please try again.';
+    msgBox.classList.remove('d-none');
+    btn.disabled = false;
+    btn.innerHTML = orig;
+  }
+}
+
+</script>
+
   </body>
 </html>

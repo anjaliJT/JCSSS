@@ -40,8 +40,8 @@
             </div> -->
         </div>
         
-        <div class="sidebar-menu">
-            <ul class="nav flex-column">
+        <div class="sidebar-menu d-flex flex-column" style="height: 89vh;">
+            <ul class="nav flex-column flex-grow-1">
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == '/users/fetch/' %}active{% endif %}" href="{% url 'user-details' %}">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -77,8 +77,16 @@
                         <i class="fas fa-cog"></i> Settings
                     </a>
                 </li>
-                <li class="nav-item mt-3">
+            </ul>
+
+                <!-- <li class="nav-item mt-3">
                     <a class="nav-link support-card rounded mx-2" href="#">
+                        <i class="fas fa-phone-alt"></i> Offline Support
+                    </a>
+                </li> -->
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link support-card rounded" href="#">
                         <i class="fas fa-phone-alt"></i> Offline Support
                     </a>
                 </li>

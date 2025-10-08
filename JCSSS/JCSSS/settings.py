@@ -167,3 +167,14 @@ DEFAULT_FROM_EMAIL = 'asr@johnnette.com'
 
 # Celery task
 CELERY_TASK_ALWAYS_EAGER = True
+
+
+from django.contrib.messages import constants as message_constants
+
+MESSAGE_TAGS = {
+    message_constants.DEBUG: "secondary",
+    message_constants.INFO: "info",
+    message_constants.SUCCESS: "success",
+    message_constants.WARNING: "warning",
+    message_constants.ERROR: "danger",
+}

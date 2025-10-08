@@ -7,11 +7,11 @@ from django.utils import timezone
 from datetime import timedelta
 
 
-class CSMApproval(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="csm_approvals")
+# class CSMApproval(models.Model):
+#     event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="csm_approvals")
 
-    def __str__(self):
-        return f"{self.event.unique_token}"
+#     def __str__(self):
+#         return f"{self.event.unique_token}"
 
 
 class CSMApprovalHistory(models.Model):
@@ -29,14 +29,14 @@ class CSMApprovalHistory(models.Model):
         ("COMPANY_SITE", "Company Site"),
     ]
 
-    csm_approval = models.ForeignKey(CSMApproval, on_delete=models.CASCADE, related_name="history")
+    event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="csm_approvals")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="REVIEW")
     location = models.CharField(max_length=20, choices=LOCATION_CHOICES, default="COMPANY_SITE")
     remarks = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)  # auto timestamp
 
     def __str__(self):
-        return f"{self.csm_approval.event.unique_token} - {self.status} at {self.updated_at.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.event.unique_token} - {self.status} at {self.updated_at.strftime('%Y-%m-%d %H:%M')}"
 
 
 # class Team(models.Model):

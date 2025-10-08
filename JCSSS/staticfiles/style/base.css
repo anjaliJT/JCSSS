@@ -54,6 +54,21 @@ body {
   z-index: 1000;
   box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
 }
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* full height */
+}
+
+.sidebar-menu ul {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-menu ul li:last-child {
+    margin-top: auto; /* push last item to bottom */
+}
 
 .sidebar.collapsed {
   margin-left: -250px;

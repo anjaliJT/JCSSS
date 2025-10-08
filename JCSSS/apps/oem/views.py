@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .models import CSMApproval, CSMApprovalHistory, ReviewReport
+from .models import  CSMApprovalHistory, ReviewReport
 from apps.complain_form.models import Event
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,11 +10,11 @@ from django.contrib import messages
 
 class CSMViews(View):
     def get(self, request):
-        approvals = CSMApproval.objects.all().order_by("-id")  # latest first
+        # approvals = CSMApproval.objects.all().order_by("-id")  # latest first
         histories = CSMApprovalHistory.objects.all().order_by("-id")  # latest first
 
         return render(request, "csm/csm.html", {
-            "approvals": approvals,
+            # "approvals": approvals,
             "histories": histories,
         })
 
@@ -25,7 +25,7 @@ class CSMViews(View):
         new_status = request.POST.get("status")
 
         try:
-            approval = CSMApproval.objects.get(id=approval_id)
+            approval = CSMApprovalHistory.objects.get(id=approval_id)
             if new_location:
                 approval.location = new_location
             if new_status:

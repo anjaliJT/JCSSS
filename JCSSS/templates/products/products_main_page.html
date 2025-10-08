@@ -14,340 +14,130 @@
                     <p class="text-muted">Manage and track all UAV products in your inventory</p>
                 </div>
                 <div class="col-auto">
-                    <!-- <div class="view-toggle me-3">
-                        <button class="view-toggle-btn active" id="gridViewBtn">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                        <button class="view-toggle-btn" id="tableViewBtn">
-                            <i class="fas fa-table"></i>
-                        </button>
-                    </div> -->
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importExportModal">
                         <i class="fas fa-file-csv me-2"></i>Import/Export
                     </button>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
-            <!-- <div class="row mb-4">
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card stats-card available h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title text-muted">Available Products</h6>
-                                    <h3 class="fw-bold">12</h3>
-                                    <p class="card-text text-success small"><i class="fas fa-arrow-up me-1"></i>2 from last month</p>
-                                </div>
-                                <div class="bg-success p-3 rounded">
-                                    <i class="fas fa-box-open fa-2x text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card stats-card sold h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title text-muted">Sold Products</h6>
-                                    <h3 class="fw-bold">8</h3>
-                                    <p class="card-text text-primary small"><i class="fas fa-arrow-up me-1"></i>3 this month</p>
-                                </div>
-                                <div class="bg-primary p-3 rounded">
-                                    <i class="fas fa-shopping-cart fa-2x text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card stats-card warranty h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title text-muted">Active Warranty</h6>
-                                    <h3 class="fw-bold">15</h3>
-                                    <p class="card-text text-warning small"><i class="fas fa-clock me-1"></i>5 expiring soon</p>
-                                </div>
-                                <div class="bg-warning p-3 rounded">
-                                    <i class="fas fa-shield-alt fa-2x text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <div class="card stats-card expired h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title text-muted">Expired Warranty</h6>
-                                    <h3 class="fw-bold">5</h3>
-                                    <p class="card-text text-muted small">No renewals this month</p>
-                                </div>
-                                <div class="bg-danger p-3 rounded">
-                                    <i class="fas fa-exclamation-triangle fa-2x text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <!-- Filters and Search -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-3 mb-2">
+                    <form method="get" id="filterForm" class="row g-3">
+
+                        <!-- Product Model -->
+                        <div class="col-12 col-md-4">
                             <label class="form-label">Product Model</label>
-                            <select class="form-select">
+                            <select class="form-select" name="model" onchange="this.form.submit()">
                                 <option value="">All Models</option>
-                                <option value="mark-iv">Mark IV</option>
-                                <option value="mark-iii">Mark III</option>
-                                <option value="mark-ii">Mark II</option>
-                                <option value="mark-iv-pro">Mark IV Pro</option>
-                                <option value="mark-iv-elite">Mark IV Elite</option>
+                                {% for model in models %}
+                                    <option value="{{ model.id }}" {% if selected_model == model.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ model.model_name }}
+                                    </option>
+                                {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-2 mb-2">
+
+                        <!-- Status -->
+                        <div class="col-12 col-md-4">
                             <label class="form-label">Status</label>
-                            <select class="form-select">
+                            <select class="form-select" name="status" onchange="this.form.submit()">
                                 <option value="">All Statuses</option>
-                                <option value="available">Available</option>
-                                <option value="sold">Sold</option>
+                                <option value="available" {% if selected_status == "available" %}selected{% endif %}>Available</option>
+                                <option value="sold" {% if selected_status == "sold" %}selected{% endif %}>Sold</option>
                             </select>
                         </div>
-                        <div class="col-md-2 mb-2">
+
+                        <!-- Warranty -->
+                        <div class="col-12 col-md-4">
                             <label class="form-label">Warranty</label>
-                            <select class="form-select">
+                            <select class="form-select" name="warranty" onchange="this.form.submit()">
                                 <option value="">All</option>
-                                <option value="active">Active</option>
-                                <option value="expiring">Expiring Soon</option>
-                                <option value="expired">Expired</option>
+                                <option value="active" {% if selected_warranty == "active" %}selected{% endif %}>Active</option>
+                                <option value="expired" {% if selected_warranty == "expired" %}selected{% endif %}>Expired</option>
                             </select>
                         </div>
-                        <div class="col-md-3 mb-2">
-                            <label class="form-label">Date Range</label>
-                            <input type="text" class="form-control" placeholder="Select date range" id="dateRangePicker">
-                        </div>
-                        <div class="col-md-2 mt-4 d-flex align-items-end">
-                            <button class="btn btn-outline-primary w-100">
-                                <i class="fas fa-filter me-1"></i> Apply
-                            </button>
-                        </div>
-                    </div>
+
+                    </form>
                 </div>
             </div>
 
-            <!-- Products Grid View -->
-            <!-- <div id="gridView">
-                <div class="row">
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card product-card h-100">
-                            <span class="warranty-badge badge bg-success">Warranty Active</span>
-                            <img src="https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=UAV+Mark+IV" class="card-img-top" alt="UAV Mark IV">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title">DJI-AR-112</h5>
-                                    <span class="badge bg-success">Available</span>
-                                </div>
-                                <h6 class="card-subtitle mb-3 text-muted">Mark IV</h6>
-                                
-                                <ul class="list-group list-group-flush mb-3">
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Order Name:</span>
-                                        <span class="fw-bold">Advanced Recon UAV</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Manufacturing Date:</span>
-                                        <span>Jan 15, 2023</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Source Location:</span>
-                                        <span>Factory A</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Warranty Period:</span>
-                                        <span>12 months</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Warranty Expiry:</span>
-                                        <span class="fw-bold text-success">Jan 15, 2024</span>
-                                    </li>
-                                </ul>
-                                
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary">View Details</button>
-                                    <button class="btn btn-outline-secondary">Request Support</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card product-card h-100">
-                            <span class="warranty-badge badge bg-success">Warranty Active</span>
-                            <img src="https://via.placeholder.com/300x200/10B981/FFFFFF?text=UAV+Mark+III" class="card-img-top" alt="UAV Mark III">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title">DJI-AR-108</h5>
-                                    <span class="badge bg-success">Available</span>
-                                </div>
-                                <h6 class="card-subtitle mb-3 text-muted">Mark III</h6>
-                                
-                                <ul class="list-group list-group-flush mb-3">
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Order Name:</span>
-                                        <span class="fw-bold">Standard Recon UAV</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Manufacturing Date:</span>
-                                        <span>Mar 22, 2023</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Source Location:</span>
-                                        <span>Factory B</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Warranty Period:</span>
-                                        <span>12 months</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Warranty Expiry:</span>
-                                        <span class="fw-bold text-success">Mar 22, 2024</span>
-                                    </li>
-                                </ul>
-                                
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary">View Details</button>
-                                    <button class="btn btn-outline-secondary">Request Support</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card product-card h-100">
-                            <span class="warranty-badge badge bg-danger">Warranty Expired</span>
-                            <img src="https://via.placeholder.com/300x200/EF4444/FFFFFF?text=UAV+Mark+II" class="card-img-top" alt="UAV Mark II">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title">DJI-AR-105</h5>
-                                    <span class="badge bg-secondary">Sold</span>
-                                </div>
-                                <h6 class="card-subtitle mb-3 text-muted">Mark II</h6>
-                                
-                                <ul class="list-group list-group-flush mb-3">
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Order Name:</span>
-                                        <span class="fw-bold">Basic Recon UAV</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Manufacturing Date:</span>
-                                        <span>Aug 12, 2022</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Source Location:</span>
-                                        <span>Factory C</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Warranty Period:</span>
-                                        <span>12 months</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Warranty Expiry:</span>
-                                        <span class="fw-bold text-danger">Aug 12, 2023</span>
-                                    </li>
-                                    <li class="list-group-item px-0 d-flex justify-content-between">
-                                        <span>Sold Date:</span>
-                                        <span>Sep 5, 2022</span>
-                                    </li>
-                                </ul>
-                                
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary">View Details</button>
-                                    <button class="btn btn-outline-secondary">Request Support</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <nav aria-label="Products pagination" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <span class="page-link">&laquo;</span>
-                        </li>
-                        <li class="page-item active">
-                            <span class="page-link">1</span>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">&raquo;</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div> -->
 
             <!-- Products Table View -->
             <div id="tableView">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
+
+                        <!-- Column Toggle Controls -->
+                        <div class="mb-3 d-flex justify-content-end">
+    <!-- Filter Icon -->
+    <button class="btn btn-outline-primary dropdown-toggle " type="button" id="columnFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-filter"></i>
+    </button>
+
+    <!-- Dropdown Menu with checkboxes -->
+    <ul class="dropdown-menu p-3" aria-labelledby="columnFilterDropdown" style="min-width: 200px;">
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="0" checked id="col0">
+            <label class="form-check-label" for="col0">Product Code</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="1" checked id="col1">
+            <label class="form-check-label" for="col1">Model</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="2" checked id="col2">
+            <label class="form-check-label" for="col2">Order Name</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="3" checked id="col3">
+            <label class="form-check-label" for="col3">Manufacturing Date</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
+            <label class="form-check-label" for="col4">Status</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
+            <label class="form-check-label" for="col5">Warranty Status</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="6" checked id="col6">
+            <label class="form-check-label" for="col6">Warranty Expiry</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="7" checked id="col7">
+            <label class="form-check-label" for="col7">Actions</label>
+        </li>
+    </ul>
+</div>
+
+
+                        <!-- Table -->
+                        {% comment %} <div class="table-responsive">
+                            <table class="table table-hover" id="productTable">
                                 <thead>
                                     <tr>
-                                        <th><input class="form-check-input" type="checkbox" id="selectAll"></th>
                                         <th>Product Code</th>
                                         <th>Model</th>
                                         <th>Order Name</th>
                                         <th>Manufacturing Date</th>
-                                        <!-- <th>Status</th> -->
-                                        <!-- <th>Warranty Status</th> -->
-                                        <!-- <th>Warranty Expiry</th> -->
+                                        <th>Status</th>
+                                        <th>Warranty Status</th>
+                                        <th>Warranty Expiry</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for product in products %}
                                     <tr>
-                                        <td><input class="form-check-input" type="checkbox"></td>
                                         <td>{{ product.product_code }}</td>
-                                        <td>{{ product.product_model.name }}</td>
+                                        <td>{{ product.product_model }}</td>
                                         <td>{{ product.order_name }}</td>
                                         <td>{{ product.manufecturing_Date|date:"M d, Y" }}</td>
-
-                                        <!-- Status -->
-                                        <!-- <td>
-                                            {% if product.status == "Available" %}
-                                                <span class="badge bg-success">{{ product.status }}</span>
-                                            {% else %}
-                                                <span class="badge bg-danger">{{ product.status }}</span>
-                                            {% endif %}
-                                        </td> -->
-
-                                        <!-- Warranty Status -->
-                                        <!-- <td>
-                                            {% if product.warranty_status == "Active" %}
-                                                <span class="badge bg-success">{{ product.warranty_status }}</span>
-                                            {% else %}
-                                                <span class="badge bg-danger">{{ product.warranty_status }}</span>
-                                            {% endif %}
-                                        </td> -->
-
-                                        <!-- Warranty Expiry -->
-                                        <!-- <td>{{ product.warranty_expiry|date:"M d, Y" }}</td> -->
-
+                                        <td>{{ product.is_sold|yesno:"Sold,Available" }}</td>
+                                        <td>{{ product.warranty_status }}</td>
+                                        <td>{{ product.warranty_expiry_date|date:"M d, Y" }}</td>
                                         <td>
                                             <button class="btn btn-sm btn-outline-primary">View</button>
                                             <button class="btn btn-sm btn-outline-secondary">Edit</button>
@@ -356,44 +146,137 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
-                        </div>
-                        
-                        <!-- <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div>
-                                <select class="form-select form-select-sm d-inline-block w-auto">
-                                    <option>5 rows</option>
-                                    <option selected>10 rows</option>
-                                    <option>25 rows</option>
-                                    <option>50 rows</option>
-                                </select>
-                                <span class="ms-2 text-muted">Showing 1-5 of 20 products</span>
-                            </div>
-                            <nav aria-label="Table pagination">
+                        </div> {% endcomment %}
+
+                        <div class="table-responsive">
+    <table class="table table-hover" id="productTable">
+        <thead>
+            <tr>
+                <th>Product Code</th>
+                <th>Model</th>
+                <th>Order Name</th>
+                <th>Manufacturing Date</th>
+                <th>Status</th>
+                <th>Warranty Status</th>
+                <th>Warranty Expiry</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.product_code }}</td>
+                <td>{{ product.product_model }}</td>
+                <td>{{ product.order_name }}</td>
+                <td>{{ product.manufecturing_Date|date:"Y-m-d" }}</td>
+                <td>{{ product.is_sold|yesno:"Sold,Available" }}</td>
+                <td>{{ product.warranty_status }}</td>
+                <td>{{ product.warranty_expiry_date|date:"Y-m-d" }}</td>
+                <td>
+                <button class="edit-btn btn btn-sm btn-outline-primary"
+        data-bs-toggle="modal" data-bs-target="#editProductModal"
+        data-id="{{ product.id }}"
+        {% if product.product_model %}
+            data-model="{{ product.product_model.id }}"
+        {% else %}
+            data-model=""
+        {% endif %}
+        data-order="{{ product.order_name }}"
+        data-manufacture="{{ product.manufecturing_Date|date:'Y-m-d' }}"
+        data-warranty="{{ product.warranty_status }}"
+        data-expiry="{{ product.warranty_expiry_date|date:'Y-m-d' }}">
+    Edit
+</button>
+
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- ✅ Modal (only once, outside the loop) -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const editButtons = document.querySelectorAll('.edit-btn');
+    const form = document.getElementById('editProductForm');
+
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.dataset.id;
+            form.action = `/product/products/${id}/edit/`;
+
+            // Set input fields
+            document.getElementById('orderName').value = this.dataset.order;
+            document.getElementById('manufactureDate').value = this.dataset.manufacture;
+            document.getElementById('warrantyExpiry').value = this.dataset.expiry;
+            document.getElementById('warrantyStatus').value = this.dataset.warranty;
+
+            // Set the select value for ForeignKey
+            document.getElementById('productModel').value = this.dataset.model; // model ID
+        });
+    });
+});
+
+</script>
+
+
+
+                        <!-- JS to toggle columns -->
+                        <script>
+                        document.querySelectorAll(".column-toggle").forEach(checkbox => {
+                            checkbox.addEventListener("change", function() {
+                                let colIndex = parseInt(this.value) + 1; // nth-child is 1-based
+                                let display = this.checked ? "" : "none";
+                                
+                                document.querySelectorAll(`#productTable tr th:nth-child(${colIndex}), 
+                                                        #productTable tr td:nth-child(${colIndex})`)
+                                        .forEach(cell => cell.style.display = display);
+                            });
+                        });
+                        </script>
+
+
+                        <!-- Pagination -->
+                        {% if products.has_other_pages %}
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="text-muted">
+                                Page {{ products.number }} of {{ products.paginator.num_pages }}
+                            </span>
+                            <nav>
                                 <ul class="pagination mb-0">
-                                    <li class="page-item disabled">
-                                        <span class="page-link">&laquo;</span>
-                                    </li>
-                                    <li class="page-item active">
-                                        <span class="page-link">1</span>
-                                    </li>
+                                    {% if products.has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
+                                        <a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.show_all %}&show_all=1{% endif %}">&laquo;</a>
                                     </li>
+                                    {% else %}
+                                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                                    {% endif %}
+
+                                    {% for num in products.paginator.page_range %}
+                                        <li class="page-item {% if products.number == num %}active{% endif %}">
+                                            <a class="page-link" href="?page={{ num }}{% if request.GET.show_all %}&show_all=1{% endif %}">{{ num }}</a>
+                                        </li>
+                                    {% endfor %}
+
+                                    {% if products.has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
+                                        <a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.show_all %}&show_all=1{% endif %}">&raquo;</a>
                                     </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">4</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">&raquo;</a>
-                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                                    {% endif %}
                                 </ul>
                             </nav>
-                        </div> -->
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -479,10 +362,11 @@
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                <a href="/static/files/product.csv" download class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-download me-1"></i>Download Template
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -493,7 +377,59 @@
         </div>
     </div>
 
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editProductForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductLabel">Edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+    <label class="form-label">Model</label>
+    <select name="product_model" id="productModel" class="form-select">
+        {% for model in models %}
+                                    <option value="{{ model.id }}" {% if selected_model == model.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ model.model_name }}
+                                    </option>
+                                {% endfor %}
+    </select>
+</div>
 
+                        <div class="col-md-6">
+                            <label class="form-label">Order Name</label>
+                            <input type="text" name="order_name" id="orderName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Manufacturing Date</label>
+                            <input type="date" name="manufecturing_Date" id="manufactureDate" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Warranty Expiry Date</label>
+                            <input type="date" name="warranty_expiry_date" id="warrantyExpiry" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Warranty Status</label>
+                        <select name="warranty_status" id="warrantyStatus" class="form-select" disabled>
+                            <option value="Active">Active</option>
+                            <option value="Expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -546,30 +482,6 @@
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let fromDate = document.getElementById("fromDate");
-            let toDate = document.getElementById("toDate");
-
-            // today's date in YYYY-MM-DD
-            let today = new Date().toISOString().split("T")[0];
-            fromDate.setAttribute("max", today);
-            toDate.setAttribute("max", today);
-
-            // when from date changes → set min for toDate
-            fromDate.addEventListener("change", function () {
-                toDate.min = fromDate.value;
-            });
-
-            // when to date changes → validate it
-            toDate.addEventListener("change", function () {
-                if (toDate.value < fromDate.value) {
-                    alert("⚠️ To Date cannot be earlier than From Date.");
-                    toDate.value = "";
-                }
-            });
         });
     </script>
 {% endblock %}
