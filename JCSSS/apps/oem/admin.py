@@ -1,6 +1,6 @@
 from django.contrib import admin
 # from .models import CSMApproval, CSMApprovalHistory, Team, QAQCReview
-from .models import  CSMApprovalHistory, ReviewReport, Payment
+from .models import  *
 
 
 # @admin.register(CSMApproval)
@@ -9,8 +9,8 @@ from .models import  CSMApprovalHistory, ReviewReport, Payment
 #     list_filter = ("status", "location")
 #     search_fields = ("event__unique_token", "remarks")
 
-# admin.site.register(CSMApproval)
-admin.site.register(CSMApprovalHistory)
-# admin.site.register(Team)
-admin.site.register(ReviewReport)
-admin.site.register(Payment)
+admin.site.register(Location)
+admin.site.register(ComplaintStatus)
+admin.site.register(RepairCost)
+admin.site.register(CustomerPricing)
+# admin.site.register(Payment)

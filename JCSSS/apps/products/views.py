@@ -2,14 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import request, HttpResponse
 from .models import Product, Product_model
 from .Forms.product_form import productForm, uploadFileForm
-from datetime import date, timedelta
 import pandas as pd 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
 import datetime
+from datetime import datetime, date
 
 # Create your views here.
 @login_required(login_url = 'login')
@@ -79,11 +77,7 @@ def product_list(request):
     })
     
 
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from .models import Product, Product_model
+
 
 def edit_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
