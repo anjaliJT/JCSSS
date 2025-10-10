@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Event, Meteorology, Attachment, EventSeverityClassification
-from apps.oem.models import  CSMApprovalHistory
+from apps.oem.models import  ComplaintStatus
 from apps.oem.tasks import send_mail_csm
 
 
@@ -36,7 +36,7 @@ from apps.oem.tasks import send_mail_csm
 #         complaints_page = complaint_paginator.get_page(page_number)
 
 #         # Histories
-#         histories = CSMApprovalHistory.objects.all().order_by("-id")
+#         histories = ComplaintStatus.objects.all().order_by("-id")
 #         history_paginator = Paginator(histories, 10)
 #         histories_page = history_paginator.get_page(page_number)
 
@@ -83,7 +83,7 @@ class ComplaintListView(LoginRequiredMixin, View):
         complaint_paginator = Paginator(complaints, 10)
         complaints_page = complaint_paginator.get_page(page_number)
 
-        histories = CSMApprovalHistory.objects.all().order_by("-id")
+        histories = ComplaintStatus.objects.all().order_by("-id")
         history_paginator = Paginator(histories, 10)
         histories_page = history_paginator.get_page(page_number)
 
