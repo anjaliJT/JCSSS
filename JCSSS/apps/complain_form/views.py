@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Event, Meteorology, Attachment, EventSeverityClassification
+from .models import Event
 from apps.oem.models import  ComplaintStatus
 from apps.oem.tasks import send_mail_csm
 
@@ -65,33 +65,40 @@ class ComplaintListView(LoginRequiredMixin, View):
 
     def get(self, request):
         page_number = request.GET.get('page', 1)
-        complaints = Event.objects.all().order_by('-date_of_occurrence')
-
         status = request.GET.get('status') or ''
         uav = request.GET.get('uav') or ''
         search = request.GET.get('search') or ''
 
+        # ✅ Fetch complaints
+        complaints = Event.objects.all().order_by('-date_of_occurrence')
+
         if status:
-            complaints = complaints.filter(status=status)
+            complaints = complaints.filter(
+                complaint_statuses__status__iexact=status
+            ).distinct()
 
         if uav:
-            complaints = complaints.filter(uav_type=uav)
+            complaints = complaints.filter(uav_type__iexact=uav)
 
         if search:
             complaints = complaints.filter(model_number__icontains=search)
 
+        # ✅ Paginate complaints only
         complaint_paginator = Paginator(complaints, 10)
         complaints_page = complaint_paginator.get_page(page_number)
 
-        histories = ComplaintStatus.objects.all().order_by("-id")
-        history_paginator = Paginator(histories, 10)
-        histories_page = history_paginator.get_page(page_number)
-
+        # ✅ Get unique UAV types for dropdown
         uavs = Event.objects.values_list('uav_type', flat=True).distinct()
+
+        # ✅ Optional: Fetch last known complaint status per event
+        histories = (
+            ComplaintStatus.objects.select_related("event")
+            .order_by("-updated_at")[:50]
+        )
 
         context = {
             'complaints': complaints_page,
-            'histories': histories_page,
+            'histories': histories,
             'uavs': uavs,
             'current_filters': {
                 'status': status,
@@ -139,11 +146,11 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     initial_actions_taken=request.POST.get("initial_actions_taken"),
                     remarks=request.POST.get("remarks"),
                     organization=request.POST.get("organization"),
-                )
+                # )
 
-                # 2️⃣ Create Meteorology
-                Meteorology.objects.create(
-                    event=event,
+                # # 2️⃣ Create Meteorology
+                # Meteorology.objects.create(
+                #     event=event,
                     wind=request.POST.get("wind"),
                     temperature=request.POST.get("temperature"),
                     pressure_qnh=request.POST.get("pressure_qnh"),
@@ -155,21 +162,22 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     rain=bool(request.POST.get("rain")),
                     icing=bool(request.POST.get("icing")),
                     snow=bool(request.POST.get("snow")),
-                )
+                # )
 
-                # 3️⃣ Create Attachments
-                Attachment.objects.create(
-                    event=event,
+                # # 3️⃣ Create Attachments
+                # Attachment.objects.create(
+                #     event=event,
                     file_video=request.FILES.get("video"),
                     file_image1=request.FILES.get("photo1"),
                     file_image2=request.FILES.get("photo2"),
                     file_image3=request.FILES.get("photo3"),
                     file_log=request.FILES.get("log_file"),
-                    )
+                    
+                #     )
                 
-                # 4️⃣ create EventSeverityClassification
-                EventSeverityClassification.objects.create(
-                    event=event,
+                # # 4️⃣ create EventSeverityClassification
+                # EventSeverityClassification.objects.create(
+                #     event=event,
                     damage_potential = request.POST.get("damage_level"),
                 )
 
@@ -189,20 +197,20 @@ class ComplaintDetailView(LoginRequiredMixin,View):
 
     def get(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        meteorology = get_object_or_404(Meteorology, pk=pk)
+        # meteorology = get_object_or_404(Meteorology, pk=pk)
 
-        attachments = Attachment.objects.filter(event=event)
+        # attachments = Attachment.objects.filter(event=event)
         messages.info(request,"You only view your details.")
 
-        is_completed = bool(event and meteorology and attachments)
+        is_completed = bool(event)
 
         return render(
             request,
             self.template_name,
             {
                 "event": event,
-                "meteorology": meteorology,
-                "attachments": attachments,
+                # "meteorology": meteorology,
+                # "attachments": attachments,
                 "is_readonly": True,
                 "is_completed": is_completed,
             },

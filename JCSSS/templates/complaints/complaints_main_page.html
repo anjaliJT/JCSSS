@@ -22,47 +22,47 @@
     <div class="card mb-4">
         <div class="card-body">
             <form method="get" id="filterForm" class="row g-3">
-  <div class="row align-items-end">
-    <!-- Status Filter -->
-    <div class="col-md-4 mb-2">
-      <label class="form-label">Status</label>
-      <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
-        <option value="">All Statuses</option>
-        <option value="new" {% if current_filters.status == 'new' %}selected{% endif %}>New</option>
-        <option value="in-progress" {% if current_filters.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-        <option value="awaiting-parts" {% if current_filters.status == 'awaiting-parts' %}selected{% endif %}>Awaiting Parts</option>
-        <option value="resolved" {% if current_filters.status == 'resolved' %}selected{% endif %}>Resolved</option>
-      </select>
-    </div>
+              <div class="row align-items-end">
+                <!-- Status Filter -->
+                <div class="col-md-4 mb-2">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">All Statuses</option>
+                    <option value="REVIEW" {% if current_filters.status == 'REVIEW' %}selected{% endif %}>Review</option>
+                    <option value="ACCEPTED" {% if current_filters.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
+                    <option value="REJECTED" {% if current_filters.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
+                    <option value="UNDER_PROCESS" {% if current_filters.status == 'UNDER_PROCESS' %}selected{% endif %}>Under Process</option>
+                    <option value="COMPLETED" {% if current_filters.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
+                  </select>
+                </div>
 
-    <!-- UAV Filter -->
-    <div class="col-md-4 mb-2">
-      <label class="form-label">UAV Type</label>
-      <select class="form-select" name="uav" onchange="document.getElementById('filterForm').submit()">
-        <option value="">All UAVs</option>
-        {% for uav_name in uavs %}
-          <option value="{{ uav_name }}" {% if current_filters.uav == uav_name %}selected{% endif %}>{{ uav_name }}</option>
-        {% endfor %}
-      </select>
-    </div>
+                <!-- UAV Filter -->
+                <div class="col-md-4 mb-2">
+                  <label class="form-label">UAV Type</label>
+                  <select class="form-select" name="uav" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">All UAVs</option>
+                    {% for uav_name in uavs %}
+                      <option value="{{ uav_name }}" {% if current_filters.uav == uav_name %}selected{% endif %}>{{ uav_name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
 
-    <!-- Search -->
-    <div class="col-md-4 mb-2">
-      <div class="input-group">
-        <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
-        <button class="btn btn-outline-primary" type="submit">
-          <i class="fas fa-search"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
-
+                <!-- Search -->
+                <div class="col-md-4 mb-2">
+                  <div class="input-group">
+                    <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
+                    <button class="btn btn-outline-primary" type="submit">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+          </form>
         </div>
     </div>
 
 <!-- Modal -->
- {% for complaint in complaints %}
+ {% comment %} {% for complaint in complaints %}
   <div class="modal fade" id="submitReportModal{{ complaint.id }}" tabindex="-1" aria-labelledby="submitReportModalLabel{{ complaint.id }}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -101,7 +101,7 @@
     </div>
   </div>
 
-{% endfor %}
+{% endfor %} {% endcomment %}
 
 <!-- Complaints List -->
 <div class="card">
@@ -127,10 +127,22 @@
                     <tr>
                         <td>{{ complaint.unique_token }}</td>
                         <td>
-                            <span class="badge {% if complaint.status == 'new' %}bg-primary{% elif complaint.status == 'in-progress' %}bg-info{% elif complaint.status == 'awaiting-parts' %}bg-warning{% else %}bg-success{% endif %}">
-                                {{ complaint.get_status_display }}
-                            </span>
-                        </td>
+            {% with latest_status=complaint.complaint_statuses.last %}
+                {% if latest_status %}
+                    <span class="badge 
+                        {% if latest_status.status == 'REVIEW' %}bg-primary
+                        {% elif latest_status.status == 'UNDER_PROCESS' %}bg-info
+                        {% elif latest_status.status == 'ACCEPTED' %}bg-warning
+                        {% elif latest_status.status == 'REJECTED' %}bg-danger
+                        {% elif latest_status.status == 'COMPLETED' %}bg-success
+                        {% endif %}">
+                        {{ latest_status.get_status_display }}
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary">No Status</span>
+                {% endif %}
+            {% endwith %}
+        </td>
                         <td>
                             <div>Model: {{ complaint.model_number }}</div>
                             <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>

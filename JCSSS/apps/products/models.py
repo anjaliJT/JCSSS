@@ -18,9 +18,12 @@ class Product(models.Model):
     order_name = models.CharField(max_length=255)
     manufecturing_Date = models.DateField()
     is_sold = models.BooleanField(default=False)
-    sold_date = models.DateField(null=True, blank = True) 
-    source_location = models.CharField(max_length=255)
-    warranty_period = models.IntegerField(help_text="Warranty in months", default=12)
+    sold_date = models.DateField(null=True, blank = True) # ATP date 
+    source_location = models.CharField(max_length=255, blank=True, null=True)
+    army_command = models.CharField(max_length=255, blank=True, null=True)
+    unit_name = models.CharField(max_length=250, blank=True, null=True)
+    formation = models.CharField(max_length=250, blank=True, null=True)
+    warranty_period = models.IntegerField(help_text="Warranty in months", default=24)
 
     def __str__(self):
         return f"{self.order_name} ({self.product_code})"
