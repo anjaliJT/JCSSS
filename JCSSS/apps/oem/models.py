@@ -1,3 +1,30 @@
+
+"""
+Data models : 
+RepairLocation 
+ComplainStatus
+RepairActualCost
+RepairCostToCustomer 
+
+Functions: 
+Calculate : Profit-margin 
+Calculate : Delayed or on time repair with timestamp 
+    Logic : After verification : the timestamp  will be noted the diagnosis or payment should sent withing 3 days (72 hours)
+            if cross 72 hours : mark delay
+
+SendMail : for each staus mail will be sent to all stakeholders
+
+TO DO : 
+change manufecturer site to --> OEM Site 
+Virtual  to --> Online Support 
+
+each model should have: 
+    i) Created_at
+    ii) Created_by  fields.
+
+"""
+
+
 from django.db import models
 from apps.complain_form.models import Event
 from apps.users.models import CustomUser
@@ -6,7 +33,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class Location(models.Model):
+class Location(models.Model): # Rename it - > RepairLocation 
     LOCATION_CHOICES = [
         ("MANUFACTURER_SITE", "Manufacturer Site"),
         ("CUSTOMER_SITE", "Customer Site"),
