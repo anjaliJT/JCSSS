@@ -13,6 +13,15 @@ Calculate : Delayed or on time repair with timestamp
             if cross 72 hours : mark delay
 
 SendMail : for each staus mail will be sent to all stakeholders
+
+TO DO : 
+change manufecturer site to --> OEM Site 
+Virtual  to --> Online Support 
+
+each model should have: 
+    i) Created_at
+    ii) Created_by  fields.
+
 """
 
 
