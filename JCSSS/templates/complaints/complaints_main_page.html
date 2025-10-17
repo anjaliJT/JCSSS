@@ -125,37 +125,28 @@
                 <tbody>
                     {% for complaint in complaints %}
                     <tr>
-                        <td>{{ complaint.unique_token }}</td>
+                        <td> <a href="{% url 'fetch_complaint_status' complaint.id %}">{{ complaint.unique_token }}</td> </a>
                         <td>
-            {% with latest_status=complaint.complaint_statuses.last %}
-                {% if latest_status %}
-                    <span class="badge 
-                        {% if latest_status.status == 'REVIEW' %}bg-primary
-                        {% elif latest_status.status == 'UNDER_PROCESS' %}bg-info
-                        {% elif latest_status.status == 'ACCEPTED' %}bg-warning
-                        {% elif latest_status.status == 'REJECTED' %}bg-danger
-                        {% elif latest_status.status == 'COMPLETED' %}bg-success
-                        {% endif %}">
-                        {{ latest_status.get_status_display }}
-                    </span>
-                {% else %}
-                    <span class="badge bg-secondary">No Status</span>
-                {% endif %}
-            {% endwith %}
-        </td>
+                          {% with latest_status=complaint.complaint_statuses.last %}
+                              {% if latest_status %}
+                                <span class="badge 
+                                    {% if latest_status.status == 'REVIEW' %}bg-primary
+                                    {% elif latest_status.status == 'UNDER_PROCESS' %}bg-info
+                                    {% elif latest_status.status == 'ACCEPTED' %}bg-warning
+                                    {% elif latest_status.status == 'REJECTED' %}bg-danger
+                                    {% elif latest_status.status == 'COMPLETED' %}bg-success
+                                    {% endif %}">
+                                    {{ latest_status.get_status_display }}
+                                </span>
+                              {% else %}
+                                <span class="badge bg-secondary">No Status</span>
+                              {% endif %}
+                          {% endwith %}
+                        </td>
                         <td>
                             <div>Model: {{ complaint.model_number }}</div>
                             <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>
                         </td>
-                        <!-- <td>{{ complaint.issue_description|truncatewords:10 }}</td> -->
-                        <!-- <td>{{ complaint.created_at|date:"M d, Y" }}</td> -->
-                        <!-- <td>
-                            {% if complaint.status == 'resolved' %}
-                            <span class="text-success">Resolved: {{ complaint.resolved_at|date:"M d, Y" }}</span>
-                            {% else %}
-                            {{ complaint.updated_at|date:"M d, Y" }}
-                            {% endif %}
-                        </td> -->
                         <td>
                             <div class="btn-group">
                                 <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">

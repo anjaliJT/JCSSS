@@ -134,7 +134,7 @@ def import_products(request):
             # ✅ Check required columns
             required_columns = [
                 "product_code", "order_name", "manufecturing_Date", 
-                "is_sold", "sold_date", "source_location", "warranty_period"
+                "is_sold", "sold_date", "source_location", "warranty_period", "army_command", "unit_name", "formation"
             ]
             missing = [col for col in required_columns if col not in df.columns]
             if missing:
@@ -156,6 +156,10 @@ def import_products(request):
                         "sold_date": row.get("sold_date"),
                         "source_location": row.get("source_location"),
                         "warranty_period": row.get("warranty_period", 12),
+                        "army_command": row.get("army_command"),
+                        "unit_name": row.get("unit_name"),
+                        "formation": row.get("formation"),
+                        
                     }
                 )
             messages.success(request, "✅ Products imported successfully.")

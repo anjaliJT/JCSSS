@@ -35,9 +35,9 @@ from django.utils import timezone
 
 class Location(models.Model): # Rename it - > RepairLocation 
     LOCATION_CHOICES = [
-        ("MANUFACTURER_SITE", "Manufacturer Site"),
+        ("OEM_SITE", "OEM Site"),
         ("CUSTOMER_SITE", "Customer Site"),
-        ("ONLINE", "Virtual"),
+        ("VIRTUAL_ASSISTANCE", "Virtual Assistance"),
     ]
 
     event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="locations")
@@ -56,14 +56,17 @@ class ComplaintStatus(models.Model):
     STATUS_CHOICES = [
         ("REVIEW", "Review"),
         ("ACCEPTED", "Accepted"),
+        ("DIAGNOSIS", "Diagnosis"),
+        ("REPAIR", "Repair"),
         ("REJECTED", "Rejected"),
-        ("UNDER_PROCESS", "Under Process"),
-        ("COMPLETED", "Completed"),
+        ("READY FOR DISPATCH", "Ready for Dispatch"),
+        ("CLOSED", "Closed"),
     ]
 
     event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="complaint_statuses")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="REVIEW")
     remarks = models.TextField(blank=True, null=True)
+    attachments = models.FileField(upload_to="attachments/", blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -72,6 +75,7 @@ class ComplaintStatus(models.Model):
 
 class RepairCost(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="repair_costs")
+    description = models.TextField(blank=True, null=True)
     repair_cost = models.DecimalField(max_digits=10, decimal_places=2)
     attachment = models.FileField(upload_to="attachments/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,12 +85,13 @@ class RepairCost(models.Model):
 
 
 class CustomerPricing(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="customer_pricings")
+    event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="customer_pricing")
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     invoice = models.FileField(upload_to="attachments/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Customer Price for {self.event}: ₹{self.total_price}"
 
-    
+
