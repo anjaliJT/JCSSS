@@ -6,21 +6,27 @@ from datetime import datetime
 from django.db import models
 from apps.users.models import CustomUser
 class Event(models.Model):
-    # STATUS_CHOICES = (
-    #     ('new', 'New'),
-    #     ('in-progress', 'In Progress'),
-    #     ('awaiting-parts', 'Awaiting Parts'),
-    #     ('resolved', 'Resolved'),
-    # )
-    
+    """Complaint model: fields for registering a new complaint."""
+
     unique_token = models.CharField(max_length=100, unique=True, blank=True)
+
+    #pilot information
     pilot_name = models.CharField(max_length=250)
     # status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     certificate_number = models.CharField(max_length=100, blank=True, null=True)
     filed_by = models.CharField(max_length=250, blank=True, null=True)
     designation = models.CharField(max_length=150, blank=True, null=True)
+
+    #UAV details 
     model_number = models.CharField(max_length=50)
+    tail_number = models.CharField(max_length=50, blank=True)
+    uav_type = models.CharField(max_length=150, blank=True)
+    gcs_type = models.CharField(max_length=100, blank=True)
+    gcs_number = models.CharField(max_length=50, blank=True)
+    uav_weight = models.FloatField(help_text="Weight in kg")
+
+    #damage event details
     date_of_occurrence = models.DateField(blank=True)
     time_of_occurrence = models.TimeField(blank=True)
     field_site = models.CharField(max_length=250, blank=True)
@@ -28,11 +34,6 @@ class Event(models.Model):
     damage_level = models.CharField(max_length=50, blank=True)
     flight_mode = models.CharField(max_length=50, blank=True)
     event_phase = models.CharField(max_length=50, blank=True)
-    uav_type = models.CharField(max_length=150, blank=True)
-    tail_number = models.CharField(max_length=50, blank=True)
-    gcs_type = models.CharField(max_length=100, blank=True)
-    gcs_number = models.CharField(max_length=50, blank=True)
-    uav_weight = models.FloatField(help_text="Weight in kg")
     event_description = models.TextField(blank=True)
     initial_actions_taken = models.TextField(blank=True)
     remarks = models.TextField(blank=True, null=True)
