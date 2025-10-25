@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from django.db.models import Sum
 from apps.oem.forms import *
 from django.views.decorators.http import require_POST
-
+from decimal import Decimal
 
 # @login_required
 # def submit_report(request, event_id):
@@ -51,14 +51,31 @@ class ComplaintStatusView(View):
 
         customer_pricing = getattr(event, 'customer_pricing', None)
         total_customer_cost = customer_pricing.total_price if customer_pricing else 0
-
+ # --- compute profit/loss ---
+        trc = Decimal(str(total_repair_cost)) if total_repair_cost else Decimal('0')
+        tcc = Decimal(str(total_customer_cost)) if total_customer_cost else Decimal('0')
+        profit_value = tcc - trc
+        profit_percent = None
+        if trc != Decimal('0'):
+            profit_percent = (profit_value / trc) * Decimal('100')
+        # --- end compute ---
         # ✅ Always include location info — even if it doesn't exist yet
         location = event.locations.last()  # or .first() depending on your logic
         location_data = {
             "location": location.location if location else "",
             "remarks": location.remarks if location else "",
         }
-
+        print(     f'"form": {form},\
+            "cost_form": {cost_form},\
+            "event": {event},\
+            "statuses": {statuses},\
+            "repair_cost": {repair_cost},\
+            "total_repair_cost": {total_repair_cost},\
+            "total_customer_cost": {total_customer_cost},\
+            "latest_status": {latest_status},\
+            "status_choices": {status_choices},\
+            "location_data": {location_data},')
+        
         return render(request, "complaints/complain_status.html", {
             "form": form,
             "cost_form": cost_form,
@@ -70,6 +87,8 @@ class ComplaintStatusView(View):
             "latest_status": latest_status,
             "status_choices": status_choices,
             "location_data": location_data,  # ✅ Always available in template
+            "profit_value": profit_value,
+            "profit_percent": profit_percent,
         })
 
 @require_POST
