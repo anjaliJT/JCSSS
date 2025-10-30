@@ -197,9 +197,6 @@ class ComplaintDetailView(LoginRequiredMixin,View):
 
     def get(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        # meteorology = get_object_or_404(Meteorology, pk=pk)
-
-        # attachments = Attachment.objects.filter(event=event)
         messages.info(request,"You only view your details.")
 
         is_completed = bool(event)
@@ -209,9 +206,8 @@ class ComplaintDetailView(LoginRequiredMixin,View):
             self.template_name,
             {
                 "event": event,
-                # "meteorology": meteorology,
-                # "attachments": attachments,
                 "is_readonly": True,
                 "is_completed": is_completed,
             },
         )
+

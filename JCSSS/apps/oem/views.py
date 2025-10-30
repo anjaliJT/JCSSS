@@ -45,13 +45,15 @@ class ComplaintStatusView(View):
         statuses = event.complaint_statuses.order_by('updated_at')
         latest_status = statuses.last()
         status_choices = ComplaintStatus.STATUS_CHOICES
+        location_choices = RepairLocation.LOCATION_CHOICES
 
         repair_cost = event.repair_costs.order_by('created_at')
         total_repair_cost = repair_cost.aggregate(total=Sum('repair_cost'))['total'] or 0
 
         customer_pricing = getattr(event, 'customer_pricing', None)
         total_customer_cost = customer_pricing.total_price if customer_pricing else 0
- # --- compute profit/loss ---
+
+        # --- compute profit/loss ---
         trc = Decimal(str(total_repair_cost)) if total_repair_cost else Decimal('0')
         tcc = Decimal(str(total_customer_cost)) if total_customer_cost else Decimal('0')
         profit_value = tcc - trc
@@ -59,23 +61,15 @@ class ComplaintStatusView(View):
         if trc != Decimal('0'):
             profit_percent = (profit_value / trc) * Decimal('100')
         # --- end compute ---
+        
         # ✅ Always include location info — even if it doesn't exist yet
-        location = event.locations.last()  # or .first() depending on your logic
+        location = getattr(event, 'location', None)
         location_data = {
+            "id": location.id if location else "",
             "location": location.location if location else "",
             "remarks": location.remarks if location else "",
         }
-        print(     f'"form": {form},\
-            "cost_form": {cost_form},\
-            "event": {event},\
-            "statuses": {statuses},\
-            "repair_cost": {repair_cost},\
-            "total_repair_cost": {total_repair_cost},\
-            "total_customer_cost": {total_customer_cost},\
-            "latest_status": {latest_status},\
-            "status_choices": {status_choices},\
-            "location_data": {location_data},')
-        
+
         return render(request, "complaints/complain_status.html", {
             "form": form,
             "cost_form": cost_form,
@@ -86,10 +80,13 @@ class ComplaintStatusView(View):
             "total_customer_cost": total_customer_cost,
             "latest_status": latest_status,
             "status_choices": status_choices,
-            "location_data": location_data,  # ✅ Always available in template
+            "location_data": location_data,# ✅ Always available in template
+            "location_choices": location_choices,
             "profit_value": profit_value,
             "profit_percent": profit_percent,
         })
+
+
 
 @require_POST
 def set_complaint_location_view(request, pk):
@@ -97,15 +94,42 @@ def set_complaint_location_view(request, pk):
     location_value = request.POST.get("location")
     remarks = request.POST.get("remarks", "")
 
+    print("POST:", request.POST)
+    print("Location value:", location_value)
+
     if location_value:
-        # Save the location
-        Location.objects.create(
+        RepairLocation.objects.create(
             event=event,
             location=location_value,
             remarks=remarks
         )
 
     return redirect("fetch_complaint_status", pk=pk)
+
+from django.http import JsonResponse
+@require_POST
+def update_location_view(request, pk):
+    location = get_object_or_404(RepairLocation, pk=pk)
+    event = location.event
+    print(location.location)
+
+    if not location:
+        return JsonResponse({"error": "No location found for this event."}, status=404)
+
+    location_value = request.POST.get("location")
+    remarks = request.POST.get("remarks")
+
+    if not location_value:
+        return JsonResponse({"error": "Location is required."}, status=400)
+
+    location.location = location_value
+    location.remarks = remarks
+    location.save()
+    
+    print(location_value)
+    messages.success(request, "Repair location updated.")
+    return redirect("fetch_complaint_status", pk=event.id)
+    
 
 
 class UpdateStatusView(View):

@@ -24,17 +24,22 @@
       <div class="row">
         <div class="col-md-8">
           <div class="complaint-id">#{{event.unique_token}}</div>
-          <div class="customer-name">{{event.organization}}</div>
+          <div class="customer-name">{{event.model_number}}</div>
           <div class="mt-2">
            
             <span class="status-badge status-active">  {{ latest_status.get_status_display|default:"No Status" }}</span>
-            <span class="location-badge location-oem ms-2" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{location_data.location|default:"OEM Site"}}</span>
+            <span class="location-badge location-oem ms-2" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
             
             <!-- <span class="customer-only ms-2">Awaiting Your Approval</span> -->
             <!-- <span class="oem-only ms-2">Assigned to: John Smith</span> -->
           </div>
         </div>
         <div class="col-md-4 text-md-end">
+          <div class="col-auto">
+              <button type="button" class="btn  btn-outline-primary" onclick="history.back()">
+                  <i class="fas fa-arrow-left me-2"></i>Back to Complaints
+              </button>
+          </div>
           <div class="text-muted small">Product: {{event.model_number}}</div>
           <div class="text-muted small">Tail No: {{event.tail_number}}</div>
           <div class="text-muted small">Registered at: {{ event.reported_at|date:"d/m/Y" }}</div>
@@ -97,9 +102,9 @@
 
                         <!-- ✅ Edit button opens modal with the status ID -->
                         {% if user.role == "CSM" %}
-                         <div class="d-flex mt-2">
+                         <div class="d-flex mt-2" title="Edit Status">
                             <a href="#" 
-                              class="btn btn-sm btn-primary"
+                              class="btn btn-sm btn-outline-primary"
                               data-bs-toggle="modal"
                               data-bs-target="#editStatusModal"
                               data-status-id="{{ s.id }}"
@@ -110,7 +115,7 @@
                             <!-- Delete Button -->
                             <form method="POST" action="{% url 'delete_status' s.id %}" onsubmit="return confirm('Are you sure you want to delete this status?');">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger ms-1">
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Delete Status">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -129,23 +134,9 @@
             </div>
           </div>
           
-          <!-- Product Image Section -->
-          {% comment %} <div class="col-12 col-lg-4">
-            <div class="product-image-section">
-              <div class="product-image-container">
-                <i class="fas fa-drone product-icon"></i>
-              </div>
-              <div class="product-details">
-                <h5>DJI Mavic 3 Pro</h5>
-                <p class="text-muted small mb-2">Serial: DJI-M3P-789123</p>
-                <p class="text-muted small">Issue: Connectivity problems</p>
-                <div class="mt-2">
-                  <span class="location-badge location-oem" id="productLocationBadge">OEM Site</span>
-                </div>
-              </div>
-            </div>
-          </div> {% endcomment %}
         </div>
+
+        <!-- Cost Summary -->
 
         <div class="card oem-only">
           <div class="card-header">
@@ -164,21 +155,21 @@
               <div class="profit-loss" id="profitLossIndicator">
                 <!-- Profit/Loss indicator will be shown here -->
                {% if profit_value is not None %}
-    {% if profit_value > 0 %}
-      <div class="alert alert-success mb-0 py-2">
-        <strong>Profit:</strong> ₹{{ profit_value|floatformat:2 }}
-        {% if profit_percent %}<small class="ms-2 text-muted">({{ profit_percent|floatformat:2 }}%)</small>{% endif %}
-      </div>
-    {% elif profit_value < 0 %}
-      <div class="alert alert-danger mb-0 py-2">
-        <strong>Loss:</strong> ₹{{ profit_value|floatformat:2 }}
-      </div>
-    {% else %}
-      <div class="alert alert-secondary mb-0 py-2">Break-even</div>
-    {% endif %}
-  {% else %}
-    <div class="text-muted small">No pricing data</div>
-  {% endif %}
+                {% if profit_value > 0 %}
+                  <div class="alert alert-success mb-0 py-2">
+                    <strong>Profit:</strong> ₹{{ profit_value|floatformat:2 }}
+                    {% if profit_percent %}<small class="ms-2 text-muted">({{ profit_percent|floatformat:2 }}%)</small>{% endif %}
+                  </div>
+                {% elif profit_value < 0 %}
+                  <div class="alert alert-danger mb-0 py-2">
+                    <strong>Loss:</strong> ₹{{ profit_value|floatformat:2 }}
+                  </div>
+                {% else %}
+                  <div class="alert alert-secondary mb-0 py-2">Break-even</div>
+                {% endif %}
+              {% else %}
+                <div class="text-muted small">No pricing data</div>
+              {% endif %}
               </div>
             </div>
             
@@ -205,7 +196,7 @@
                         <form method="POST" action="{% url 'delete_repair_cost' cost.id %}" 
                               onsubmit="return confirm('Are you sure you want to delete this repair cost?');" class="mt-1">
                           {% csrf_token %}
-                          <button type="submit" class="btn btn-sm btn-danger ms-3">
+                          <button type="submit" class="btn btn-sm btn-outline-danger ms-3">
                             <i class="fas fa-trash"></i> 
                           </button>
                         </form>
@@ -259,12 +250,18 @@
       <div class="col-lg-4" id="oemPanels">
         
         <!-- Set Repair Location -->
-         <input type="hidden" id="locationData" value="{{ location_data.location|default:'' }}">
+        <input type="hidden" id="locationData" value="{{ location_data.id }}">
+        <div class="card oem-only">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <i class="fas fa-map-marker-alt me-2"></i>Set Repair Location
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm" title="Edit Location" id="enableEditBtn">
+              <i class="fas fa-edit"></i>
+            </button>
 
-        <div class="card oem-only" id= "locationFormHide">
-          <div class="card-header">
-            <i class="fas fa-map-marker-alt me-2"></i>Set Repair Location
           </div>
+
 
           <div class="card-body">
             <form method="POST" action="{% url 'set_complaint_location' event.id %}" id="locationForm">
@@ -429,14 +426,7 @@
             </form>
           </div>
         </div>
-        <!-- Set Customer Pricing Closed -->
-
-
-        <!-- Cost Summary -->
-      
-
-        
-        <!-- Cost Summary Closed -->
+        <!-- Set Customer Pricing Closed --> 
         {% endif %}
 
       </div>
@@ -445,8 +435,8 @@
     </div>
   </div>
 
-<div class="modal fade" id="editStatusModal" tabindex="-1" aria-labelledby="editStatusLabel" aria-hi
-dden="true">
+  <!-- Edit Status Modal -->
+<div class="modal fade" id="editStatusModal" tabindex="-1" aria-labelledby="editStatusLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <!-- Static action URL -->

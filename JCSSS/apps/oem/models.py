@@ -33,23 +33,24 @@ from django.db import models
 from django.utils import timezone
 
 
-class Location(models.Model): # Rename it - > RepairLocation 
+class RepairLocation(models.Model):  
     LOCATION_CHOICES = [
         ("OEM_SITE", "OEM Site"),
         ("CUSTOMER_SITE", "Customer Site"),
         ("VIRTUAL_ASSISTANCE", "Virtual Assistance"),
     ]
 
-    event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="locations")
+    event = models.OneToOneField(Event, on_delete=models.PROTECT, related_name="location")
     location = models.CharField(
         max_length=20,
         choices=LOCATION_CHOICES,
-        default="MANUFACTURER_SITE"
+        default="CUSTOMER_SITE"
     )
     remarks = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.event}"
+        return str(self.event)
+
 
 
 class ComplaintStatus(models.Model):

@@ -165,12 +165,16 @@
 
 .timeline-marker.active {
   background-color: #2c5aa0;
+  background: #007bff; 
   color: white;
-  box-shadow: 0 0 0 4px rgba(44, 90, 160, 0.2);
+  box-shadow: 0 0 8px rgba(0,123,255,0.4);
+  animation: pulse 2s infinite;
 }
+
 
 .timeline-marker.pending {
   background-color: #f8f9fa;
+  background: #6c757d;
   color: #6c757d;
 }
 
@@ -180,6 +184,8 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
+/* .timeline-content { margin-left: 40px; } */
+
 
 .timeline-date {
   font-size: 0.85rem;
@@ -192,6 +198,8 @@
   margin-bottom: 0.5rem;
   color: #343a40;
 }
+/* .timeline-title { font-weight: 600; margin-bottom: 4px; } */
+
 
 .timeline-description {
   font-size: 0.9rem;
@@ -313,13 +321,8 @@
   margin-bottom: 1rem;
 }
 
-/* .customer-view .oem-only {
-  display: none !important;
-} */
 
-/* .oem-view .customer-only {
-  display: none !important;
-} */
+
 
 .repair-cost-history {
   max-height: 300px;
@@ -350,9 +353,12 @@
 }
 
 .location-option.selected {
-  border-color: #2c5aa0;
-  background-color: rgba(44, 90, 160, 0.1);
+  border-color: #2c5aa0 !important;
+  /* background-color: rgba(44, 90, 160, 0.1); */
+  background-color: #e9f3ff !important;
+  border: 2px solid #007bff;
 }
+
 
 .location-icon {
   font-size: 1.5rem;
@@ -496,9 +502,6 @@
   font-size: 14px;
 } */
 
-.timeline-marker.completed { background: #28a745; }
-.timeline-marker.active { background: #007bff; box-shadow: 0 0 8px rgba(0,123,255,0.4); animation: pulse 2s infinite; }
-.timeline-marker.pending { background: #6c757d; }
 
 @keyframes pulse {
   0% { transform: scale(1); }
@@ -506,8 +509,4 @@
   100% { transform: scale(1); }
 }
 
-.timeline-content { margin-left: 40px; }
-.timeline-date { font-size: 0.85rem; color: #666; }
-.timeline-title { font-weight: 600; margin-bottom: 4px; }
-.timeline-description { color: #777; }
 

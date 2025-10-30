@@ -22,6 +22,7 @@ urlpatterns = [
     path('complaint/<int:pk>/fetch/', ComplaintStatusView.as_view(), name='fetch_complaint_status'),
     
     path('complaint/<int:pk>/set-location/', set_complaint_location_view, name='set_complaint_location'),
+    path('complaint/<int:pk>/update-location/', update_location_view, name='update_location'),
 
 
     # add, edit and delete Status

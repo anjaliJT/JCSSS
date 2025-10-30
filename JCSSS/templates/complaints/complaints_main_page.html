@@ -131,9 +131,9 @@
                               {% if latest_status %}
                                 <span class="badge 
                                     {% if latest_status.status == 'REVIEW' %}bg-primary
-                                    {% elif latest_status.status == 'UNDER_PROCESS' %}bg-info
-                                    {% elif latest_status.status == 'ACCEPTED' %}bg-warning
-                                    {% elif latest_status.status == 'REJECTED' %}bg-danger
+                                    {% elif latest_status.status == 'ACCEPTED' %}bg-info
+                                    {% elif latest_status.status == 'REJECTED' %}bg-warning
+                                    {% elif latest_status.status == 'CLOSED' %}bg-danger
                                     {% elif latest_status.status == 'COMPLETED' %}bg-success
                                     {% endif %}">
                                     {{ latest_status.get_status_display }}
