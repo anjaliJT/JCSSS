@@ -55,7 +55,7 @@ def send_mail_csm(event_id):
     ComplaintStatus.objects.create(
         event=event,
         status="REVIEW",
-        remarks="Complaint registered, pending review",
+        remarks="Complaint registered, Review pending.",
     )
 
     return f"Mail sent for event {event.unique_token}"

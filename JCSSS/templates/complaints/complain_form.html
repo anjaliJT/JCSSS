@@ -19,10 +19,11 @@
         <p class="text-muted">Report an issue with your UAV for support assistance</p>
     </div>
     <div class="col-auto">
-        <a href="{% url 'complaint_list' %}" class="btn btn-outline-secondary">
+        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
             <i class="fas fa-arrow-left me-2"></i>Back to Complaints
-        </a>
+        </button>
     </div>
+
 </div>
 
 <!-- Progress Steps -->
@@ -247,7 +248,7 @@
                         <label for="uavWeight" class="form-label required">UAV Weight (kg)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-weight"></i></span>
-                            <input type="number" id="uavWeight" name="uav_weight" class="form-control" placeholder="Enter weight" required value="{{ event.uav_weight|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="number" id="uavWeight" name="uav_weight" class="form-control" placeholder="Enter weight" step="any" required value="{{ event.uav_weight|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
 
@@ -256,21 +257,21 @@
                         <label for="wind" class="form-label">Wind Speed (knots)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-wind"></i></span>
-                            <input type="number" class="form-control" id="wind" name="wind" placeholder="Enter speed" value="{{ meteorology.wind|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="number" class="form-control" id="wind" name="wind" placeholder="Enter speed" step="any" value="{{ event.wind|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="temperature" class="form-label">Temperature (°C)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-temperature-high"></i></span>
-                            <input type="number" class="form-control" id="temperature" name="temperature" placeholder="Enter temp" value="{{ meteorology.temperature|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="number" class="form-control" id="temperature" name="temperature" placeholder="Enter temp" value="{{ event.temperature|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="pressure" class="form-label">Pressure QNH (hPa)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-compress-arrows-alt"></i></span>
-                            <input type="number" class="form-control" id="pressure" name="pressure_qnh" placeholder="Enter QNH" value="{{ meteorology.pressure_qnh|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="number" class="form-control" id="pressure" name="pressure_qnh" placeholder="Enter QNH" value="{{ event.pressure_qnh|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                 </div>
@@ -294,31 +295,31 @@
                                     type="checkbox" 
                                     id="rain" 
                                     name="rain"
-                                    {% if meteorology.rain %}checked{% endif %}
+                                    {% if event.rain %}checked{% endif %}
                                     {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="rain">Rain</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="icing" name="icing" value="true" {% if meteorology.icing %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="icing" name="icing" value="true" {% if event.icing %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="icing">
                                     <i class="fas fa-icicles me-2"></i>Icing
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="snow" name="snow" value="true" {% if meteorology.snow %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="snow" name="snow" value="true" {% if event.snow %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="snow">
                                     <i class="fas fa-snowflake me-2"></i>Snow
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="turbulence" name="turbulence" value="true" {% if meteorology.turbulence %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="turbulence" name="turbulence" value="true" {% if event.turbulence %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="turbulence">
                                     <i class="fas fa-wind me-2"></i>Turbulence
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="windShear" name="windshear" {% if meteorology.windshear %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="windShear" name="windshear" {% if event.windshear %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="windShear">
                                     <i class="fas fa-wind me-2"></i>Wind Shear
                                 </label>
@@ -430,38 +431,49 @@
 
 
     <!-- Show uploaded attachments -->
-    {% if attachments %}
+    {% if event %}
         <div class="col-md-12 mt-4">
-            <h5>Uploaded Attachments</h5>
-            <ul class="list-group">
-                {% for attach in attachments %}
-                    {% if attach.file_video %}
-                        <li class="list-group-item">
-                            🎥 <a href="{{ attach.file_video.url }}" target="_blank">Video Evidence</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_image1 %}
-                        <li class="list-group-item">
-                            🖼 <a href="{{ attach.file_image1.url }}" target="_blank">Photo 1</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_image2 %}
-                        <li class="list-group-item">
-                            🖼 <a href="{{ attach.file_image2.url }}" target="_blank">Photo 2</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_image3 %}
-                        <li class="list-group-item">
-                            🖼 <a href="{{ attach.file_image3.url }}" target="_blank">Photo 3</a>
-                        </li>
-                    {% endif %}
-                    {% if attach.file_log %}
-                        <li class="list-group-item">
-                            📄 <a href="{{ attach.file_log.url }}" target="_blank">Flight Log</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+            <h4>Attachments</h4>
+            {% if event.file_video %}
+            <p><strong>Video:</strong> 
+                <a href="{{ event.file_video.url }}" target="_blank">View Video</a>
+            </p>
+            {% endif %}
+
+            {% if event.file_image1 %}
+            <p><strong>Image 1:</strong> 
+                <a href="{{ event.file_image1.url }}" target="_blank">
+                <img src="{{ event.file_image1.url }}" alt="Image 1" width="200">
+                </a>
+            </p>
+            {% endif %}
+
+            {% if event.file_image2 %}
+            <p><strong>Image 2:</strong> 
+                <a href="{{ event.file_image2.url }}" target="_blank">
+                <img src="{{ event.file_image2.url }}" alt="Image 2" width="200">
+                </a>
+            </p>
+            {% endif %}
+
+            {% if event.file_image3 %}
+            <p><strong>Image 3:</strong> 
+                <a href="{{ event.file_image3.url }}" target="_blank">
+                <img src="{{ event.file_image3.url }}" alt="Image 3" width="200">
+                </a>
+            </p>
+            {% endif %}
+
+            {% if event.file_log %}
+            <p><strong>Log File:</strong> 
+                <a href="{{ event.file_log.url }}" target="_blank">Download Log</a>
+            </p>
+            {% endif %}
+
+            {% if not event.file_video and not event.file_image1 and not event.file_image2 and not event.file_image3 and not event.file_log %}
+            <p>No attachments uploaded.</p>
+            {% endif %}
+
         </div>
     {% endif %}
 </div>

@@ -9,7 +9,7 @@ from .models import  *
 #     list_filter = ("status", "location")
 #     search_fields = ("event__unique_token", "remarks")
 
-admin.site.register(Location)
+admin.site.register(RepairLocation)
 admin.site.register(ComplaintStatus)
 admin.site.register(RepairCost)
 admin.site.register(CustomerPricing)
