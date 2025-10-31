@@ -95,7 +95,7 @@ def edit_product(request, pk):
 
         product.save()
 
-        # ✅ Load data for the list view
+        # Load data for the list view
         products = Product.objects.all()
         models = Product_model.objects.all()
 
@@ -122,21 +122,34 @@ def import_products(request):
         file = request.FILES["import_file"]
 
         try:
-            # Read CSV or Excel
+            # Read CSV or Excel with proper handling of whitespace and quoted fields
             if file.name.endswith(".csv"): 
-                df = pd.read_csv(file)
+                df = pd.read_csv(
+                    file,
+                    dtype=str,  # Read all columns as strings initially
+                    skipinitialspace=True,
+                    on_bad_lines='warn'  # Don't fail on problematic lines
+                )
             elif file.name.endswith((".xls", ".xlsx")):
-                df = pd.read_excel(file)
+                df = pd.read_excel(file, dtype=str)
             else:
                 messages.error(request, "Invalid file type. Please upload CSV or Excel.")
                 return redirect("product_list")
+            
+            # Clean column names by removing any whitespace
+            df.columns = df.columns.str.strip()
 
-            # ✅ Check required columns
+            # Check required columns
             required_columns = [
                 "product_code", "order_name", "manufecturing_Date", 
                 "is_sold", "sold_date", "source_location", "warranty_period", "army_command", "unit_name", "formation"
             ]
-            missing = [col for col in required_columns if col not in df.columns]
+            
+            # Convert column names to lowercase for case-insensitive comparison
+            df_columns = [col.lower() for col in df.columns]
+            required_columns_lower = [col.lower() for col in required_columns]
+            
+            missing = [col for col in required_columns if col.lower() not in df_columns]
             if missing:
                 messages.error(
                     request, 
@@ -145,24 +158,57 @@ def import_products(request):
                 )
                 return redirect("product_list")
 
-            # ✅ Process rows
+            # Process rows
             for _, row in df.iterrows():
-                Product.objects.update_or_create(
-                    product_code=row["product_code"],
-                    defaults={
-                        "order_name": row.get("order_name"),
-                        "manufecturing_Date": row.get("manufecturing_Date"),
-                        "is_sold": row.get("is_sold", False),
-                        "sold_date": row.get("sold_date"),
-                        "source_location": row.get("source_location"),
-                        "warranty_period": row.get("warranty_period", 12),
-                        "army_command": row.get("army_command"),
-                        "unit_name": row.get("unit_name"),
-                        "formation": row.get("formation"),
-                        
-                    }
-                )
-            messages.success(request, "✅ Products imported successfully.")
+                try:
+                    # Handle date formats with flexible parsing
+                    manufecturing_date = pd.to_datetime(row["manufecturing_Date"]).date() if pd.notna(row["manufecturing_Date"]) else None
+                    sold_date = pd.to_datetime(row["sold_date"]).date() if pd.notna(row["sold_date"]) else None
+                    
+                    # Handle boolean values more flexibly
+                    is_sold = str(row.get("is_sold", "")).upper().strip() in ["TRUE", "YES", "1"]
+                    
+                    # Try to get product model from order_name
+                    product_model = None
+                    order_name = str(row.get("order_name", "")).strip()
+                    if order_name:
+                        product_model, _ = Product_model.objects.get_or_create(
+                            model_name=order_name,
+                            defaults={'model_name': order_name}
+                        )
+                    
+                    # Handle warranty period conversion
+                    warranty_str = str(row.get("warranty_period", "24 Months"))
+                    warranty_period = 24  # default value
+                    try:
+                        # Extract the first number from the string
+                        import re
+                        numbers = re.findall(r'\d+', warranty_str)
+                        if numbers:
+                            warranty_period = int(numbers[0])
+                    except ValueError:
+                        pass  # Keep default value if conversion fails
+                    
+                    Product.objects.update_or_create(
+                        product_code=str(row["product_code"]).strip(),
+                        defaults={
+                            "product_model": product_model,
+                            "order_name": order_name,
+                            "manufecturing_Date": manufecturing_date,
+                            "is_sold": is_sold,
+                            "sold_date": sold_date,
+                            "source_location": str(row.get("source_location", "")).strip(),
+                            "warranty_period": warranty_period,
+                            "army_command": str(row.get("army_command", "")).strip(),
+                            "unit_name": str(row.get("unit_name", "")).strip(),
+                            "formation": str(row.get("formation", "")).strip(),
+                        }
+                    )
+                except Exception as e:
+                    messages.error(request, f"Error processing row {row['product_code']}: {str(e)}")
+                    continue
+
+            messages.success(request, "Products imported successfully.")
             return redirect("product_list")
 
         except Exception as e:
