@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block title %}Product Repair Summary{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/repair_history.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+        <!-- Product Header -->
+        <div class="product-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-drone fa-2x text-primary me-3"></i>
+                        <div>
+                            <h1 class="h3 mb-1">DJI Mavic 3 Pro</h1>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-hashtag me-1"></i>Serial: DJI-M3P-789123
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-primary">Active</span>
+                        <span class="badge bg-success">Warranty Valid</span>
+                        <span class="badge bg-info">4 Repairs Completed</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-download me-1"></i>Export Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="summary-card text-center">
+                    <div class="metric-value cost-metric">5</div>
+                    <div class="metric-label">Total Repairs</div>
+                    <div class="mt-2">
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up me-1"></i>2 this year
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="summary-card text-center">
+                    <div class="metric-value cost-metric">₹18,500</div>
+                    <div class="metric-label">Total Repair Cost</div>
+                    <div class="mt-2">
+                        <small class="text-muted">Average: ₹3,700 per repair</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="summary-card text-center">
+                    <div class="metric-value cost-metric">₹24,000</div>
+                    <div class="metric-label">Charged to Client</div>
+                    <div class="mt-2">
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>100% collected
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="summary-card text-center">
+                    <div class="metric-value profit-metric">₹5,500</div>
+                    <div class="metric-label">Net Profit</div>
+                    <div class="mt-2">
+                        <small class="text-success">
+                            <i class="fas fa-chart-line me-1"></i>29.7% margin
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repair History -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Repair History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="p-4">
+                    <!-- Repair 1 -->
+                    <div class="repair-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
+                                        <i class="fas fa-tools text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Motor Replacement & Circuit Repair</h6>
+                                        <p class="text-muted small mb-0">Repair #R-2024-001</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-end text-md-center">
+                                    <div class="h6 mb-1">₹6,000</div>
+                                    <small class="text-muted">Feb 15, 2024</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <span class="status-badge status-completed me-2">Completed</span>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repair 2 -->
+                    <div class="repair-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 rounded p-2 me-3">
+                                        <i class="fas fa-battery-half text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Battery System Overhaul</h6>
+                                        <p class="text-muted small mb-0">Repair #R-2023-045</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-end text-md-center">
+                                    <div class="h6 mb-1">₹4,500</div>
+                                    <small class="text-muted">Nov 8, 2023</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <span class="status-badge status-completed me-2">Completed</span>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repair 3 -->
+                    <div class="repair-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info bg-opacity-10 rounded p-2 me-3">
+                                        <i class="fas fa-camera text-info"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Camera Gimbal Replacement</h6>
+                                        <p class="text-muted small mb-0">Repair #R-2023-028</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-end text-md-center">
+                                    <div class="h6 mb-1">₹5,500</div>
+                                    <small class="text-muted">Jul 22, 2023</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <span class="status-badge status-completed me-2">Completed</span>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repair 4 -->
+                    <div class="repair-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 rounded p-2 me-3">
+                                        <i class="fas fa-microchip text-success"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Flight Controller Replacement</h6>
+                                        <p class="text-muted small mb-0">Repair #R-2023-015</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-end text-md-center">
+                                    <div class="h6 mb-1">₹2,500</div>
+                                    <small class="text-muted">Mar 10, 2023</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <span class="status-badge status-completed me-2">Completed</span>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
