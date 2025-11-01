@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 import datetime
 from datetime import datetime, date
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 @login_required(login_url = 'login')
@@ -23,22 +24,6 @@ def create_product(request):
     return render(request,"products/product_form.html",{"form":form})
         
 
-# views.py
-
-# def product_list(request):
-#     products = Product.objects.all()
-#     models = Product_model.objects.all()
-#     selected_model = request.GET.get("model")
-#     print(selected_model)
-
-#     if selected_model:
-#         products = products.filter(product_model_id=selected_model)
-
-#     return render(request, "products/products_main_page.html", {
-#         "products": products,
-#         "models": models,
-#         "selected_model": selected_model,
-#     })
 
 def product_list(request):
     products = Product.objects.all()
@@ -191,10 +176,11 @@ def export_products(request):
     df.to_excel(response, index=False)
     return response
 
-
-
-
-    
+@require_POST
+def delete_product(request, pk):
+    product_obj = get_object_or_404(Product, id=pk)
+    product_obj.delete()
+    return redirect('product_list')
 
 
 

@@ -14,7 +14,7 @@ class Product_model(models.Model):
 class Product(models.Model):
     # this table contain information of each models products
     product_model = models.ForeignKey(Product_model,on_delete=models.CASCADE,null=True,blank=True)
-    product_code = models.CharField(max_length=50, unique=True)  # tail number 
+    tail_number = models.CharField(max_length=50, unique=True)  # tail number 
     order_name = models.CharField(max_length=255)
     manufecturing_Date = models.DateField()
     is_sold = models.BooleanField(default=False)
@@ -26,7 +26,7 @@ class Product(models.Model):
     warranty_period = models.IntegerField(help_text="Warranty in months", default=24)
 
     def __str__(self):
-        return f"{self.order_name} ({self.product_code})"
+        return f"{self.order_name} ({self.tail_number})"
     
     @property
     def warranty_expiry_date(self):
