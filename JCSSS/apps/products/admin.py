@@ -10,7 +10,7 @@ class ProductModelAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin): 
-    list_display  =  ("product_code","order_name","product_model","manufecturing_Date",
+    list_display  =  ("tail_number","order_name","product_model","manufecturing_Date",
     "is_sold","sold_date","source_location","warranty_period","warranty_expiry_date")
     list_filter = ("product_model","is_sold")
-    search_fields = ("product_code",)
+    search_fields = ("tail_number",)

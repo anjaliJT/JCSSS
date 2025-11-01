@@ -14175,3 +14175,118 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: success() missing 1 required positional argument: 'message'
 "POST /csm/complaint/7/update-location/ HTTP/1.1" 500 78255
+Internal Server Error: /product/products/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 86, in edit_product
+    return render(request, "products/products_main_page.html", {
+        "products": products,
+    ...<3 lines>...
+        "selected_warranty": None,
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'delete_status' with arguments '('',)' not found. 1 pattern(s) tried: ['csm/complaint/status/(?P<status_id>[0-9]+)/delete/\\Z']
+"POST /product/products/1/edit/ HTTP/1.1" 500 187103
+Internal Server Error: /product/products/1/delete/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+TypeError: delete_product() got an unexpected keyword argument 'pk'
+"POST /product/products/1/delete/ HTTP/1.1" 500 73354
+Internal Server Error: /product/products/1/delete/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+TypeError: delete_product() got an unexpected keyword argument 'pk'
+"POST /product/products/1/delete/ HTTP/1.1" 500 73354
+Internal Server Error: /product/products/1/delete/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+TypeError: delete_product() got an unexpected keyword argument 'pk'
+"POST /product/products/1/delete/ HTTP/1.1" 500 73354
+Internal Server Error: /product/products/1/edit/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 95, in edit_product
+    return render(request, 'edit_product.html', {
+        'product': product,
+        'product_models': Product_model.objects.all()
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: edit_product.html
+"GET /product/products/1/edit/ HTTP/1.1" 500 87249

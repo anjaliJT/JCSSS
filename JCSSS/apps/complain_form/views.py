@@ -1,5 +1,5 @@
 from django.views import View
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
 from django.core.paginator import Paginator
@@ -10,54 +10,6 @@ from .models import Event
 from apps.oem.models import  ComplaintStatus
 from apps.oem.tasks import send_mail_csm
 
-
-# class ComplaintListView(LoginRequiredMixin, View):
-#     login_url = 'login'
-#     redirect_field_name = 'next'
-    
-#     template_name = "complaints/complaints_main_page.html"
-    
-#     def get(self, request):
-#         # Get page number from request (default = 1)
-#         page_number = request.GET.get('page', 1)
-
-#         # Complaints
-#         complaints = Event.objects.all().order_by('-date_of_occurrence')
-#         status = request.GET.get('status')
-#         uav = request.GET.get('uav')
-#         search = request.GET.get('search')
-
-#         if status:
-#             complaints = complaints.filter(status=status)
-#         if uav:
-#             complaints = complaints.filter(tail_number=uav)
-
-#         complaint_paginator = Paginator(complaints, 10)
-#         complaints_page = complaint_paginator.get_page(page_number)
-
-#         # Histories
-#         histories = ComplaintStatus.objects.all().order_by("-id")
-#         history_paginator = Paginator(histories, 10)
-#         histories_page = history_paginator.get_page(page_number)
-
-#         # Unique UAVs
-#         uavs = Event.objects.values_list('uav_type', flat=True).distinct()
-
-#         context = {
-#             'complaints': complaints_page,
-#             # 'approvals': approvals_page,
-#             'histories': histories_page,
-#             'uavs': uavs,
-#             'current_filters': {
-#                 'status': status,
-#                 'uav': uav,
-#                 'search': search,
-#             },
-#         }
-        
-#         return render(request, self.template_name, context)
-
-from django.utils.dateparse import parse_date
 
 class ComplaintListView(LoginRequiredMixin, View):
     login_url = 'login'
@@ -108,8 +60,6 @@ class ComplaintListView(LoginRequiredMixin, View):
         }
 
         return render(request, self.template_name, context)
-
-
 
 class ComplaintRegister(LoginRequiredMixin,View):
     login_url = 'login'
@@ -191,7 +141,6 @@ class ComplaintRegister(LoginRequiredMixin,View):
             # return render(request, self.template_name)
             return HttpResponse(f"Error : {e}") 
 
-from django.shortcuts import get_object_or_404, render
 class ComplaintDetailView(LoginRequiredMixin,View):
     template_name = "complaints/complain_form.html"
 

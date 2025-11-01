@@ -125,10 +125,10 @@
                 <h6 class="mb-3 text-primary">Incident Details</h6>
                 <div class="row mb-4">
                     <div class="col-md-3">
-                        <label for="modelNumber" class="form-label required">Model Number</label>
+                        <label for="modelNumber" class="form-label required">Serial Number</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                            <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Enter model number" required value="{{ event.model_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Enter serial number" required value="{{ event.model_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                     <div class="col-md-3">

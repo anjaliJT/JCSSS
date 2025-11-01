@@ -127,7 +127,7 @@
   position: relative;
 }
 
-.timeline::before {
+/* .timeline::before {
   content: '';
   position: absolute;
   left: 30px;
@@ -136,7 +136,7 @@
   width: 3px;
   background: linear-gradient(to bottom, #2c5aa0, #3a7bd5);
   border-radius: 3px;
-}
+} */
 
 .timeline-item {
   position: relative;
@@ -205,6 +205,30 @@
   font-size: 0.9rem;
   color: #6c757d;
   margin-bottom: 0.5rem;
+}
+
+
+/* 🧩 Remove bottom line after CLOSED status */
+.timeline-item:last-child::after {
+  content: none;
+}
+
+/* Add vertical connector only between items */
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 31px;
+  top: 19px;
+  width: 3px;
+  height: calc(100% - -30px);
+  background: linear-gradient(to bottom, #2c5aa0, #3a7bd5);
+  border-radius: 3px;
+  z-index: 1;
+}
+
+/* Stop line after CLOSED */
+.timeline-item.closed::after {
+  content: none;
 }
 
 .attachment-link {
@@ -385,7 +409,7 @@
     padding-left: 60px;
   }
   
-  .timeline::before {
+  .timeline-item::after {
     left: 25px;
   }
   
@@ -476,31 +500,6 @@
     padding: 0.5rem;
   }
 }
-/* 
-.timeline {
-  position: relative;
-  margin: 20px 0;
-  padding-left: 40px;
-  border-left: 3px solid #e0e0e0;
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-.timeline-marker {
-  position: absolute;
-  left: -10px;
-  top: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 28px;
-  color: white;
-  font-size: 14px;
-} */
 
 
 @keyframes pulse {
