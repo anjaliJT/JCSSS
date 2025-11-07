@@ -224,7 +224,7 @@
                         <label for="tailNumber" class="form-label required">Tail Number</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                            <input type="text" class="form-control" id="tailNumber" name="tail_number" placeholder="Enter tail number" required value="{{ event.tail_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="text" class="form-control" style="text-transform: uppercase;" id="tailNumber" name="tail_number" placeholder="Enter tail number" required value="{{ event.tail_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                     <div class="col-md-3">

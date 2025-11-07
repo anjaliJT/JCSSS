@@ -36,5 +36,10 @@ class Product(models.Model):
     @property
     def warranty_status(self): 
         return "Expired" if date.today() > self.warranty_expiry_date else "Active"
+    
+    def save(self, *args, **kwargs):
+        if self.tail_number:
+            self.tail_number = self.tail_number.upper()  # Convert to uppercase before saving
+        super().save(*args, **kwargs)
 
     

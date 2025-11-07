@@ -14290,3 +14290,1910 @@ Traceback (most recent call last):
     raise TemplateDoesNotExist(template_name, chain=chain)
 django.template.exceptions.TemplateDoesNotExist: edit_product.html
 "GET /product/products/1/edit/ HTTP/1.1" 500 87249
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return redirect(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 51, in redirect
+    resolve_url(to, *args, **kwargs),
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 184, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for '<WSGIRequest: GET '/product/repair/'>' not found. '<WSGIRequest: GET '/product/repair/'>' is not a valid view function or pattern name.
+"GET /product/repair/ HTTP/1.1" 500 90757
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182371
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182371
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182371
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182371
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182379
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182379
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182379
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182379
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182379
+Internal Server Error: /product/repair/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 228, in repair_history_view
+    return render(request, "complaints/repair_history.html")
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 4: 'static', expected 'endblock'. Did you forget to register or load this tag?
+"GET /product/repair/ HTTP/1.1" 500 182379
+Internal Server Error: /product/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 56, in product_list_view
+    return render(request, "products/products_main_page.html", {
+        "products": products,
+    ...<3 lines>...
+        "selected_warranty": selected_warranty,
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'reapir_history' not found. 'reapir_history' is not a valid view function or pattern name.
+"GET /product/ HTTP/1.1" 500 177571
+Internal Server Error: /product/1/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+TypeError: repair_history_view() got an unexpected keyword argument 'pk'
+"GET /product/1/repair-history/ HTTP/1.1" 500 68325
+Internal Server Error: /product/1/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+TypeError: repair_history_view() got an unexpected keyword argument 'pk'
+"GET /product/1/repair-history/ HTTP/1.1" 500 68325
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 242, in repair_history_view
+    print(events.model_number)
+          ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'QuerySet' object has no attribute 'model_number'
+"GET /product/2/repair-history/ HTTP/1.1" 500 72977
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 242, in repair_history_view
+    print(events.model_number,"-----------<<<<<<<<<")
+          ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'QuerySet' object has no attribute 'model_number'
+"GET /product/2/repair-history/ HTTP/1.1" 500 72960
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 242, in repair_history_view
+    print(events.first().model_number, "-----------<<<<<<<<<")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'model_number'
+"GET /product/3/repair-history/ HTTP/1.1" 500 72911
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 279, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 199, in render
+    len_values = len(values)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 815, in as_sql
+    distinct_result, distinct_params = self.connection.ops.distinct_sql(
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        distinct_fields,
+        ^^^^^^^^^^^^^^^^
+        distinct_params,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\backends\base\operations.py", line 204, in distinct_sql
+    raise NotSupportedError(
+        "DISTINCT ON fields is not supported by this database backend"
+    )
+django.db.utils.NotSupportedError: DISTINCT ON fields is not supported by this database backend
+"GET /product/2/repair-history/ HTTP/1.1" 500 178779
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 257, in repair_history_view
+    .aggregate(total=Coalesce(Sum("repair_cost"), Value(0)))
+     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 588, in aggregate
+    return self.query.chain().get_aggregation(self.db, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ~~~~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases or bool(combinator),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 85, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 74, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ~~~~~~~~~~~~~~~^
+        with_col_aliases=with_col_aliases,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 329, in get_select
+    sql, params = col.select_format(self, sql, params)
+                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\expressions.py", line 498, in select_format
+    if hasattr(self.output_field, "select_format"):
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\expressions.py", line 327, in output_field
+    output_field = self._resolve_output_field()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\expressions.py", line 365, in _resolve_output_field
+    raise FieldError(
+    ...<6 lines>...
+    )
+django.core.exceptions.FieldError: Expression contains mixed types: DecimalField, IntegerField. You must set output_field.
+"GET /product/2/repair-history/ HTTP/1.1" 500 127432
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 251, in repair_history_view
+    print(latest_status_subquery)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 360, in __repr__
+    data = list(self[: REPR_OUTPUT_SIZE + 1])
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 216, in __iter__
+    for row in compiler.results_iter(
+               ~~~~~~~~~~~~~~~~~~~~~^
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+        MULTI, chunked_fetch=chunked_fetch, chunk_size=chunk_size
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 794, in as_sql
+    self.compile(self.where) if self.where is not None else ("", [])
+    ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\where.py", line 151, in as_sql
+    sql, params = compiler.compile(child)
+                  ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\fields\related_lookups.py", line 127, in as_sql
+    return super().as_sql(compiler, connection)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 426, in as_sql
+    return super().as_sql(compiler, connection)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 258, in as_sql
+    rhs_sql, rhs_params = self.process_rhs(compiler, connection)
+                          ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 129, in process_rhs
+    sql, params = compiler.compile(value)
+                  ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\expressions.py", line 952, in as_sql
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: This queryset contains a reference to an outer query and may only be used in a subquery.
+"GET /product/2/repair-history/ HTTP/1.1" 500 146170
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 251, in repair_history_view
+    print(latest_status_subquery,"<<<<<<<<<<<<------")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 360, in __repr__
+    data = list(self[: REPR_OUTPUT_SIZE + 1])
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 216, in __iter__
+    for row in compiler.results_iter(
+               ~~~~~~~~~~~~~~~~~~~~~^
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+        MULTI, chunked_fetch=chunked_fetch, chunk_size=chunk_size
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 794, in as_sql
+    self.compile(self.where) if self.where is not None else ("", [])
+    ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\where.py", line 151, in as_sql
+    sql, params = compiler.compile(child)
+                  ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\fields\related_lookups.py", line 127, in as_sql
+    return super().as_sql(compiler, connection)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 426, in as_sql
+    return super().as_sql(compiler, connection)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 258, in as_sql
+    rhs_sql, rhs_params = self.process_rhs(compiler, connection)
+                          ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 129, in process_rhs
+    sql, params = compiler.compile(value)
+                  ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\expressions.py", line 952, in as_sql
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: This queryset contains a reference to an outer query and may only be used in a subquery.
+"GET /product/2/repair-history/ HTTP/1.1" 500 146474
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 253, in repair_history_view
+    print(latest_status_subquery)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 360, in __repr__
+    data = list(self[: REPR_OUTPUT_SIZE + 1])
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 384, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\query.py", line 216, in __iter__
+    for row in compiler.results_iter(
+               ~~~~~~~~~~~~~~~~~~~~~^
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1572, in results_iter
+    results = self.execute_sql(
+        MULTI, chunked_fetch=chunked_fetch, chunk_size=chunk_size
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 794, in as_sql
+    self.compile(self.where) if self.where is not None else ("", [])
+    ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\where.py", line 151, in as_sql
+    sql, params = compiler.compile(child)
+                  ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\fields\related_lookups.py", line 127, in as_sql
+    return super().as_sql(compiler, connection)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 426, in as_sql
+    return super().as_sql(compiler, connection)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 258, in as_sql
+    rhs_sql, rhs_params = self.process_rhs(compiler, connection)
+                          ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\lookups.py", line 129, in process_rhs
+    sql, params = compiler.compile(value)
+                  ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\sql\compiler.py", line 577, in compile
+    sql, params = node.as_sql(self, self.connection)
+                  ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\db\models\expressions.py", line 952, in as_sql
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: This queryset contains a reference to an outer query and may only be used in a subquery.
+"GET /product/2/repair-history/ HTTP/1.1" 500 146204
+Internal Server Error: /product/2/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'endblock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 300, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 870, in do_for
+    nodelist_empty = parser.parse(("endfor",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 567, in invalid_block_tag
+    raise self.error(
+    ...<8 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 165: 'endblock', expected 'endfor'. Did you forget to register or load this tag?
+"GET /product/2/repair-history/ HTTP/1.1" 500 208031
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167242
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167242
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167379
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167379
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167379
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167379
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167379
+Internal Server Error: /product/3/repair-history/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\products\views.py", line 302, in repair_history_view
+    return render(request, "complaints/repair_history.html", context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 749, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaultfilters.py", line 852, in divisibleby
+    return int(value) % int(arg) == 0
+           ~~~~~~~~~~~^~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+"GET /product/3/repair-history/ HTTP/1.1" 500 167379
+Internal Server Error: /csm/complaint/1/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 50, in get
+    return render(request, "complaints/complain_status.html", {
+        "form": form,
+    ...<11 lines>...
+        "profit_percent": profit_percent,
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 961, in do_if
+    condition = TemplateIfParser(parser, bits).parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 195, in parse
+    retval = self.expression()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 206, in expression
+    left = t.nud(self)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 24, in nud
+    raise parser.error_class(
+        "Not expecting '%s' in this position in if tag." % self.id
+    )
+django.template.exceptions.TemplateSyntaxError: Not expecting 'and' in this position in if tag.
+"GET /csm/complaint/1/fetch/ HTTP/1.1" 500 318836
+Internal Server Error: /csm/complaint/1/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 180, in translate_token
+    op = OPERATORS[token]
+         ~~~~~~~~~^^^^^^^
+KeyError: "=='CLOSED'"
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 50, in get
+    return render(request, "complaints/complain_status.html", {
+        "form": form,
+    ...<11 lines>...
+        "profit_percent": profit_percent,
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 961, in do_if
+    condition = TemplateIfParser(parser, bits).parse()
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 894, in __init__
+    super().__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 171, in __init__
+    mapped_tokens.append(self.translate_token(token))
+                         ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 182, in translate_token
+    return self.create_var(token)
+           ~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 897, in create_var
+    return TemplateLiteral(self.template_parser.compile_filter(value), value)
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 710, in __init__
+    raise TemplateSyntaxError(
+    ...<2 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '=='CLOSED'' from '=='CLOSED''
+"GET /csm/complaint/1/fetch/ HTTP/1.1" 500 354377
+Internal Server Error: /csm/complaint/1/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 180, in translate_token
+    op = OPERATORS[token]
+         ~~~~~~~~~^^^^^^^
+KeyError: '=!'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 50, in get
+    return render(request, "complaints/complain_status.html", {
+        "form": form,
+    ...<11 lines>...
+        "profit_percent": profit_percent,
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 961, in do_if
+    condition = TemplateIfParser(parser, bits).parse()
+                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 894, in __init__
+    super().__init__(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 171, in __init__
+    mapped_tokens.append(self.translate_token(token))
+                         ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\smartif.py", line 182, in translate_token
+    return self.create_var(token)
+           ~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 897, in create_var
+    return TemplateLiteral(self.template_parser.compile_filter(value), value)
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 710, in __init__
+    raise TemplateSyntaxError(
+    ...<2 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '=!' from '=!'
+"GET /csm/complaint/1/fetch/ HTTP/1.1" 500 354043
