@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create OEM User{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .form-section-title {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items:center;
+        gap: 0.5rem;
+    }
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h1 class="h4 mb-1">
+                    {% if user %}
+                        <i class="fas fa-user-edit me-2 text-primary"></i>Edit OEM User
+                    {% else %}
+                        <i class="fas fa-user-plus me-2 text-primary"></i>Create New OEM User
+                    {% endif %}
+                </h1>
+                <p class="text-muted mb-0">
+                    {% if user %}
+                        Update user information and role assignments.
+                    {% else %}
+                        Add a new user to the system and assign appropriate roles.
+                    {% endif %}
+                </p>
+            </div>
+            <a href="{% url 'user_admin_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Users
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" id="createUserForm" action="{% if user %}{% url 'edit_oem_user' user.id %}{% else %}{% url 'create_oem_user' %}{% endif %}">
+                    {% csrf_token %}
+                    
+                    <!-- Identity Information -->
+                    <div class="form-section">
+                        <h6 class="form-section-title">
+                            <i class="fas fa-id-card"></i>Identity Information
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label required-field">First name</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="e.g. Sneha" value="{% if user %}{{ user.first_name }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label required-field">Last name</label>
+                                <input type="text" name="last_name" class="form-control" placeholder="e.g. Sharma" value="{% if user %}{{ user.last_name }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label required-field">Official email</label>
+                                <input type="email" name="email" class="form-control" placeholder="name@command.in" value="{% if user %}{{ user.email }}{% endif %}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Certificate number</label>
+                                <input type="text" name="certificate_number" class="form-control" placeholder="Enter certificate ID" value="{% if user %}{{ user.certificate_number }}{% endif %}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label required-field">Phone number</label>
+                                <input type="text" name="phone_number" class="form-control" placeholder="10-digit number" maxlength="10" pattern="^[0-9]{10}$" value="{% if user %}{{ user.phone_number }}{% endif %}" required>
+                                <small class="form-text text-muted">Must be exactly 10 digits</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Designation</label>
+                                <input type="text" name="designation" class="form-control" placeholder="e.g. Flight Commander" value="{% if user %}{{ user.designation }}{% endif %}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Command / Unit</label>
+                                <input type="text" name="command_name" class="form-control" placeholder="e.g. Western Air Command" value="{% if user %}{{ user.command_name }}{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role & Access -->
+                    <div class="form-section">
+                        <h6 class="form-section-title">
+                            <i class="fas fa-user-shield"></i>Role & Access
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label required-field">Role</label>
+                                <select class="form-select" name="role" required>
+                                    <option value="">Select role</option>
+                                    {% for value, label in role_choices %}
+                                        <option value="{{ value }}" {% if user and user.role == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Account Status</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="is_active" id="isActiveSwitch" {% if not user or user.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="isActiveSwitch">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="form-section">
+                        <h6 class="form-section-title">
+                            <i class="fas fa-lock"></i>Security & Password
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Initial password</label>
+                                <input type="password" name="password1" class="form-control" placeholder="Leave blank to auto-generate">
+                                <small class="form-text text-muted">Auto-generated if left blank</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Confirm password</label>
+                                <input type="password" name="password2" class="form-control" placeholder="Confirm password">
+                            </div>
+                            {% if not user %}
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="send_invite" id="sendInviteSwitch" checked>
+                                    <label class="form-check-label" for="sendInviteSwitch">
+                                        <i class="fas fa-paper-plane me-1"></i>Send invitation email with password setup link
+                                    </label>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>Leave password fields blank to keep the current password unchanged.
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <a href="{% url 'user_admin_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>{% if user %}Update User{% else %}Create User{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('createUserForm');
+    
+    form.addEventListener('submit', function(e) {
+        const email = form.querySelector('input[name="email"]').value;
+        const phone = form.querySelector('input[name="phone_number"]').value;
+        const role = form.querySelector('select[name="role"]').value;
+        const password1 = form.querySelector('input[name="password1"]').value;
+        const password2 = form.querySelector('input[name="password2"]').value;
+        
+        // Validate required fields
+        if (!email || !phone || !role) {
+            e.preventDefault();
+            alert('Please fill in all required fields (marked with *)');
+            return false;
+        }
+        
+        // Phone validation
+        if (!/^\d{10}$/.test(phone)) {
+            e.preventDefault();
+            alert('Phone number must be exactly 10 digits');
+            return false;
+        }
+        
+        // Password validation if provided
+        if (password1 || password2) {
+            if (password1 !== password2) {
+                e.preventDefault();
+                alert('Passwords do not match');
+                return false;
+            }
+            if (password1.length < 8) {
+                e.preventDefault();
+                alert('Password must be at least 8 characters long');
+                return false;
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    .badge-role {
+        font-size: 0.75rem;
+        letter-spacing: 0.03em;
+    }
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+    }
+    .status-active {
+        background-color: #28a745;
+    }
+    .status-inactive {
+        background-color: #dc3545;
+    }
+    .status-pending {
+        background-color: #ffc107;
+    }
+    .user-card:hover {
+        border-color: rgba(53, 133, 255, 0.35);
+        box-shadow: 0 0.75rem 2rem rgba(34, 60, 80, 0.12);
+    }
+    .filter-chip {
+        background: rgba(53, 133, 255, 0.08);
+        border: 1px solid rgba(53, 133, 255, 0.18);
+        color: #285bff;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
+    }
+    .permission-tag {
+        font-size: 0.65rem;
+        background: rgba(108, 117, 125, 0.15);
+        color: #5c6770;
+        border: none;
+    }
+    .table thead th {
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+    }
+    .table tbody tr {
+        vertical-align: middle;
+    }
+    @media (max-width: 992px) {
+        .filters-wrapper {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Main Content Area -->
+<div class="container-main">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-0">User Management</h2>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'create_oem_user' %}" class="btn btn-primary">
+                <i class="fas fa-user-plus me-2"></i>New User
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" id="filterForm" class="row g-3">
+                <div class="row align-items-end">
+                    <!-- Search -->
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Search</label>
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" value="{{ current_filters.q }}" placeholder="Search users...">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Role Filter -->
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" name="role" onchange="document.getElementById('filterForm').submit()">
+                            <option value="">All Roles</option>
+                            {% for value, label in role_choices %}
+                                <option value="{{ value }}" {% if current_filters.role == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
+                            <option value="">All Statuses</option>
+                            <option value="active" {% if current_filters.status == "active" %}selected{% endif %}>Active</option>
+                            <option value="inactive" {% if current_filters.status == "inactive" %}selected{% endif %}>Inactive</option>
+                            <option value="invited" {% if current_filters.status == "invited" %}selected{% endif %}>Invitation Sent</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Users List -->
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Users</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Role & Unit</th>
+                            <th>Access</th>
+                            <th>Activity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in user_rows %}
+                        <tr class="user-card">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ user.avatar_url }}" class="rounded-circle me-3" width="40" height="40" alt="User avatar for {{ user.full_name }}">
+                                    <div>
+                                        <div class="fw-semibold">{{ user.full_name }}</div>
+                                        <small class="text-muted">{{ user.email }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill bg-primary-subtle text-primary badge-role">{{ user.role_display }}</span>
+                                <div class="text-muted small">{{ user.command_name|default:"—" }}</div>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for tag in user.access_tags %}
+                                        <span class="badge rounded-pill permission-tag">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-muted small">{{ user.status_subtitle }}</div>
+                                <div><span class="status-dot {{ user.status_indicator }}"></span><small class="{{ user.status_text_class }} fw-semibold">{{ user.status_label }}</small></div>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'edit_oem_user' user.id %}" class="btn btn-outline-primary btn-sm" title="Edit User">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown" title="More Options">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#" data-user-id="{{ user.id }}"><i class="fas fa-shield-alt me-2"></i>Adjust Permissions</a></li>
+                                        <li><a class="dropdown-item" href="#" data-user-id="{{ user.id }}"><i class="fas fa-envelope-open-text me-2"></i>Resend Invite</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="#" data-user-id="{{ user.id }}"><i class="fas fa-user-slash me-2"></i>Deactivate</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5">
+                                <i class="fas fa-user-slash fa-3x text-muted mb-3 d-block"></i>
+                                <h5 class="text-muted">No users found</h5>
+                                <p class="text-muted">No users match the current filters.</p>
+                                <a href="{% url 'create_oem_user' %}" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-2"></i>Create New User
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="User pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+            
+            {% for page_num in page_range %}
+                {% if page_num == '…' %}
+                    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                {% elif page_num == page_obj.number %}
+                    <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_num }}{% if query_string %}&{{ query_string }}{% endif %}">{{ page_num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}
+
