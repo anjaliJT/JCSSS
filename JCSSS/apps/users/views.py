@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib import messages  # optional, for error messages
 from apps.users.models import CustomUser, ForgotPasswordOTP
 from django.views import View
 from apps.users.forms import CustomUserSignupForm
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -17,6 +17,12 @@ from datetime import datetime, timedelta, timezone
 import logging
 import random
 import json
+from urllib.parse import quote_plus
+from django.utils.crypto import get_random_string
+
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.utils.timesince import timesince
 
 
 logger = logging.getLogger(__name__)
@@ -209,6 +215,240 @@ class UserDetails(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, "dashboard.html", {"user": None})
 
+
+class UserManagementListView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
+    login_url = 'login'
+    permission_required = "auth.view_user"
+    template_name = "users/user_management.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request = self.request
+
+        users_qs = CustomUser.objects.all()
+
+        search_query = request.GET.get("q", "").strip()
+        role_filter = request.GET.get("role", "").strip()
+        status_filter = request.GET.get("status", "").strip()
+        sort_by = request.GET.get("sort", "-date_joined")
+
+        if search_query:
+            users_qs = users_qs.filter(
+                Q(first_name__icontains=search_query)
+                | Q(last_name__icontains=search_query)
+                | Q(email__icontains=search_query)
+                | Q(certificate_number__icontains=search_query)
+            )
+
+        if role_filter:
+            users_qs = users_qs.filter(role=role_filter)
+
+        if status_filter == "active":
+            users_qs = users_qs.filter(is_active=True, last_login__isnull=False)
+        elif status_filter == "inactive":
+            users_qs = users_qs.filter(is_active=False)
+        elif status_filter == "invited":
+            users_qs = users_qs.filter(is_active=True, last_login__isnull=True)
+
+        sort_mapping = {
+            "-date_joined": "-date_joined",
+            "first_name": "first_name",
+            "-last_login": "-last_login",
+        }
+        users_qs = users_qs.order_by(sort_mapping.get(sort_by, "-date_joined"))
+
+        paginator = Paginator(users_qs, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        elided_page_range = paginator.get_elided_page_range(page_obj.number, on_each_side=1, on_ends=1)
+
+        user_rows = []
+        for user in page_obj:
+            full_name = (user.get_full_name() or "").strip()
+            if not full_name:
+                full_name = user.email.split("@")[0]
+
+            avatar_seed = quote_plus(full_name or user.email)
+            avatar_url = f"https://ui-avatars.com/api/?name={avatar_seed}&background=random"
+
+            last_login_display = "Never logged in"
+            if user.last_login:
+                last_login_display = f"{timesince(user.last_login)} ago"
+
+            if not user.is_active:
+                status_label = "Inactive"
+                status_indicator = "status-inactive"
+                status_text_class = "text-danger"
+                status_subtitle = "Account disabled"
+            elif user.last_login:
+                status_label = "Active"
+                status_indicator = "status-active"
+                status_text_class = "text-success"
+                status_subtitle = f"Last login {last_login_display}"
+            else:
+                status_label = "Invite Pending"
+                status_indicator = "status-pending"
+                status_text_class = "text-warning"
+                status_subtitle = "Awaiting first login"
+
+            access_tags = list(user.groups.values_list("name", flat=True))
+            if len(access_tags) < 4:
+                extra_perms = user.user_permissions.values_list("codename", flat=True)
+                for perm in extra_perms:
+                    humanised = perm.replace("_", " ").title()
+                    if humanised not in access_tags:
+                        access_tags.append(humanised)
+                    if len(access_tags) >= 4:
+                        break
+            if not access_tags:
+                access_tags.append(user.get_role_display())
+
+            user_rows.append(
+                {
+                    "id": user.id,
+                    "full_name": full_name,
+                    "email": user.email,
+                    "avatar_url": avatar_url,
+                    "role_display": user.get_role_display(),
+                    "command_name": user.command_name or "",
+                    "access_tags": access_tags,
+                    "last_login_display": last_login_display,
+                    "status_indicator": status_indicator,
+                    "status_label": status_label,
+                    "status_text_class": status_text_class,
+                    "status_subtitle": status_subtitle,
+                }
+            )
+
+        stats = {
+            "total": users_qs.count(),
+            "active": users_qs.filter(is_active=True, last_login__isnull=False).count(),
+            "inactive": users_qs.filter(is_active=False).count(),
+            "pending": users_qs.filter(is_active=True, last_login__isnull=True).count(),
+        }
+
+        preserved_query = request.GET.copy()
+        preserved_query.pop("page", None)
+        query_string = preserved_query.urlencode()
+
+        context.update(
+            {
+                "user_rows": user_rows,
+                "page_obj": page_obj,
+                "page_range": elided_page_range,
+                "stats": stats,
+                "current_filters": {
+                    "q": search_query,
+                    "role": role_filter,
+                    "status": status_filter,
+                    "sort": sort_by,
+                },
+                "role_choices": CustomUser.ROLE_CHOICES,
+                "sort_options": [
+                    ("-date_joined", "Newest first"),
+                    ("first_name", "Alphabetical"),
+                    ("-last_login", "Last active"),
+                ],
+                "query_string": query_string,
+            }
+        )
+        return context
+
+
+class CreateOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    login_url = 'login'
+    permission_required = "auth.add_user"
+    template_name = "users/create_oem_user_form.html"
+    
+    def get(self, request):
+        context = {
+            'role_choices': CustomUser.ROLE_CHOICES,
+        }
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        try:
+            # Create user
+            user = CustomUser.objects.create(
+                first_name=request.POST.get('first_name'),
+                last_name=request.POST.get('last_name'),
+                email=request.POST.get('email').lower(),
+                phone_number=request.POST.get('phone_number'),
+                certificate_number=request.POST.get('certificate_number') or None,
+                designation=request.POST.get('designation') or None,
+                command_name=request.POST.get('command_name') or None,
+                role=request.POST.get('role'),
+                is_active=request.POST.get('is_active') == 'on',
+            )
+            
+            # Set password
+            password1 = request.POST.get('password1')
+            if password1:
+                user.set_password(password1)
+            else:
+                # Auto-generate password
+                password = get_random_string(12)
+                user.set_password(password)
+            user.save()
+            
+            # Send invite if requested
+            send_invite = request.POST.get('send_invite') == 'on'
+            if send_invite:
+                # TODO: Send invitation email with password reset link
+                messages.success(request, f"User {user.get_full_name()} created successfully. Invitation email sent.")
+            else:
+                messages.success(request, f"User {user.get_full_name()} created successfully.")
+            
+            return redirect('user_admin_list')
+        except Exception as e:
+            messages.error(request, f"Error creating user: {str(e)}")
+            context = {
+                'role_choices': CustomUser.ROLE_CHOICES,
+            }
+            return render(request, self.template_name, context)
+
+
+class EditOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    login_url = 'login'
+    permission_required = "auth.change_user"
+    template_name = "users/create_oem_user_form.html"
+    
+    def get(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        context = {
+            'user': user,
+            'role_choices': CustomUser.ROLE_CHOICES,
+        }
+        return render(request, self.template_name, context)
+    
+    def post(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        try:
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.email = request.POST.get('email').lower()
+            user.phone_number = request.POST.get('phone_number')
+            user.certificate_number = request.POST.get('certificate_number') or None
+            user.designation = request.POST.get('designation') or None
+            user.command_name = request.POST.get('command_name') or None
+            user.role = request.POST.get('role')
+            user.is_active = request.POST.get('is_active') == 'on'
+            
+            # Update password if provided
+            password1 = request.POST.get('password1')
+            if password1:
+                user.set_password(password1)
+            
+            user.save()
+            messages.success(request, f"User {user.get_full_name()} updated successfully.")
+            return redirect('user_admin_list')
+        except Exception as e:
+            messages.error(request, f"Error updating user: {str(e)}")
+            context = {
+                'user': user,
+                'role_choices': CustomUser.ROLE_CHOICES,
+            }
+            return render(request, self.template_name, context)
 
 
 class profileView(LoginRequiredMixin,View): 

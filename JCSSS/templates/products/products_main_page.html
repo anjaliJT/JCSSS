@@ -3,6 +3,7 @@
 
 {% block title %}Product Details - UAV Support Portal{% endblock %}
 
+
 {% block content %}
        
         <!-- Main Content Area -->
@@ -14,6 +15,9 @@
                     <p class="text-muted">Manage and track all UAV products in your inventory</p>
                 </div>
                 <div class="col-auto">
+                    <button class="btn btn-primary" id="createProductBtn" data-bs-toggle="modal" data-bs-target="#productFormModal">
+                        <i class="fas fa-plus-circle me-2"></i>Create Product
+                    </button>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importExportModal">
                         <i class="fas fa-file-csv me-2"></i>Import/Export
                     </button>
@@ -95,7 +99,7 @@
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="4" id="col4">
-                                <label class="form-check-label" for="col4">Status</label>
+                                <label class="form-check-label" for="col4">Sale Status</label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
@@ -103,28 +107,32 @@
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="6" checked id="col6">
-                                <label class="form-check-label" for="col6">Warranty Expiry</label>
+                                <label class="form-check-label" for="col6">Warranty Period</label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="7" checked id="col7">
-                                <label class="form-check-label" for="col7">Source Location</label>
+                                <label class="form-check-label" for="col7">Warranty Expiry</label>
+                            </li>
+                            <li class="form-check">
+                                <input class="form-check-input column-toggle" type="checkbox" value="8" checked id="col8">
+                                <label class="form-check-label" for="col8">Source Location</label>
                             </li>
                             <!-- Army Command unchecked by default -->
                             <li class="form-check">
-                                <input class="form-check-input column-toggle" type="checkbox" value="8" id="col8">
-                                <label class="form-check-label" for="col8">Army Command</label>
-                            </li>
-                            <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="9" id="col9">
-                                <label class="form-check-label" for="col9">Unit Name</label>
+                                <label class="form-check-label" for="col9">Army Command</label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="10" id="col10">
-                                <label class="form-check-label" for="col10">Formation</label>
+                                <label class="form-check-label" for="col10">Unit Name</label>
                             </li>
                             <li class="form-check">
-                                <input class="form-check-input column-toggle" type="checkbox" value="11" checked id="col11">
-                                <label class="form-check-label" for="col11">Actions</label>
+                                <input class="form-check-input column-toggle" type="checkbox" value="11" id="col11">
+                                <label class="form-check-label" for="col11">Formation</label>
+                            </li>
+                            <li class="form-check">
+                                <input class="form-check-input column-toggle" type="checkbox" value="12" checked id="col12">
+                                <label class="form-check-label" for="col12">Actions</label>
                             </li>
                             </ul>
                         </div>
@@ -139,8 +147,9 @@
                                             <th>Model</th>
                                             <th>Order Name</th>
                                             <th>Manufacturing Date</th>
-                                            <th>Status</th>
+                                            <th>Sale Status</th>
                                             <th>Warranty Status</th>
+                                            <th>Warranty Period (M)</th>
                                             <th>Warranty Expiry</th>
                                             <th>Source Location</th>
                                             <th>Army Command</th>
@@ -164,7 +173,10 @@
                                                     <span class="badge bg-success text-white">Available</span>
                                                 {% endif %}
                                             </td>
-                                            <td>{{ product.warranty_status }}</td>
+                                            <td>
+                                                <span class="badge {% if product.warranty_status == 'Active' %}bg-info{% else %}bg-warning{% endif %}">{{ product.warranty_status }}</span>
+                                            </td>
+                                            <td>{{ product.warranty_period }}</td>
                                             <td>{{ product.warranty_expiry_date|date:"Y-m-d" }}</td>
                                             <td>{{ product.source_location }}</td>
                                             <td>{{ product.army_command }}</td>
@@ -173,7 +185,7 @@
                                             <td>
                                                 <!-- Edit Button -->
                                                 <button class="edit-btn btn btn-sm btn-outline-primary"
-                                                    data-bs-toggle="modal" data-bs-target="#editProductModal"
+                                                    data-bs-toggle="modal" data-bs-target="#productFormModal"
                                                     data-id="{{ product.id }}"
                                                     {% if product.product_model %}
                                                         data-model="{{ product.product_model.id }}"
@@ -187,8 +199,8 @@
                                                     data-tail-number="{{ product.tail_number }}"
                                                     data-formation="{{ product.formation }}"
                                                     data-manufacture="{{ product.manufecturing_Date|date:'Y-m-d' }}"
-                                                    data-warranty="{{ product.warranty_status }}"
-                                                    data-expiry="{{ product.warranty_expiry_date|date:'Y-m-d' }}">
+                                                    data-warranty="{{ product.warranty_period }}"
+                                                    data-is-sold="{% if product.is_sold %}true{% else %}false{% endif %}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
 
@@ -210,7 +222,7 @@
                         <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             const editButtons = document.querySelectorAll('.edit-btn');
-                            const form = document.getElementById('editProductForm');
+                            const form = document.getElementById('productForm');
 
                             editButtons.forEach(btn => {
                                 btn.addEventListener('click', function () {
@@ -371,93 +383,9 @@
         </div>
     </div>
 
-    <!-- edit-product -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form method="POST" id="editProductForm">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editProductLabel">Edit Product</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Tail Number</label>
-                                <input type="text" name="tail_number" id="tailNumber" class="form-control" disabled>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Model</label>
-                                <select name="product_model" id="productModel" class="form-select">
-                                    {% for model in models %}
-                                        <option value="{{ model.id }}" {% if selected_model == model.id|stringformat:"s" %}selected{% endif %}>
-                                            {{ model.model_name }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
+    <!-- Include Edit Product Form -->
+    {% include "products/product_form.html" %}
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Order Name</label>
-                                <input type="text" name="order_name" id="orderName" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Manufacturing Date</label>
-                                <input type="date" name="manufecturing_Date" id="manufactureDate" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Warranty Expiry Date</label>
-                                <input type="date" name="warranty_expiry_date" id="warrantyExpiry" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Source Location</label>
-                                <input type="text" name="source_location" id="sourceLocation" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Army Command</label>
-                                <input type="text" name="army_command" id="armyCommand" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Unit Name</label>
-                                <input type="text" name="unit_name" id="unitName" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Formation</label>
-                                <input type="text" name="formation" id="formation" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                            <label class="form-label">Warranty Status</label>
-                            <select name="warranty_status" id="warrantyStatus" class="form-select" disabled>
-                                <option value="Active">Active</option>
-                                <option value="Expired">Expired</option>
-                            </select>
-                        </div>
-                        </div>
-                        
-
-
-                        
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
