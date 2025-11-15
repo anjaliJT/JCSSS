@@ -48,14 +48,14 @@
                     </h6>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Expiry Date</label>
-                            <input type="date" name="warranty_expiry_date" id="warrantyExpiry" class="form-control">
+                            <label class="form-label">Warranty Period (Months)</label>
+                            <input type="number" name="warranty_period" id="warrantyPeriod" class="form-control" placeholder="e.g., 24" value="24" min="1">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Status</label>
-                            <select name="warranty_status" id="warrantyStatus" class="form-select">
-                                <option value="Active">Active</option>
-                                <option value="Expired">Expired</option>
+                            <label class="form-label">Product Status</label>
+                            <select name="is_sold" id="isSold" class="form-select">
+                                <option value="false">Available</option>
+                                <option value="true">Sold</option>
                             </select>
                         </div>
                     </div>
