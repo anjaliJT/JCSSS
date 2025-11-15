@@ -14,7 +14,8 @@ from .models import Product
 from apps.complain_form.models import Event  # import your Event model (adjust app name as needed)
 from django.db.models import Max, Sum, F
 from apps.oem.models import ComplaintStatus, RepairCost, CustomerPricing
-
+from django.db.models import OuterRef, Subquery, Sum, Value, DecimalField, CharField, DateTimeField, Q
+from django.db.models.functions import Coalesce
 
 # Create your views here.
 @login_required(login_url = 'login')
@@ -95,7 +96,7 @@ def edit_product_view(request, pk):
             "selected_status": None,
             "selected_warranty": None,
         })
-    print("edit.html")
+
     return render(request, 'edit_product.html', {
         'product': product,
         'product_models': Product_model.objects.all()
@@ -230,10 +231,7 @@ def delete_product_view(request, pk):
     product_obj.delete()
     return redirect('product_list')
 
-  
 
-from django.db.models import OuterRef, Subquery, Sum, Value, DecimalField, CharField, DateTimeField, Q
-from django.db.models.functions import Coalesce
 
 def repair_history_view(request, pk):
     product = Product.objects.get(pk=pk)
