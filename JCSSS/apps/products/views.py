@@ -9,10 +9,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 import datetime
 from datetime import datetime, date
 from django.views.decorators.http import require_POST
+from django.shortcuts import render, get_object_or_404
+from .models import Product
+from apps.complain_form.models import Event  # import your Event model (adjust app name as needed)
+from django.db.models import Max, Sum, F
+from apps.oem.models import ComplaintStatus, RepairCost, CustomerPricing
+
 
 # Create your views here.
 @login_required(login_url = 'login')
-def create_product(request): 
+def create_product_view(request): 
     if request.method == "POST": 
         form  = productForm(request.POST)
         if form.is_valid() : 
@@ -25,7 +31,7 @@ def create_product(request):
         
 
 
-def product_list(request):
+def product_list_view(request):
     products = Product.objects.all()
     models = Product_model.objects.all()
 
@@ -60,11 +66,9 @@ def product_list(request):
         "selected_status": selected_status,
         "selected_warranty": selected_warranty,
     })
-    
 
 
-
-def edit_product(request, pk):
+def edit_product_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
     if request.method == "POST":
@@ -98,7 +102,7 @@ def edit_product(request, pk):
     })
 
 @login_required(login_url='login')
-def import_products(request): 
+def import_products_view(request): 
     if request.method == "POST": 
         if "import_file" not in request.FILES:
             messages.error(request, "⚠️ No file uploaded.")
@@ -203,10 +207,8 @@ def import_products(request):
     return render(request, "products/product_form.html")
 
 
-   
-
 @login_required(login_url='login')
-def export_products(request):
+def export_products_view(request):
     from_date = request.GET.get("from_date")
     to_date = request.GET.get("to_date")
 
@@ -223,10 +225,81 @@ def export_products(request):
     return response
 
 @require_POST
-def delete_product(request, pk):
+def delete_product_view(request, pk):
     product_obj = get_object_or_404(Product, id=pk)
     product_obj.delete()
     return redirect('product_list')
+
+  
+
+from django.db.models import OuterRef, Subquery, Sum, Value, DecimalField, CharField, DateTimeField, Q
+from django.db.models.functions import Coalesce
+
+def repair_history_view(request, pk):
+    product = Product.objects.get(pk=pk)
+    tail_number = product.tail_number
+
+    # Fetch all events for this tail number
+    events_qs = Event.objects.filter(tail_number=tail_number)
+    repairs_count = events_qs.count()
+    first_event = events_qs.first()
+
+    # ---- Subqueries ----
+    latest_status_subquery = ComplaintStatus.objects.filter(
+        event=OuterRef("pk")
+    ).order_by("-updated_at").values("status")[:1]
+
+    latest_date_subquery = ComplaintStatus.objects.filter(
+        event=OuterRef("pk")
+    ).order_by("-updated_at").values("updated_at")[:1]
+
+    repair_cost_subquery = RepairCost.objects.filter(
+        event=OuterRef("pk")
+    ).values("event").annotate(total=Sum("repair_cost")).values("total")[:1]
+
+    client_charge_subquery = CustomerPricing.objects.filter(
+        event=OuterRef("pk")
+    ).values("total_price")[:1]
+
+    # ---- Annotate all in one queryset ----
+    events = events_qs.annotate(
+        last_status=Subquery(latest_status_subquery, output_field=CharField()),
+        last_repair_date=Subquery(latest_date_subquery, output_field=DateTimeField()),
+        total_repair_cost=Subquery(repair_cost_subquery, output_field=DecimalField()),
+        client_charge=Subquery(client_charge_subquery, output_field=DecimalField()),
+    )
+
+    # ---- Totals for summary cards ----
+    event_ids = events_qs.values_list("id", flat=True)
+
+    total_repair_cost = (
+        RepairCost.objects.filter(event_id__in=event_ids)
+        .aggregate(total=Coalesce(Sum("repair_cost"), Value(0, output_field=DecimalField())))
+        ["total"]
+    )
+
+    total_client_charge = (
+        CustomerPricing.objects.filter(event_id__in=event_ids)
+        .aggregate(total=Coalesce(Sum("total_price"), Value(0, output_field=DecimalField())))
+        ["total"]
+    )
+
+    net_profit = total_client_charge - total_repair_cost
+    avg_cost = total_repair_cost / repairs_count if repairs_count else 0
+    margin = (net_profit / total_client_charge * 100) if total_client_charge > 0 else 0
+
+    context = {
+        "product": product,
+        "events": events,
+        "repairs_count": repairs_count,
+        "first_event": first_event,
+        "total_repair_cost": total_repair_cost,
+        "total_client_charge": total_client_charge,
+        "net_profit": net_profit,
+        "avg_cost": avg_cost,
+        "margin": margin,
+    }
+    return render(request, "complaints/repair_history.html", context)
 
 
 

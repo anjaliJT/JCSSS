@@ -35,6 +35,7 @@ urlpatterns = [
     path('repair-cost/<int:cost_id>/delete/', delete_repair_cost_view, name='delete_repair_cost'),
 
     path("complaints/<int:pk>/customer-cost/", CustomerCostView.as_view(), name="add_customer_cost"),
+    path("complaints/approve/<int:pk>/", customer_price_approve_view, name="customer_price_approve"),
 
     
     # path("submit-report/<int:event_id>/", submit_report, name="submit_report"),
