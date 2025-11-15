@@ -96,3 +96,4 @@ class CustomerPricing(models.Model):
         return f"Customer Price for {self.event}: ₹{self.total_price}"
 
 
+

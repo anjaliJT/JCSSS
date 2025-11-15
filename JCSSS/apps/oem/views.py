@@ -197,6 +197,21 @@ class CustomerCostView(View):
         return redirect("fetch_complaint_status", pk=pk)
 
 
+def customer_price_approve_view(request, pk):
+    if request.method == "POST":
+        pricing = get_object_or_404(CustomerPricing, pk=pk)
+        pricing.approved = True
+        pricing.save()
+        messages.success(request, "You approved successfully.")
+    else:
+        messages.error(request, "Invalid request method.")
+    return redirect('fetch_complaint_status', pk=pk)
+
+
+
+
+
+
 def attachemnts(instance, filename):
     # Store in a subfolder by event id (or date if you prefer)
     return f"complaints/{instance.event.id}/{filename}"

@@ -1,9 +1,8 @@
 
 {% extends "base.html" %}
 
-{% load static %}
+{% block title %}Product Details - UAV Support Portal{% endblock %}
 
-{% block title %}Products Inventory - UAV Support Portal{% endblock %}
 
 {% block content %}
        
@@ -162,7 +161,8 @@
                                     <tbody>
                                         {% for product in products %}
                                         <tr>
-                                            <td>{{ product.tail_number }}</td>
+                                            <!-- <td>{{ product.tail_number }}</td> -->
+                                            <td> <a href="{% url 'repair_history' product.id  %}">{{ product.tail_number }}</td> </a>
                                             <td>{{ product.product_model }}</td>
                                             <td>{{ product.order_name }}</td>
                                             <td>{{ product.manufecturing_Date|date:"Y-m-d" }}</td>
