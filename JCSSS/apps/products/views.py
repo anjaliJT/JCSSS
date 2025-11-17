@@ -68,6 +68,39 @@ def product_list_view(request):
     })
 
 
+# def edit_product_view(request, pk):
+#     product = get_object_or_404(Product, pk=pk)
+
+#     if request.method == "POST":
+#         model_id = request.POST.get('product_model')
+#         if model_id:
+#             product.product_model = get_object_or_404(Product_model, pk=model_id)
+
+#         product.order_name = request.POST.get('order_name')
+
+#         manufacture_date_str = request.POST.get('manufecturing_Date')
+#         if manufacture_date_str:
+#             product.manufecturing_Date = datetime.strptime(manufacture_date_str, '%Y-%m-%d').date()
+
+#         product.save()
+
+#         # Load data for the list view
+#         products = Product.objects.all()
+#         models = Product_model.objects.all()
+
+#         return render(request, "products/products_main_page.html", {
+#             "products": products,
+#             "models": models,
+#             "selected_model": None,
+#             "selected_status": None,
+#             "selected_warranty": None,
+#         })
+#     print("edit.html")
+#     return render(request, 'edit_product.html', {
+#         'product': product,
+#         'product_models': Product_model.objects.all()
+#     })
+
 def edit_product_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
@@ -77,6 +110,10 @@ def edit_product_view(request, pk):
             product.product_model = get_object_or_404(Product_model, pk=model_id)
 
         product.order_name = request.POST.get('order_name')
+        product.source_location = request.POST.get('source_location')
+        product.army_command = request.POST.get('army_command')
+        product.unit_name = request.POST.get('unit_name')
+        product.formation = request.POST.get('formation')
 
         manufacture_date_str = request.POST.get('manufecturing_Date')
         if manufacture_date_str:
@@ -95,11 +132,13 @@ def edit_product_view(request, pk):
             "selected_status": None,
             "selected_warranty": None,
         })
+
     print("edit.html")
     return render(request, 'edit_product.html', {
         'product': product,
         'product_models': Product_model.objects.all()
     })
+
 
 @login_required(login_url='login')
 def import_products_view(request): 

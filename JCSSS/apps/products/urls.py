@@ -10,3 +10,15 @@ urlpatterns = [
     path('<int:pk>/delete/', delete_product_view, name='delete_product'),
     path('<int:pk>/repair-history/', repair_history_view, name='repair_history'),
 ]
+
+
+
+
+# <td>
+#   <a href="{% url 'repair_history' product.id %}" 
+#      onclick="event.preventDefault(); 
+#               openPopup('Do you really want to delete this item?', 
+#                 function(){ window.location.href='{% url 'repair_history' product.id %}'; });">
+#     {{ product.tail_number }}
+#   </a>
+# </td>

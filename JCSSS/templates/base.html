@@ -280,5 +280,46 @@
         
     </div>
 </div>
+
+<!-- Custom Center Popup -->
+<div class="modal fade" id="customPopup" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Confirmation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="popupMessage">
+        Are you sure you want to continue?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="popupOkBtn">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openPopup(message, onConfirm) {
+    document.getElementById('popupMessage').innerText = message;
+
+    const popup = new bootstrap.Modal(document.getElementById('customPopup'));
+    const okBtn = document.getElementById('popupOkBtn');
+
+    // Reset previous click listeners
+    okBtn.replaceWith(okBtn.cloneNode(true));
+    const newOkBtn = document.getElementById('popupOkBtn');
+
+    newOkBtn.addEventListener('click', () => {
+      popup.hide();
+      if (onConfirm) onConfirm();
+    });
+
+    popup.show();
+  }
+</script>
+
+
 </body>
 </html>
