@@ -215,7 +215,7 @@
                             editButtons.forEach(btn => {
                                 btn.addEventListener('click', function () {
                                     const id = this.dataset.id;
-                                    form.action = `/product/products/${id}/edit/`;
+                                    form.action = `/product/${id}/edit/`;
 
                                     // Set input fields
                                     document.getElementById('orderName').value = this.dataset.order;
