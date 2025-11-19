@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from .models import CustomUser
-
+from django.utils.crypto import get_random_string
 
 class CustomUserSignupForm(UserCreationForm):
     # First Name - letters only
@@ -86,3 +86,47 @@ class CustomUserSignupForm(UserCreationForm):
             "designation": forms.TextInput(attrs={"class": "form-control", "placeholder": "Designation"}),
             "command_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Command Name", "autocomplete": "off"}),
         }
+
+
+# class OEMUserForm(forms.ModelForm):
+#     password1 = forms.CharField(widget=forms.PasswordInput(), required=False)
+#     password2 = forms.CharField(widget=forms.PasswordInput(), required=False)
+
+
+#     class Meta:
+#         model = CustomUser
+#         fields = [
+#         "first_name", "last_name", "email", "phone_number",
+#         "certificate_number", "designation", "command_name",
+#         "role", "is_active",
+#         ]
+
+
+#     def clean(self):
+#         cleaned = super().clean()
+#         p1 = cleaned.get("password1")
+#         p2 = cleaned.get("password2")
+
+
+#         if p1 or p2:
+#             if p1 != p2:
+#                 raise forms.ValidationError("Passwords do not match.")
+#             if len(p1) < 8:
+#                 raise forms.ValidationError("Password must be at least 8 characters long.")
+#             return cleaned
+
+
+#     def save(self, commit=True, is_update=False):
+#         user = super().save(commit=False)
+#         pwd = self.cleaned_data.get("password1")
+
+
+#         if pwd:
+#             user.set_password(pwd)
+#         elif not is_update:
+#             user.set_password(get_random_string(12))
+
+
+#         if commit:
+#             user.save()
+#         return user

@@ -76,7 +76,7 @@
                 </li> -->
                 {% if request.user.is_authenticated and perms.auth.view_user %}
                 <li class="nav-item">
-                    <a class="nav-link {% if '/users/admin' in request.path %}active{% endif %}" href="{% url 'user_admin_list' %}">
+                    <a class="nav-link {% if '/users/' in request.path %}active{% endif %}" href="{% url 'user_list' %}">
                         <i class="fas fa-users-cog"></i> User Management
                     </a>
                 </li>

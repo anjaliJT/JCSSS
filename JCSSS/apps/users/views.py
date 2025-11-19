@@ -23,7 +23,7 @@ from django.utils.crypto import get_random_string
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils.timesince import timesince
-
+# from apps.users.forms import OEMUserForm
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -307,10 +307,17 @@ class UserManagementListView(PermissionRequiredMixin, LoginRequiredMixin, Templa
                 {
                     "id": user.id,
                     "full_name": full_name,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
                     "email": user.email,
+                    "phone_number": user.phone_number,
+                    "certificate_number": user.certificate_number or "",
+                    "designation": user.designation or "",
                     "avatar_url": avatar_url,
+                    "role": user.role,
                     "role_display": user.get_role_display(),
                     "command_name": user.command_name or "",
+                    "is_active": user.is_active,
                     "access_tags": access_tags,
                     "last_login_display": last_login_display,
                     "status_indicator": status_indicator,
@@ -399,12 +406,14 @@ class CreateOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
             else:
                 messages.success(request, f"User {user.get_full_name()} created successfully.")
             
-            return redirect('user_admin_list')
+            return redirect('user_list')
+        
         except Exception as e:
             messages.error(request, f"Error creating user: {str(e)}")
             context = {
                 'role_choices': CustomUser.ROLE_CHOICES,
             }
+            # return redirect('user_list')
             return render(request, self.template_name, context)
 
 
@@ -441,14 +450,11 @@ class EditOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
             
             user.save()
             messages.success(request, f"User {user.get_full_name()} updated successfully.")
-            return redirect('user_admin_list')
+            return redirect('user_list')
         except Exception as e:
+            logger.error(f"Error updating user {pk}: {str(e)}", exc_info=True)
             messages.error(request, f"Error updating user: {str(e)}")
-            context = {
-                'user': user,
-                'role_choices': CustomUser.ROLE_CHOICES,
-            }
-            return render(request, self.template_name, context)
+            return redirect('user_list')
 
 
 class profileView(LoginRequiredMixin,View): 
@@ -473,3 +479,32 @@ class profileView(LoginRequiredMixin,View):
 
             messages.success(request, "Profile updated successfully ✅")
             return redirect("profile")  # reload page with updated info
+    
+# class OEMUserFormView(PermissionRequiredMixin, LoginRequiredMixin, View):
+
+
+#     permission_required = "auth.add_user"
+
+
+#     def post(self, request, pk=None):
+#         is_update = pk is not None
+#         instance = get_object_or_404(CustomUser, pk=pk) if is_update else None
+
+
+#         form = OEMUserForm(request.POST, instance=instance)
+
+
+#         if form.is_valid():
+#             form.save(is_update=is_update)
+#             msg = "User updated successfully" if is_update else "User created successfully"
+#             messages.success(request, msg)
+#             return redirect("user_list")
+
+
+#         # If form errors exist, re-render modal in same page
+#         # Inject errors back into modal
+#         request.session['form_errors'] = form.errors
+#         request.session['form_data'] = request.POST
+
+
+#         return redirect("user_list")

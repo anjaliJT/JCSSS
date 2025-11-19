@@ -27,8 +27,12 @@ def create_product_view(request):
             return redirect("product_list")
     else:
         form = productForm()    
-    
-    return render(request,"products/product_form.html",{"form":form})
+    # print("forms --->",form)
+    # return redirect("product_list")
+    models = Product_model.objects.all()
+    return render(request,"products/product_form.html",{
+        "form":form,"models":models
+        })
         
 
 

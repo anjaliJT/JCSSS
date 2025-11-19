@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const id = this.dataset.id;
             formTitle.textContent = 'Edit User';
             submitBtn.innerHTML = 'Update User';
-            userForm.action = `/users/admin/${id}/edit/`;
+            userForm.action = `/users/${id}/edit/`;
 
             // Populate form fields with user data
             document.getElementById('firstName').value = this.dataset.firstName || '';
