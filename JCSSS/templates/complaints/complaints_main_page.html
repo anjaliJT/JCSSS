@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}My Complaints - UAV Support Portal{% endblock %}
 
@@ -12,9 +13,13 @@
             <p class="text-muted">View and manage all your support tickets</p>
         </div>
         <div class="col-auto">
-            <a class="btn btn-primary" href="{% url 'complain_submit' %}">
-                <i class="fas fa-plus-circle me-2"></i>New Complaint
-            </a>
+            <a class="btn btn-primary"
+            href="{% url 'complain_submit' %}"
+            onclick="complainNavigation(event, '{% url 'complain_submit' %}')">
+            <i class="fas fa-plus-circle me-2"></i>New Complaint
+          </a>
+          
+
         </div>
     </div>
 
@@ -22,7 +27,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <form method="get" id="filterForm" class="row g-3">
-              <div class="row align-items-end">
+              <div class="row align-items-end pt-2">
                 <!-- Status Filter -->
                 <div class="col-md-4 mb-2">
                   <label class="form-label">Status</label>
@@ -135,6 +140,7 @@
                                     {% elif latest_status.status == 'REJECTED' %}bg-warning
                                     {% elif latest_status.status == 'CLOSED' %}bg-danger
                                     {% elif latest_status.status == 'COMPLETED' %}bg-success
+                                    {% else %} bg-secondary
                                     {% endif %}">
                                     {{ latest_status.get_status_display }}
                                 </span>
@@ -193,7 +199,7 @@
         <!-- Pagination -->
         {% if complaints.has_other_pages %}
         <nav aria-label="Complaints pagination" class="mt-4">
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-end">
                 {% if complaints.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ complaints.previous_page_number }}" aria-label="Previous">
@@ -228,4 +234,8 @@
         {% endif %}
     </div>
 </div>
+{% block extra_scripts %}
+  <script src="{% static 'js/popup_msg' %}"></script>
+{% endblock %}
+
 {% endblock %}

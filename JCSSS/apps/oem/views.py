@@ -126,22 +126,18 @@ class UpdateStatusView(View):
 
 @require_POST
 def edit_status_view(request, pk):
-    status_id = request.POST.get("status_id")
-    status_value = request.POST.get("status")
-    remarks = request.POST.get("remarks")
+    status_obj = get_object_or_404(ComplaintStatus, pk=pk)
 
-    status_obj = ComplaintStatus.objects.get(id=status_id)
-    status_obj.status = status_value
-    status_obj.remarks = remarks
+    status_obj.status = request.POST.get("status")
+    status_obj.remarks = request.POST.get("remarks")
 
-    # Save uploaded file if present
     if 'attachments' in request.FILES:
         status_obj.attachments = request.FILES['attachments']
 
     status_obj.save()
 
-    # Redirect back to the event's complaint status page
     return redirect("fetch_complaint_status", pk=status_obj.event.id)
+
 
 @require_POST
 def delete_status_view(request, status_id):
