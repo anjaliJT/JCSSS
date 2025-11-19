@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib import messages  # optional, for error messages
 from apps.users.models import CustomUser, ForgotPasswordOTP
@@ -12,21 +12,22 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from django.utils.timezone import now
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 import logging
-import random
-import json
 from urllib.parse import quote_plus
 from django.utils.crypto import get_random_string
 
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils.timesince import timesince
+from django.core.mail import EmailMultiAlternatives
+import json, traceback,random
+from .models import ForgotPasswordOTP
 
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
+otp_storage = {}
 
 
 class Login(View):
@@ -54,22 +55,6 @@ def logout_view(request):
     logout(request)  # Clears the session and logs out the user
     return redirect('login')
 
-
-
-otp_storage = {}
-
-
-
-
-from django.core.mail import EmailMultiAlternatives
-from django.utils import timezone
-from django.http import JsonResponse
-from django.contrib.auth import get_user_model
-import json, random
-from datetime import timedelta
-import traceback
-
-User = get_user_model()
 
 def send_otp(request):
     if request.method == "POST":
@@ -129,17 +114,6 @@ def send_otp(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method."})
 
-
-
-
-from django.http import JsonResponse
-from django.utils import timezone
-import json, traceback
-from datetime import timedelta
-from django.contrib.auth import get_user_model
-from .models import ForgotPasswordOTP
-
-User = get_user_model()
 
 def verify_otp(request):
     if request.method != 'POST':
@@ -473,3 +447,4 @@ class profileView(LoginRequiredMixin,View):
 
             messages.success(request, "Profile updated successfully ✅")
             return redirect("profile")  # reload page with updated info
+

@@ -15,9 +15,12 @@
                     <p class="text-muted">Manage and track all UAV products in your inventory</p>
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-primary" id="createProductBtn" data-bs-toggle="modal" data-bs-target="#productFormModal">
+                    <button class="btn btn-primary"
+                            onclick="createProduct(event)"
+                            id="createProductBtn">
                         <i class="fas fa-plus-circle me-2"></i>Create Product
                     </button>
+
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importExportModal">
                         <i class="fas fa-file-csv me-2"></i>Import/Export
                     </button>
@@ -205,13 +208,20 @@
                                                 </button>
 
                                                 <!-- Delete Button -->
-                                                <form method="POST" action="{% url 'delete_product' product.id %}" class="d-inline-block"
-                                                    onsubmit="return confirm('Are you sure you want to delete this?');">
+                                                <form method="POST" action="{% url 'delete_product' product.id %}" class="d-inline-block" onsubmit="event.preventDefault(); confirmDelete(this);">
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Delete Product">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+
+                                                <script>
+                              function confirmDelete(form) {
+                                openPopup('Are you sure you want to delete this status?', function() {
+                                  form.submit(); // Submit the form only if OK is clicked
+                                });
+                              }
+                            </script>
                                             </td>
                                         </tr>
                                         {% endfor %}

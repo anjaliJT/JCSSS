@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const statusSelect = document.getElementById('statusSelect');
   const remarksInput = document.getElementById('remarksInput');
   const hiddenStatusId = document.getElementById('statusId');
+  const saveBtn = document.getElementById('saveEditBtn'); // <-- NEW
 
   editButtons.forEach(button => {
     button.addEventListener('click', function () {
@@ -11,20 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
       const currentStatus = this.dataset.status?.trim();
       const currentRemarks = this.dataset.remarks || "";
 
-      // Dynamically set the form action
       form.action = `/csm/complaint/${statusId}/edit-status/`;
-
-      // Update hidden input
       hiddenStatusId.value = statusId;
-
-      // Fill remarks
       remarksInput.value = currentRemarks;
 
-      // Select the correct status option
       let matched = false;
       for (let option of statusSelect.options) {
-        if (option.text.trim().toUpperCase() === currentStatus.toUpperCase() ||
-            option.value.trim().toUpperCase() === currentStatus.toUpperCase()) {
+        if (
+          option.text.trim().toUpperCase() === currentStatus.toUpperCase() ||
+          option.value.trim().toUpperCase() === currentStatus.toUpperCase()
+        ) {
           option.selected = true;
           matched = true;
           break;
@@ -32,8 +29,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (!matched) {
-        statusSelect.selectedIndex = 0; // fallback
+        statusSelect.selectedIndex = 0;
       }
+    });
+  });
+
+  // ✅ Confirmation popup for Save button
+  saveBtn.addEventListener("click", function () {
+    openPopup("Are you sure you want to save changes?", function () {
+      form.submit();
     });
   });
 });

@@ -110,9 +110,6 @@
                                 <th style="width: 10%">Tail Number</th>
                                 <th style="width: 10%">Price</th>
                                 <th style="width: 15%">Complaint number</th>
-                                <!-- <th style="width: 25%">Command name</th> -->
-                                <!-- <th style="width: 12%">Complaint Date</th> -->
-                                <!-- <th style="width: 12%">Last Updated Person</th>  -->
                                 <th style="width: 14%">Status</th>
                                 <th style="width: 14%">Actions</th>
                             </tr>
@@ -168,4 +165,40 @@
                 </div>
             </div>
         </div>
+
+        <!-- Pagination -->
+        {% if events.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-end">
+
+        {% if events.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ events.previous_page_number }}">&laquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {% for i in events.paginator.page_range %}
+        <li class="page-item {% if events.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+
+        {% if events.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ events.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}
+
 {% endblock %}

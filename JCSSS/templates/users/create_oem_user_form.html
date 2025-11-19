@@ -158,7 +158,7 @@
                         <a href="{% url 'user_admin_list' %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" onclick="confirmFormSubmit(event)">
                             <i class="fas fa-save me-2"></i>{% if user %}Update User{% else %}Create User{% endif %}
                         </button>
                     </div>
@@ -211,5 +211,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+{% block extra_scripts %}
+<script src="{% static 'js/popup_msg.js' %}"></script>
+{% endblock %}
+
 {% endblock %}
 

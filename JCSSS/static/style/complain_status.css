@@ -424,6 +424,13 @@
   .role-selector {
     max-width: 100%;
   }
+  .location-option {
+    padding: 0.5rem;
+  }
+  .right-header{
+    margin-top: 1rem !important;
+  }
+  
 }
 
 /* Add to existing CSS */
@@ -496,9 +503,7 @@
     max-height: 250px;
   } */
   
-  .location-option {
-    padding: 0.5rem;
-  }
+  
 }
 
 

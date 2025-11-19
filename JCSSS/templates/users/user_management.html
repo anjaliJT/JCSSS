@@ -70,9 +70,14 @@
             <h2 class="mb-0">User Management</h2>
         </div>
         <div class="col-auto">
-            <a href="{% url 'create_oem_user' %}" class="btn btn-primary">
+            <a href="{% url 'create_oem_user' %}" 
+            class="btn btn-primary"
+            onclick="userNavigation(event, '{% url 'create_oem_user' %}')">
                 <i class="fas fa-user-plus me-2"></i>New User
             </a>
+            <script>
+                
+            </script>
         </div>
     </div>
 
@@ -164,7 +169,9 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{% url 'edit_oem_user' user.id %}" class="btn btn-outline-primary btn-sm" title="Edit User">
+                                    <a href="{% url 'edit_oem_user' user.id %}" class="btn btn-outline-primary btn-sm"
+                                    onclick="userEditNavigation(event, '{% url 'edit_oem_user' user.id %}')"
+                                    title="Edit User">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown" title="More Options">
@@ -199,7 +206,7 @@
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
     <nav aria-label="User pagination" class="mt-4">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-end me-2">
             {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
@@ -238,5 +245,9 @@
     {% endif %}
 </div>
 
+</div>
+{% block extra_scripts %}
+<script src="{% static 'js/popup_msg.js' %}"></script>
+{% endblock %}
 {% endblock %}
 
