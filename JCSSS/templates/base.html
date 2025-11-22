@@ -129,7 +129,7 @@
                     
                     <div class="dropdown">
                         <a href="#" class="text-white dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://ui-avatars.com/api/?name=Customer+User&background=random" class="rounded-circle me-2" width="32" height="32">
+                            <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=random&size=120" class="rounded-circle me-2" width="32" height="32">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="{% url 'profile' %}" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>

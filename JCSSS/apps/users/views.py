@@ -23,11 +23,32 @@ from django.utils.timesince import timesince
 from django.core.mail import EmailMultiAlternatives
 import json, traceback,random
 from .models import ForgotPasswordOTP
+from apps.stats.core import compute_all_metrics, compute_complain
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
 
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
 otp_storage = {}
+
+class StatisticsView(View):
+    def get(self, request):
+
+        # If user is not logged in → send to login
+        if not request.user.is_authenticated:
+            return render(request, "auth/login.html")
+
+        user = request.user
+
+        # If user is not CUSTOMER → show full stats
+        if user.role != "CUSTOMER":
+            full_data = compute_all_metrics(user)
+            return render(request, "dashboard.html", {"full_data": full_data})
+
+        # If user is CUSTOMER → show limited stats
+        user_data = compute_complain(user)
+        return render(request, "dashboard.html", {"user_data": user_data})
 
 
 class Login(View):

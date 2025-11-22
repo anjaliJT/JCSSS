@@ -1,0 +1,47 @@
+<div class="col-md-6 mb-3">
+    <div class="card h-100">
+        <div class="card-body">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h6 class="card-title">{{ e.model_number }}</h6>
+                    <p class="text-muted small">Serial: {{ e.tail_number }}</p>
+                </div>
+
+                {% if e.current_status == "REVIEW" %}
+                    <span class="badge bg-warning text-dark">In Review</span>
+                {% elif e.current_status == "REPAIR" %}
+                    <span class="badge bg-info">In Repair</span>
+                {% elif e.current_status == "CLOSED" %}
+                    <span class="badge bg-success">Completed</span>
+                {% else %}
+                    <span class="badge bg-secondary">{{ e.current_status }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Progress Section -->
+            <div class="bg-light p-3 rounded">
+                <p class="small text-muted mb-1">Current Progress</p>
+
+                <p class="mb-2">{{ e.current_status }}</p>
+
+                <div class="progress mb-2">
+                    <div class="progress-bar
+                        {% if e.current_status == "REVIEW" %}bg-warning
+                        {% elif e.current_status == "REPAIR" %}bg-info
+                        {% elif e.current_status == "CLOSED" %}bg-success
+                        {% else %}bg-secondary
+                        {% endif %}
+                    "
+                    role="progressbar"
+                    style="width: {{ e.progress }}%">
+                    </div>
+                </div>
+
+                <p class="small text-muted mb-0">Updated recently</p>
+            </div>
+
+        </div>
+    </div>
+</div>
