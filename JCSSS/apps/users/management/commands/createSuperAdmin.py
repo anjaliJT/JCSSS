@@ -13,16 +13,22 @@ class Command(BaseCommand):
         # admin_role, _ = Role.objects.get_or_create(name="SUPERADMIN")
         # default_department, _ = Department.objects.get_or_create(name="OPERATIONS")
 
-        if not User.objects.filter(email="jcsss@johnnette.com").exists():
-            superadmin = User.objects.create_superuser(
-                email='jcsss@johnnette.com',
-                password=password,
-                first_name='Super',
-                last_name='Admin',
-                # role=admin_role,
-                # department=default_department,
-            )
+        email = 'jcss2@johnnette.com'
 
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                'first_name': 'Super',
+                'last_name': 'Admin',
+            }
+        )
+
+        if created:
+            user.set_password(password)
+            user.is_staff = True
+            user.is_superuser = True
+            user.is_active = True
+            user.save()
             self.stdout.write(self.style.SUCCESS('✅ Superadmin created successfully.'))
         else:
             self.stdout.write(self.style.WARNING('⚠️ Superadmin already exists.'))

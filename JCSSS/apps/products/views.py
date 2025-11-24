@@ -14,23 +14,12 @@ from .models import Product
 from apps.complain_form.models import Event 
 from django.db.models import  Sum
 from apps.oem.models import ComplaintStatus, RepairCost, CustomerPricing
+
 from django.core.paginator import Paginator
 from django.db.models import OuterRef, Subquery, Sum, Value, DecimalField, CharField, DateTimeField
 from django.db.models.functions import Coalesce
 from django.db import IntegrityError
 
-
-# @login_required(login_url = 'login')
-# def create_product_view(request): 
-#     if request.method == "POST": 
-#         form  = productForm(request.POST)
-#         if form.is_valid() : 
-#             form.save() 
-#             return redirect("product_list")
-#     else:
-#         form = productForm()    
-    
-#     return render(request,"products/product_form.html",{"form":form})
 
 
 @login_required(login_url='login')
@@ -47,9 +36,11 @@ def create_product_view(request):
         else:
             messages.error(request, "Tail Number already exists.")
     else:
+
         form = productForm()
 
     return redirect('product_list')
+
         
 
 
@@ -122,7 +113,6 @@ def edit_product_view(request, pk):
             "selected_warranty": None,
         })
 
-    print("edit.html")
     return render(request, 'edit_product.html', {
         'product': product,
         'product_models': Product_model.objects.all()

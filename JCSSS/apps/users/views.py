@@ -209,147 +209,255 @@ class UserDetails(LoginRequiredMixin,View):
     redirect_field_name = 'next'
     def get(self, request):
         return render(request, "dashboard.html", {"user": None})
-
-
 class UserManagementListView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
+    """View for displaying and managing user lists with filtering and pagination."""
+    
     login_url = 'login'
     permission_required = "auth.view_user"
     template_name = "users/user_management.html"
 
     def get_context_data(self, **kwargs):
+        """Builds context data for user management template by coordinating specialized processors."""
         context = super().get_context_data(**kwargs)
         request = self.request
 
-        users_qs = CustomUser.objects.all()
+        # Process data through specialized components
+        filter_processor = UserFilterProcessor(request)
+        filtered_users = filter_processor.get_filtered_queryset()
+        
+        pagination_processor = UserPaginationProcessor(filtered_users, request)
+        page_obj = pagination_processor.get_page_obj()
+        
+        data_processor = UserDataProcessor(page_obj)
+        user_rows = data_processor.get_user_rows()
 
-        search_query = request.GET.get("q", "").strip()
-        role_filter = request.GET.get("role", "").strip()
-        status_filter = request.GET.get("status", "").strip()
-        sort_by = request.GET.get("sort", "-date_joined")
+        context.update({
+            "user_rows": user_rows,
+            "page_obj": page_obj,
+            "page_range": pagination_processor.get_elided_page_range(),
+            "stats": filter_processor.get_statistics(),
+            "current_filters": filter_processor.get_current_filters(),
+            "role_choices": CustomUser.ROLE_CHOICES,
+            "sort_options": self.get_sort_options(),
+            "query_string": filter_processor.get_query_string(),
+        })
+        return context
 
-        if search_query:
-            users_qs = users_qs.filter(
-                Q(first_name__icontains=search_query)
-                | Q(last_name__icontains=search_query)
-                | Q(email__icontains=search_query)
-                | Q(certificate_number__icontains=search_query)
-            )
+    def get_sort_options(self):
+        """Returns available sorting options for the user list."""
+        return [
+            ("-date_joined", "Newest first"),
+            ("first_name", "Alphabetical"),
+            ("-last_login", "Last active"),
+        ]
 
-        if role_filter:
-            users_qs = users_qs.filter(role=role_filter)
+class UserFilterProcessor:
+    """Handles filtering, searching, and sorting of user querysets."""
+    
+    def __init__(self, request):
+        """Initializes with request and extracts filter parameters."""
+        self.request = request
+        self.search_query = request.GET.get("q", "").strip()
+        self.role_filter = request.GET.get("role", "").strip()
+        self.status_filter = request.GET.get("status", "").strip()
+        self.sort_by = request.GET.get("sort", "-date_joined")
+        self.base_queryset = CustomUser.objects.all()
 
-        if status_filter == "active":
-            users_qs = users_qs.filter(is_active=True, last_login__isnull=False)
-        elif status_filter == "inactive":
-            users_qs = users_qs.filter(is_active=False)
-        elif status_filter == "invited":
-            users_qs = users_qs.filter(is_active=True, last_login__isnull=True)
+    def get_filtered_queryset(self):
+        """Applies all filters and returns the final queryset."""
+        queryset = self.base_queryset
+        
+        if self.search_query:
+            queryset = self._apply_search_filter(queryset)
+        
+        if self.role_filter:
+            queryset = queryset.filter(role=self.role_filter)
+        
+        if self.status_filter:
+            queryset = self._apply_status_filter(queryset)
+        
+        return self._apply_sorting(queryset)
 
+    def _apply_search_filter(self, queryset):
+        """Filters queryset based on search query across multiple fields."""
+        return queryset.filter(
+            Q(first_name__icontains=self.search_query)
+            | Q(last_name__icontains=self.search_query)
+            | Q(email__icontains=self.search_query)
+            | Q(certificate_number__icontains=self.search_query)
+        )
+
+    def _apply_status_filter(self, queryset):
+        """Filters queryset based on user status (active/inactive/invited)."""
+        if self.status_filter == "active":
+            return queryset.filter(is_active=True, last_login__isnull=False)
+        elif self.status_filter == "inactive":
+            return queryset.filter(is_active=False)
+        elif self.status_filter == "invited":
+            return queryset.filter(is_active=True, last_login__isnull=True)
+        return queryset
+
+    def _apply_sorting(self, queryset):
+        """Applies sorting to the queryset based on selected option."""
         sort_mapping = {
             "-date_joined": "-date_joined",
             "first_name": "first_name",
             "-last_login": "-last_login",
         }
-        users_qs = users_qs.order_by(sort_mapping.get(sort_by, "-date_joined"))
+        return queryset.order_by(sort_mapping.get(self.sort_by, "-date_joined"))
 
-        paginator = Paginator(users_qs, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        elided_page_range = paginator.get_elided_page_range(page_obj.number, on_each_side=1, on_ends=1)
-
-        user_rows = []
-        for user in page_obj:
-            full_name = (user.get_full_name() or "").strip()
-            if not full_name:
-                full_name = user.email.split("@")[0]
-
-            avatar_seed = quote_plus(full_name or user.email)
-            avatar_url = f"https://ui-avatars.com/api/?name={avatar_seed}&background=random"
-
-            last_login_display = "Never logged in"
-            if user.last_login:
-                last_login_display = f"{timesince(user.last_login)} ago"
-
-            if not user.is_active:
-                status_label = "Inactive"
-                status_indicator = "status-inactive"
-                status_text_class = "text-danger"
-                status_subtitle = "Account disabled"
-            elif user.last_login:
-                status_label = "Active"
-                status_indicator = "status-active"
-                status_text_class = "text-success"
-                status_subtitle = f"Last login {last_login_display}"
-            else:
-                status_label = "Invite Pending"
-                status_indicator = "status-pending"
-                status_text_class = "text-warning"
-                status_subtitle = "Awaiting first login"
-
-            access_tags = list(user.groups.values_list("name", flat=True))
-            if len(access_tags) < 4:
-                extra_perms = user.user_permissions.values_list("codename", flat=True)
-                for perm in extra_perms:
-                    humanised = perm.replace("_", " ").title()
-                    if humanised not in access_tags:
-                        access_tags.append(humanised)
-                    if len(access_tags) >= 4:
-                        break
-            if not access_tags:
-                access_tags.append(user.get_role_display())
-
-            user_rows.append(
-                {
-                    "id": user.id,
-                    "full_name": full_name,
-                    "email": user.email,
-                    "avatar_url": avatar_url,
-                    "role_display": user.get_role_display(),
-                    "command_name": user.command_name or "",
-                    "access_tags": access_tags,
-                    "last_login_display": last_login_display,
-                    "status_indicator": status_indicator,
-                    "status_label": status_label,
-                    "status_text_class": status_text_class,
-                    "status_subtitle": status_subtitle,
-                }
-            )
-
-        stats = {
-            "total": users_qs.count(),
-            "active": users_qs.filter(is_active=True, last_login__isnull=False).count(),
-            "inactive": users_qs.filter(is_active=False).count(),
-            "pending": users_qs.filter(is_active=True, last_login__isnull=True).count(),
+    def get_statistics(self):
+        """Returns counts for different user status categories."""
+        queryset = self.get_filtered_queryset()
+        return {
+            "total": queryset.count(),
+            "active": queryset.filter(is_active=True, last_login__isnull=False).count(),
+            "inactive": queryset.filter(is_active=False).count(),
+            "pending": queryset.filter(is_active=True, last_login__isnull=True).count(),
         }
 
-        preserved_query = request.GET.copy()
+    def get_current_filters(self):
+        """Returns current filter values for template rendering."""
+        return {
+            "q": self.search_query,
+            "role": self.role_filter,
+            "status": self.status_filter,
+            "sort": self.sort_by,
+        }
+
+    def get_query_string(self):
+        """Returns query string for pagination links while preserving filters."""
+        preserved_query = self.request.GET.copy()
         preserved_query.pop("page", None)
-        query_string = preserved_query.urlencode()
+        return preserved_query.urlencode()
+class UserPaginationProcessor:
+    """Handles pagination logic for user lists."""
+    
+    def __init__(self, queryset, request, per_page=10):
+        """Initializes paginator with queryset and request parameters."""
+        self.queryset = queryset
+        self.request = request
+        self.per_page = per_page
+        self.paginator = Paginator(queryset, per_page)
+        self.page_obj = self._get_page_obj()
 
-        context.update(
-            {
-                "user_rows": user_rows,
-                "page_obj": page_obj,
-                "page_range": elided_page_range,
-                "stats": stats,
-                "current_filters": {
-                    "q": search_query,
-                    "role": role_filter,
-                    "status": status_filter,
-                    "sort": sort_by,
-                },
-                "role_choices": CustomUser.ROLE_CHOICES,
-                "sort_options": [
-                    ("-date_joined", "Newest first"),
-                    ("first_name", "Alphabetical"),
-                    ("-last_login", "Last active"),
-                ],
-                "query_string": query_string,
-            }
+    def _get_page_obj(self):
+        """Returns the current page object based on request."""
+        page_number = self.request.GET.get("page")
+        return self.paginator.get_page(page_number)
+
+    def get_page_obj(self):
+        """Returns the current page object."""
+        return self.page_obj
+
+    def get_elided_page_range(self, on_each_side=1, on_ends=1):
+        """Returns elided page range for pagination controls."""
+        return self.paginator.get_elided_page_range(
+            self.page_obj.number, 
+            on_each_side=on_each_side, 
+            on_ends=on_ends
         )
-        return context
 
+class UserDataProcessor:
+    """Processes user objects into template-ready dictionary data."""
+    
+    def __init__(self, page_obj):
+        """Initializes with a page object containing users."""
+        self.page_obj = page_obj
 
+    def get_user_rows(self):
+        """Processes all users in page object into template data."""
+        return [self._process_user_data(user) for user in self.page_obj]
+
+    def _process_user_data(self, user):
+        """Converts a single user object into template data dictionary."""
+        full_name = self._get_user_full_name(user)
+        status_data = self._get_status_data(user)
+        
+        return {
+            "id": user.id,
+            "full_name": full_name,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "certificate_number": user.certificate_number or "",
+            "designation": user.designation or "",
+            "avatar_url": self._get_avatar_url(full_name, user.email),
+            "role": user.role,
+            "role_display": user.get_role_display(),
+            "command_name": user.command_name or "",
+            "is_active": user.is_active,
+            "access_tags": self._get_access_tags(user),
+            "last_login_display": self._get_last_login_display(user),
+            "status_indicator": status_data["indicator"],
+            "status_label": status_data["label"],
+            "status_text_class": status_data["text_class"],
+            "status_subtitle": status_data["subtitle"],
+        }
+
+    def _get_user_full_name(self, user):
+        """Returns user's full name or falls back to email username."""
+        full_name = (user.get_full_name() or "").strip()
+        return full_name or user.email.split("@")[0]
+
+    def _get_avatar_url(self, full_name, email):
+        """Generates avatar URL based on user's name or email."""
+        avatar_seed = quote_plus(full_name or email)
+        return f"https://ui-avatars.com/api/?name={avatar_seed}&background=random"
+
+    def _get_last_login_display(self, user):
+        """Formats last login time for display."""
+        if user.last_login:
+            return f"{timesince(user.last_login)} ago"
+        return "Never logged in"
+
+    def _get_status_data(self, user):
+        """Determines user status data for display and styling."""
+        if not user.is_active:
+            return {
+                "label": "Inactive",
+                "indicator": "status-inactive",
+                "text_class": "text-danger",
+                "subtitle": "Account disabled"
+            }
+        elif user.last_login:
+            return {
+                "label": "Active",
+                "indicator": "status-active",
+                "text_class": "text-success",
+                "subtitle": f"Last login {self._get_last_login_display(user)}"
+            }
+        else:
+            return {
+                "label": "Invite Pending",
+                "indicator": "status-pending",
+                "text_class": "text-warning",
+                "subtitle": "Awaiting first login"
+            }
+
+    def _get_access_tags(self, user):
+        """Compiles list of access tags from groups and permissions."""
+        access_tags = list(user.groups.values_list("name", flat=True))
+        
+        if len(access_tags) < 4:
+            access_tags = self._add_extra_permissions(user, access_tags)
+        
+        if not access_tags:
+            access_tags.append(user.get_role_display())
+            
+        return access_tags
+
+    def _add_extra_permissions(self, user, access_tags):
+        """Adds individual permissions as tags when group tags are insufficient."""
+        extra_perms = user.user_permissions.values_list("codename", flat=True)
+        for perm in extra_perms:
+            if len(access_tags) >= 4:
+                break
+            humanised = perm.replace("_", " ").title()
+            if humanised not in access_tags:
+                access_tags.append(humanised)
+        return access_tags
 class CreateOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = 'login'
     permission_required = "auth.add_user"
@@ -394,12 +502,14 @@ class CreateOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
             else:
                 messages.success(request, f"User {user.get_full_name()} created successfully.")
             
-            return redirect('user_admin_list')
+            return redirect('user_list')
+        
         except Exception as e:
             messages.error(request, f"Error creating user: {str(e)}")
             context = {
                 'role_choices': CustomUser.ROLE_CHOICES,
             }
+            # return redirect('user_list')
             return render(request, self.template_name, context)
 
 
@@ -436,14 +546,11 @@ class EditOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
             
             user.save()
             messages.success(request, f"User {user.get_full_name()} updated successfully.")
-            return redirect('user_admin_list')
+            return redirect('user_list')
         except Exception as e:
+            logger.error(f"Error updating user {pk}: {str(e)}", exc_info=True)
             messages.error(request, f"Error updating user: {str(e)}")
-            context = {
-                'user': user,
-                'role_choices': CustomUser.ROLE_CHOICES,
-            }
-            return render(request, self.template_name, context)
+            return redirect('user_list')
 
 
 class profileView(LoginRequiredMixin,View): 
@@ -468,4 +575,32 @@ class profileView(LoginRequiredMixin,View):
 
             messages.success(request, "Profile updated successfully ✅")
             return redirect("profile")  # reload page with updated info
+    
+# class OEMUserFormView(PermissionRequiredMixin, LoginRequiredMixin, View):
 
+
+#     permission_required = "auth.add_user"
+
+
+#     def post(self, request, pk=None):
+#         is_update = pk is not None
+#         instance = get_object_or_404(CustomUser, pk=pk) if is_update else None
+
+
+#         form = OEMUserForm(request.POST, instance=instance)
+
+
+#         if form.is_valid():
+#             form.save(is_update=is_update)
+#             msg = "User updated successfully" if is_update else "User created successfully"
+#             messages.success(request, msg)
+#             return redirect("user_list")
+
+
+#         # If form errors exist, re-render modal in same page
+#         # Inject errors back into modal
+#         request.session['form_errors'] = form.errors
+#         request.session['form_data'] = request.POST
+
+
+#         return redirect("user_list")

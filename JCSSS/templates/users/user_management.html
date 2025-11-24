@@ -5,58 +5,11 @@
 
 {% block extra_css %}
 <style>
-    .badge-role {
-        font-size: 0.75rem;
-        letter-spacing: 0.03em;
-    }
-    .status-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 6px;
-    }
-    .status-active {
-        background-color: #28a745;
-    }
-    .status-inactive {
-        background-color: #dc3545;
-    }
-    .status-pending {
-        background-color: #ffc107;
-    }
-    .user-card:hover {
-        border-color: rgba(53, 133, 255, 0.35);
-        box-shadow: 0 0.75rem 2rem rgba(34, 60, 80, 0.12);
-    }
-    .filter-chip {
-        background: rgba(53, 133, 255, 0.08);
-        border: 1px solid rgba(53, 133, 255, 0.18);
-        color: #285bff;
-        font-weight: 500;
-        text-transform: uppercase;
-        font-size: 0.7rem;
-        letter-spacing: 0.04em;
-    }
     .permission-tag {
         font-size: 0.65rem;
         background: rgba(108, 117, 125, 0.15);
         color: #5c6770;
         border: none;
-    }
-    .table thead th {
-        text-transform: uppercase;
-        font-size: 0.7rem;
-        letter-spacing: 0.06em;
-    }
-    .table tbody tr {
-        vertical-align: middle;
-    }
-    @media (max-width: 992px) {
-        .filters-wrapper {
-            flex-direction: column;
-            gap: 0.75rem;
-        }
     }
 </style>
 {% endblock %}
@@ -68,6 +21,7 @@
     <div class="row mb-4">
         <div class="col">
             <h2 class="mb-0">User Management</h2>
+            <p class="text-muted">Manage and track all users in your system</p>
         </div>
         <div class="col-auto">
             <a href="{% url 'create_oem_user' %}" 
@@ -125,81 +79,137 @@
 
     <!-- Users List -->
     <div class="card">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Users</h5>
-        </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Role & Unit</th>
-                            <th>Access</th>
-                            <th>Activity</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in user_rows %}
-                        <tr class="user-card">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ user.avatar_url }}" class="rounded-circle me-3" width="40" height="40" alt="User avatar for {{ user.full_name }}">
-                                    <div>
-                                        <div class="fw-semibold">{{ user.full_name }}</div>
-                                        <small class="text-muted">{{ user.email }}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill bg-primary-subtle text-primary badge-role">{{ user.role_display }}</span>
-                                <div class="text-muted small">{{ user.command_name|default:"—" }}</div>
-                            </td>
-                            <td>
-                                <div class="d-flex flex-wrap gap-1">
-                                    {% for tag in user.access_tags %}
-                                        <span class="badge rounded-pill permission-tag">{{ tag }}</span>
-                                    {% endfor %}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-muted small">{{ user.status_subtitle }}</div>
-                                <div><span class="status-dot {{ user.status_indicator }}"></span><small class="{{ user.status_text_class }} fw-semibold">{{ user.status_label }}</small></div>
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{% url 'edit_oem_user' user.id %}" class="btn btn-outline-primary btn-sm"
-                                    onclick="userEditNavigation(event, '{% url 'edit_oem_user' user.id %}')"
-                                    title="Edit User">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="dropdown" title="More Options">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="#" data-user-id="{{ user.id }}"><i class="fas fa-shield-alt me-2"></i>Adjust Permissions</a></li>
-                                        <li><a class="dropdown-item" href="#" data-user-id="{{ user.id }}"><i class="fas fa-envelope-open-text me-2"></i>Resend Invite</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item text-danger" href="#" data-user-id="{{ user.id }}"><i class="fas fa-user-slash me-2"></i>Deactivate</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center py-5">
-                                <i class="fas fa-user-slash fa-3x text-muted mb-3 d-block"></i>
-                                <h5 class="text-muted">No users found</h5>
-                                <p class="text-muted">No users match the current filters.</p>
-                                <a href="{% url 'create_oem_user' %}" class="btn btn-primary">
-                                    <i class="fas fa-user-plus me-2"></i>Create New User
-                                </a>
-                            </td>
-                        </tr>
+            <!-- Column Toggle Controls -->
+<!-- Column Toggle Controls -->
+<div class="mb-3 d-flex justify-content-end">
+    <!-- Filter Icon -->
+    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="columnFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-filter"></i>
+    </button>
+
+    <!-- Dropdown Menu with checkboxes -->
+    <ul class="dropdown-menu p-3" aria-labelledby="columnFilterDropdown" style="min-width: 250px;">
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="0" checked id="col0">
+            <label class="form-check-label" for="col0">User</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="1" checked id="col1">
+            <label class="form-check-label" for="col1">Phone Number</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="2" id="col2">
+            <label class="form-check-label" for="col2">Certificate Number</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="3" checked id="col3">
+            <label class="form-check-label" for="col3">Designation</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
+            <label class="form-check-label" for="col4">Command / Unit</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
+            <label class="form-check-label" for="col5">Role</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="6" checked id="col6">
+            <label class="form-check-label" for="col6">Access Permissions</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="7" checked id="col7">
+            <label class="form-check-label" for="col7">Status</label>
+        </li>
+        <li class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="8" checked id="col8">
+            <label class="form-check-label" for="col8">Actions</label>
+        </li>
+    </ul>
+</div>
+         <div class="table-responsive">
+    <table class="table table-hover" id="userTable">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Phone Number</th>
+                <th>Certificate Number</th>
+                <th>Designation</th>
+                <th>Command / Unit</th>
+                <th>Role</th>
+                <th>Access Permissions</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in user_rows %}
+            <tr class="user-card">
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="{{ user.avatar_url }}" class="rounded-circle me-3" width="40" height="40" alt="User avatar for {{ user.full_name }}">
+                        <div>
+                            <div class="fw-semibold">{{ user.full_name }}</div>
+                            <small class="text-muted">{{ user.email }}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ user.phone_number }}</td>
+                <td>{{ user.certificate_number|default:"—" }}</td>
+                <td>{{ user.designation|default:"—" }}</td>
+                <td>{{ user.command_name|default:"—" }}</td>
+                <td>
+                    <span class="badge rounded-pill bg-primary-subtle text-primary badge-role">{{ user.role_display }}</span>
+                </td>
+                <td>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for tag in user.access_tags %}
+                            <span class="badge rounded-pill permission-tag">{{ tag }}</span>
                         {% endfor %}
-                </tbody>
-            </table>
+                    </div>
+                </td>
+                <td>
+                    {% if user.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Only Edit Button -->
+                    <button class="edit-user-btn btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal" data-bs-target="#userFormModal"
+                        data-id="{{ user.id }}"
+                        data-first-name="{{ user.first_name }}"
+                        data-last-name="{{ user.last_name }}"
+                        data-email="{{ user.email }}"
+                        data-phone="{{ user.phone_number }}"
+                        data-certificate="{{ user.certificate_number }}"
+                        data-designation="{{ user.designation }}"
+                        data-command="{{ user.command_name }}"
+                        data-role="{{ user.role }}"
+                        data-is-active="{{ user.is_active }}"
+                        title="Edit User">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" class="text-center py-5">
+                    <i class="fas fa-user-slash fa-3x text-muted mb-3 d-block"></i>
+                    <h5 class="text-muted">No users found</h5>
+                    <p class="text-muted">No users match the current filters.</p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userFormModal">
+                        <i class="fas fa-user-plus me-2"></i>Create New User
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
         </div>
     </div>
     
@@ -245,9 +255,36 @@
     {% endif %}
 </div>
 
+<!-- Include User Form Modal -->
+{% include "users/create_oem_user_form.html" %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Apply toggle logic on change
+        document.querySelectorAll(".column-toggle").forEach(checkbox => {
+            checkbox.addEventListener("change", function() {
+                let colIndex = parseInt(this.value) + 1; // nth-child is 1-based
+                let display = this.checked ? "" : "none";
+                
+                document.querySelectorAll(`#userTable tr th:nth-child(${colIndex}), 
+                                        #userTable tr td:nth-child(${colIndex})`)
+                        .forEach(cell => cell.style.display = display);
+            });
 </div>
+
+
+            // Hide unchecked columns initially
+            if (!checkbox.checked) {
+                let colIndex = parseInt(checkbox.value) + 1;
+                document.querySelectorAll(`#userTable tr th:nth-child(${colIndex}), 
+                                        #userTable tr td:nth-child(${colIndex})`)
+                        .forEach(cell => cell.style.display = "none");
+            }
+        });
+    });
+</script>
+{% endblock %}
 {% block extra_scripts %}
 <script src="{% static 'js/popup_msg.js' %}"></script>
 {% endblock %}
 {% endblock %}
-
