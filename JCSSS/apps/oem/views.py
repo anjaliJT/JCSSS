@@ -5,7 +5,7 @@ from apps.complain_form.models import Event
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from django.db import IntegrityError
+from datetime import date
 from django.db.models import Sum
 from apps.oem.forms import *
 from django.views.decorators.http import require_POST
@@ -46,6 +46,38 @@ class ComplaintStatusView(View):
             "location": location.location if location else "",
             "remarks": location.remarks if location else "",
         }
+        
+        
+        # --- Calculate total days based on statuses ---
+        total_days = None
+        today = timezone.now()
+        review_status = statuses.filter(status="REVIEW").order_by('updated_at').first()
+        accepted_status = statuses.filter(status="ACCEPTED").order_by('updated_at').first()
+        closed_status = statuses.filter(status="CLOSED").order_by('updated_at').first()
+        
+        # CASE 1 – Closed exists → Calculate from ACCEPTED if possible
+        if closed_status:
+            if accepted_status:
+                start_date = accepted_status.updated_at
+            else:
+                start_date = review_status.updated_at
+                
+            total_days = (closed_status.updated_at - start_date).days
+
+        # CASE 2 – Not closed yet → Calculate till today
+        else:
+            if accepted_status:
+                start_date = accepted_status.updated_at
+                total_days = (today - start_date).days
+
+            elif review_status:
+                start_date = review_status.updated_at
+                total_days = (today - start_date).days
+
+            else:
+                total_days = None  # nothing started yet
+
+            
 
         return render(request, "complaints/complain_status.html", {
             "form": form,
@@ -61,6 +93,7 @@ class ComplaintStatusView(View):
             "location_choices": location_choices,
             "profit_value": profit_value,
             "profit_percent": profit_percent,
+            "total_days": total_days,
         })
 
 
