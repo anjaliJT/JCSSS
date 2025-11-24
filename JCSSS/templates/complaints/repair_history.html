@@ -37,7 +37,7 @@
         <div class="row g-4 mb-4">
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <div class="metric-value cost-metric">{{repairs_count}}</div>
+                    <div class="metric-value cost-metric text-dark">{{repairs_count}}</div>
                     <div class="metric-label">Total Repairs</div>
                     <div class="mt-2">
                         <small class="text-success">
@@ -48,7 +48,7 @@
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <div class="metric-value cost-metric">₹{{ total_repair_cost|floatformat:2 }}</div>
+                    <div class="metric-value cost-metric text-primary">₹{{ total_repair_cost|floatformat:2 }}</div>
                     <div class="metric-label">Total Repair Cost</div>
                     <div class="mt-2">
                         <small class="text-success">
@@ -60,7 +60,7 @@
 
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <div class="metric-value cost-metric">₹{{ total_client_charge|floatformat:2 }}</div>
+                    <div class="metric-value cost-metric text-warning">₹{{ total_client_charge|floatformat:2 }}</div>
                     <div class="metric-label">Charged to Client</div>
                     <div class="mt-2">
                         <small class="text-success">
@@ -73,84 +73,132 @@
 
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <div class="metric-value profit-metric">₹{{ net_profit|floatformat:2 }}</div>
-                    <div class="metric-label">Net Profit</div>
-                    <div class="mt-2">
-                        <small class="text-success">
-                            <i class="fas fa-chart-line me-1"></i>{{ margin }}% margin
-                        </small>
-                    </div>
+                    <!-- <div class="metric-value profit-metric">₹{{ net_profit|floatformat:2 }}</div> -->
+                    <div class="metric-value 
+                    {% if net_profit > 0 %}
+                        text-success
+                    {% elif net_profit < 0 %}
+                        text-danger
+                    {% else %}
+                        text-secondary
+                    {% endif %}">
+                    ₹{{ net_profit|floatformat:2 }}
                 </div>
+
+                <div class="metric-label">Net Profit</div>
+
+                <div class="mt-2">
+                    <small class="{% if margin >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        <i class="fas fa-chart-line me-1"></i>{{ margin|floatformat:2 }}% margin
+                    </small>
+                </div>
+
             </div>
         </div>
 
         <!-- Repair History -->
         <div class="card">
-            <div class="card-header bg-white">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Repair History</h5>
             </div>
-            <div class="card-body p-0">
-                <div class="p-4">
-                    <!-- Repair 1 -->
-                    {% for event in events %}
-                    <div class="repair-card">
-                        <div class="row align-items-center gy-3">
-                            <!-- Left section -->
-                            <div class="col-8 col-sm-4 col-md-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="
-                                        {% if forloop.counter|divisibleby:2 %}
-                                            bg-success
-                                        {% else %}
-                                            bg-warning
-                                        {% endif %}
-                                        bg-opacity-10 rounded p-2 me-3
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 12%">Model Number</th>
+                                <th style="width: 10%">Tail Number</th>
+                                <th style="width: 10%">Price</th>
+                                <th style="width: 15%">Complaint number</th>
+                                <th style="width: 14%">Status</th>
+                                <th style="width: 14%">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                            <tr>
+                                <td >{{ event.model_number }}</td>
+                                <td>{{ event.tail_number }}</td>
+                                <td>₹{{ event.total_repair_cost|default:"0.00" }}
+                                    <br>
+                                    <small class="text-muted">
+                                            {{ event.date_of_occurrence|date:"M d, Y"|default:"—" }}
+                                        </small>
+                                </td>
+                                <td>{{ event.unique_token }}</td>
+                                <!-- <td> {{ event.last_status|default:"N/A" }}</td> -->
+                                <td>
+                                {% if event.last_status %}
+                                    <span class="badge 
+                                    {% if event.last_status == 'REVIEW' %} bg-primary
+                                    {% elif event.last_status == 'ACCEPTED' %} bg-info
+                                    {% elif event.last_status == 'REJECTED' %} bg-warning
+                                    {% elif event.last_status == 'CLOSED' %} bg-danger
+                                    {% elif event.last_status == 'COMPLETED' %} bg-success
+                                    {% else %} bg-secondary
+                                    {% endif %}
                                     ">
-                                        <i class="fas fa-tools text-light"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">{{ event.model_number }}</h6>
-                                        <p class="text-muted small mb-0">{{ event.tail_number }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Middle section -->
-                            <div class="col-4 col-sm-4 col-md-3 text-start text-md-center">
-                                <div class="h6 mb-1">
-                                    ₹{{ event.total_repair_cost|default:"0.00" }}
-                                </div>
-                                <small class="text-muted">
-                                    {{ event.date_of_occurrence|date:"M d, Y"|default:"—" }}
-                                </small>
-                            </div>
-                            <div class="col-8 col-sm-4 col-md-3 text-start text-md-center">
-                                <div class="h6 mb-1">
-                                    {{ event.unique_token }}
-                                </div>
-                            </div>
-
-                            <!-- Right section -->
-                            <div class="col-4 col-sm-4 col-md-3 text-end right-section">
-                                <span class="badge bg-danger mb-1">
                                     {{ event.last_status|default:"N/A" }}
-                                </span>
-                                <a href="{% url 'fetch_complaint_status' event.id %}">
-                                    <button class="btn btn-sm btn-outline-primary ms-2">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </a>
-                            </div>
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">No Status</span>
+                                {% endif %}
+                                </td>
 
-                        </div>
-                        <hr>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted py-4">
-                        <i class="fas fa-info-circle me-2"></i>No repair history found for this product.
-                    </div>
-                    {% endfor %}
+                                <td><a href="{% url 'fetch_complaint_status' event.id %}">
+                                            <button class="btn btn-sm btn-outline-primary ms-2">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td></a>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <i class="fas fa-ticket-alt fa-3x text-muted mb-3 d-block"></i>
+                                    <h5 class="text-muted">No Repair history found</h5>
+                                    <i class="fas fa-info-circle me-2"></i>No repair history found for this product.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+
+        <!-- Pagination -->
+        {% if events.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-end">
+
+        {% if events.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ events.previous_page_number }}">&laquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {% for i in events.paginator.page_range %}
+        <li class="page-item {% if events.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+
+        {% if events.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ events.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}
+
 {% endblock %}

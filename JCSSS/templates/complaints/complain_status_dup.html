@@ -25,32 +25,16 @@
         <div class="col-md-8">
           <div class="complaint-id">#{{event.unique_token}}</div>
           <div class="customer-name">{{event.model_number}}</div>
-          <div class="mt-2 header">
+          <div class="mt-2 status-location">
            
             <span class="status-badge status-active">  {{ latest_status.get_status_display|default:"No Status" }}</span>
-            <span class="location-badge location-oem" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
-            {% if total_days is not None %}
-              {% if total_days <= 10 %}
-                  <span class="badge bg-success location-badge p-2">
-                      <i class="fas fa-check-circle"></i> On Time ({{ total_days }} days)
-                  </span>
-              {% else %}
-                  <span class="badge bg-danger location-badge p-2">
-                      <i class="fas fa-exclamation-triangle"></i> Late ({{ total_days }} days)
-                  </span>
-              {% endif %}
-            {% else %}
-              <span class="badge bg-secondary location-badge p-2">
-                  <i class="fas fa-info-circle"></i> Not Started
-              </span>
-            {% endif %}
-
+            <span class="location-badge location-oem ms-2" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
             
             <!-- <span class="customer-only ms-2">Awaiting Your Approval</span> -->
             <!-- <span class="oem-only ms-2">Assigned to: John Smith</span> -->
           </div>
         </div>
-        <div class="col-md-4 text-md-end">
+        <div class="col-md-4 text-md-end right-header">
           <div class="col-auto">
               <button type="button" class="btn  btn-outline-primary" onclick="history.back()">
                   <i class="fas fa-arrow-left me-2"></i>Back to Complaints
@@ -109,14 +93,6 @@
                         <p class="timeline-description">
                           {{ s.remarks|default:"" }}
                         </p>
-
-                        {%if s.status == "ACCEPTED" %}
-                          <p class="timeline-info">You will get the diagnosis report within 3 days once we receive the product at our warehouse.</p>
-                        {% endif %}
-                        {% if s.status == 'DIAGNOSIS' and event.customer_pricing.approved == True %}
-                          <p class="timeline-info">When the payment is approved by you, it takes 7 days to repair the product.</p>
-                        {% endif %}
-
                         {% if s.attachments %}
                           <a href="{{ s.attachments.url }}" target="_blank">
                             <i class="fas fa-paperclip"></i> View Attachment
@@ -229,9 +205,10 @@
                         </div>
                         <div class="text-warning fw-bold d-flex flex-column">₹{{ cost.repair_cost|floatformat:2 }}
                         {% if user.role == "CSM" %}
-                          <form method="POST" id="deleteRepairCost" action="{% url 'delete_repair_cost' cost.id %}" class="mt-1">
+                          <form method="POST" action="{% url 'delete_repair_cost' cost.id %}" 
+                                onsubmit="return confirm('Are you sure you want to delete this repair cost?');" class="mt-1">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-danger ms-3" onclick="deleteRepairCost(event)">
+                            <button type="submit" class="btn btn-sm btn-outline-danger ms-3">
                               <i class="fas fa-trash"></i> 
                             </button>
                           </form>
@@ -260,11 +237,13 @@
                 <span class="cost-label">Total Repair Cost:</span>
                 <span class="cost-value customer-cost" id="customerTotalCost">₹{{ total_customer_cost|floatformat:2 }}</span>
               </div>
-              <div class="mt-2">
-                <a href="{{ event.customer_pricing.invoice.url }}" class="attachment-link" id="customerInvoiceLink" target="_blank">
-                  <i class="fas fa-file-invoice me-1"></i>View Invoice
-                </a>
-              </div>
+               {% if event.customer_pricing.invoice %}
+                <div class="mt-2">
+                    <a href="{{ event.customer_pricing.invoice.url }}" class="attachment-link" id="customerInvoiceLink" target="_blank">
+                        <i class="fas fa-file-invoice me-1"></i>View Invoice
+                    </a>
+                </div>
+              {% endif %}
             </div>
             
             {% if event.customer_pricing.approved == False %}
@@ -385,9 +364,28 @@
               </div>
 
               <div class="d-grid">
-                <button type="submit" class="btn btn-primary" onclick="statusEdit(event)" {% if latest_status.status == 'CLOSED' %} disabled {% endif %}>
-                  <i class="fas fa-save me-2"></i>Update Status
+                <button type="button" class="btn btn-primary"
+                        {% if latest_status.status == 'CLOSED' %} disabled {% endif %}>
+                    <i class="fas fa-save me-2"></i>Update Status
                 </button>
+                <script>
+                  function statusEdit() {
+                    // Prevent triggering when disabled
+                    const btn = event.target;
+                    if (btn.disabled) return;
+
+                    openPopup("Are you sure you want to update status?", function () {
+                      const form = document.getElementById("updateStatus");
+
+                      // Prevent multiple submissions
+                      if (!form.dataset.submitted) {
+                        form.dataset.submitted = "true";
+                        form.submit();
+                      }
+                    });
+                  }
+                </script>
+
               </div>
             </form>
 
@@ -433,9 +431,26 @@
                 </div>
 
                 <div class="d-grid">
-                  <button type="submit" onclick="addRepairCost(event)" class="btn btn-warning" {% if latest_status.status == 'CLOSED' %} disabled {% endif %}>
+                  <button type="submit" class="btn btn-warning" onclick="addRepairCost(event)" {% if latest_status.status == 'CLOSED' %} disabled {% endif %}>
                     <i class="fas fa-plus-circle me-2"></i>Add Repair Cost
                   </button>
+                  <script>
+                  function addRepairCost() {
+                    // Prevent triggering when disabled
+                    const btn = event.target;
+                    if (btn.disabled) return;
+
+                    openPopup("Are you sure you want to add repair cost", function () {
+                      const form = document.getElementById("addRepairCostForm");
+
+                      // Prevent multiple submissions
+                      if (!form.dataset.submitted) {
+                        form.dataset.submitted = "true";
+                        form.submit();
+                      }
+                    });
+                  }
+                </script>
                 </div>
               </form>
           </div>
@@ -493,7 +508,6 @@
                   type="submit"
                   class="btn btn-success"
                   id="submitBtn"
-                  onclick="addCustomerCost(event)"
                   {% if event.customer_pricing.total_price %}disabled{% endif %}
                 >
                   <i class="fas fa-paper-plane me-2"></i>Send to Customer
@@ -503,6 +517,8 @@
           </div>
       </div>
 
+<script>
+</script>
 
 
         <!-- Set Customer Pricing Closed --> 
@@ -547,7 +563,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" id="saveEditBtn" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-primary" id="saveEditBtn">Save Changes</button>
         </div>
       </form>
     </div>
@@ -559,7 +575,6 @@
 {% block extra_scripts %}
 <!-- JS -->
 <script src="{% static 'js/location.js' %}"></script>
-<script src="{% static 'js/popup_msg' %}"></script>
 <script src="{% static 'js/status.js' %}"></script>
 <script src="{% static 'js/customer_costs.js' %}"></script>
 

@@ -24,9 +24,14 @@
             <p class="text-muted">Manage and track all users in your system</p>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary" id="createUserBtn" data-bs-toggle="modal" data-bs-target="#userFormModal">
+            <a href="{% url 'create_oem_user' %}" 
+            class="btn btn-primary"
+            onclick="userNavigation(event, '{% url 'create_oem_user' %}')">
                 <i class="fas fa-user-plus me-2"></i>New User
-            </button>
+            </a>
+            <script>
+                
+            </script>
         </div>
     </div>
 
@@ -211,7 +216,7 @@
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
     <nav aria-label="User pagination" class="mt-4">
-        <ul class="pagination justify-content-end">
+        <ul class="pagination justify-content-end me-2">
             {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
@@ -265,6 +270,8 @@
                                         #userTable tr td:nth-child(${colIndex})`)
                         .forEach(cell => cell.style.display = display);
             });
+</div>
+
 
             // Hide unchecked columns initially
             if (!checkbox.checked) {
@@ -276,4 +283,8 @@
         });
     });
 </script>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/popup_msg.js' %}"></script>
+{% endblock %}
 {% endblock %}

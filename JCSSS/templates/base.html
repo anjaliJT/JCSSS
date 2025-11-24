@@ -129,7 +129,7 @@
                     
                     <div class="dropdown">
                         <a href="#" class="text-white dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://ui-avatars.com/api/?name=Customer+User&background=random" class="rounded-circle me-2" width="32" height="32">
+                            <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=random&size=120" class="rounded-circle me-2" width="32" height="32">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="{% url 'profile' %}" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>
@@ -143,31 +143,31 @@
         </nav>
             <!-- messages  -->
        {% if messages %}
-<div class="toast-container position-fixed top-1 end-0 p-3" style="z-index: 1100;">
-    {% for message in messages %}
-    <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                {{ message }}
+        <div class="toast-container position-fixed top-1 end-0 p-3" style="z-index: 1100;">
+            {% for message in messages %}
+            <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <!-- Close button -->
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
             </div>
-            <!-- Close button -->
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            {% endfor %}
         </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+        {% endif %}
 
-<!-- Bootstrap Toast Init -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const toastElList = [].slice.call(document.querySelectorAll('.toast'))
-        toastElList.forEach(function(toastEl) {
-            let t = new bootstrap.Toast(toastEl, { delay: 3000 }) // auto close after 3s
-            t.show()
-        })
-    });
-</script>
+        <!-- Bootstrap Toast Init -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+                toastElList.forEach(function(toastEl) {
+                    let t = new bootstrap.Toast(toastEl, { delay: 3000 }) // auto close after 3s
+                    t.show()
+                })
+            });
+        </script>
 
 
 
@@ -259,7 +259,6 @@
 
 
     </script>
-    {% block extra_js %}{% endblock %}
     <!-- Profile Modal -->
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -280,5 +279,46 @@
         
     </div>
 </div>
+
+<!-- Custom Center Popup -->
+<div class="modal fade" id="customPopup" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Confirmation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="popupMessage">
+        Are you sure you want to continue?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success btn-sm" id="popupOkBtn">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openPopup(message, onConfirm) {
+    document.getElementById('popupMessage').innerText = message;
+
+    const popup = new bootstrap.Modal(document.getElementById('customPopup'));
+    const okBtn = document.getElementById('popupOkBtn');
+
+    // Reset previous click listeners
+    okBtn.replaceWith(okBtn.cloneNode(true));
+    const newOkBtn = document.getElementById('popupOkBtn');
+
+    newOkBtn.addEventListener('click', () => {
+      popup.hide();
+      if (onConfirm) onConfirm();
+    });
+
+    popup.show();
+  }
+</script>
+{% block extra_js %}{% endblock %}
+
 </body>
 </html>

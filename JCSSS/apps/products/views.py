@@ -11,28 +11,36 @@ from datetime import datetime, date
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
 from .models import Product
-from apps.complain_form.models import Event  # import your Event model (adjust app name as needed)
-from django.db.models import Max, Sum, F
+from apps.complain_form.models import Event 
+from django.db.models import  Sum
 from apps.oem.models import ComplaintStatus, RepairCost, CustomerPricing
-from django.db.models import OuterRef, Subquery, Sum, Value, DecimalField, CharField, DateTimeField, Q
-from django.db.models.functions import Coalesce
 
-# Create your views here.
-@login_required(login_url = 'login')
-def create_product_view(request): 
-    if request.method == "POST": 
-        form  = productForm(request.POST)
-        if form.is_valid() : 
-            form.save() 
-            return redirect("product_list")
+from django.core.paginator import Paginator
+from django.db.models import OuterRef, Subquery, Sum, Value, DecimalField, CharField, DateTimeField
+from django.db.models.functions import Coalesce
+from django.db import IntegrityError
+
+
+
+@login_required(login_url='login')
+def create_product_view(request):
+    if request.method == "POST":
+        form = productForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, "Product created successfully.")
+                return redirect("product_list")
+            except IntegrityError:
+                messages.error(request, "Tail Number already exists.")
+        else:
+            messages.error(request, "Tail Number already exists.")
     else:
-        form = productForm()    
-    # print("forms --->",form)
-    # return redirect("product_list")
-    models = Product_model.objects.all()
-    return render(request,"products/product_form.html",{
-        "form":form,"models":models
-        })
+
+        form = productForm()
+
+    return redirect('product_list')
+
         
 
 
@@ -82,6 +90,10 @@ def edit_product_view(request, pk):
             product.product_model = get_object_or_404(Product_model, pk=model_id)
 
         product.order_name = request.POST.get('order_name')
+        product.source_location = request.POST.get('source_location')
+        product.army_command = request.POST.get('army_command')
+        product.unit_name = request.POST.get('unit_name')
+        product.formation = request.POST.get('formation')
 
         manufacture_date_str = request.POST.get('manufecturing_Date')
         if manufacture_date_str:
@@ -105,6 +117,7 @@ def edit_product_view(request, pk):
         'product': product,
         'product_models': Product_model.objects.all()
     })
+
 
 @login_required(login_url='login')
 def import_products_view(request): 
@@ -239,6 +252,7 @@ def delete_product_view(request, pk):
 
 def repair_history_view(request, pk):
     product = Product.objects.get(pk=pk)
+    page_number = request.GET.get('page', 1)
     tail_number = product.tail_number
 
     # Fetch all events for this tail number
@@ -265,11 +279,12 @@ def repair_history_view(request, pk):
 
     # ---- Annotate all in one queryset ----
     events = events_qs.annotate(
-        last_status=Subquery(latest_status_subquery, output_field=CharField()),
-        last_repair_date=Subquery(latest_date_subquery, output_field=DateTimeField()),
-        total_repair_cost=Subquery(repair_cost_subquery, output_field=DecimalField()),
-        client_charge=Subquery(client_charge_subquery, output_field=DecimalField()),
-    )
+    last_status=Subquery(latest_status_subquery, output_field=CharField()),
+    last_repair_date=Subquery(latest_date_subquery, output_field=DateTimeField()),
+    total_repair_cost=Subquery(repair_cost_subquery, output_field=DecimalField()),
+    client_charge=Subquery(client_charge_subquery, output_field=DecimalField()),
+    ).order_by('-id')
+
 
     # ---- Totals for summary cards ----
     event_ids = events_qs.values_list("id", flat=True)
@@ -289,18 +304,22 @@ def repair_history_view(request, pk):
     net_profit = total_client_charge - total_repair_cost
     avg_cost = total_repair_cost / repairs_count if repairs_count else 0
     margin = (net_profit / total_client_charge * 100) if total_client_charge > 0 else 0
+    # Paginate EVENTS (repair history)
+    paginator = Paginator(events, 10)
+    event_page = paginator.get_page(page_number)
 
     context = {
-        "product": product,
-        "events": events,
-        "repairs_count": repairs_count,
-        "first_event": first_event,
-        "total_repair_cost": total_repair_cost,
-        "total_client_charge": total_client_charge,
-        "net_profit": net_profit,
-        "avg_cost": avg_cost,
-        "margin": margin,
-    }
+    "product": product,
+    "events": event_page,   # <-- paginated events
+    "repairs_count": repairs_count,
+    "first_event": first_event,
+    "total_repair_cost": total_repair_cost,
+    "total_client_charge": total_client_charge,
+    "net_profit": net_profit,
+    "avg_cost": avg_cost,
+    "margin": margin,
+}
+
     return render(request, "complaints/repair_history.html", context)
 
 

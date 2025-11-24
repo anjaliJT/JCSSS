@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib import messages  # optional, for error messages
 from apps.users.models import CustomUser, ForgotPasswordOTP
@@ -12,21 +12,43 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from django.utils.timezone import now
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 import logging
-import random
-import json
 from urllib.parse import quote_plus
 from django.utils.crypto import get_random_string
 
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils.timesince import timesince
-# from apps.users.forms import OEMUserForm
+from django.core.mail import EmailMultiAlternatives
+import json, traceback,random
+from .models import ForgotPasswordOTP
+from apps.stats.core import compute_all_metrics, compute_complain
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
+
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
+otp_storage = {}
+
+class StatisticsView(View):
+    def get(self, request):
+
+        # If user is not logged in → send to login
+        if not request.user.is_authenticated:
+            return render(request, "auth/login.html")
+
+        user = request.user
+
+        # If user is not CUSTOMER → show full stats
+        if user.role != "CUSTOMER":
+            full_data = compute_all_metrics(user)
+            return render(request, "dashboard.html", {"full_data": full_data})
+
+        # If user is CUSTOMER → show limited stats
+        user_data = compute_complain(user)
+        return render(request, "dashboard.html", {"user_data": user_data})
 
 
 class Login(View):
@@ -54,22 +76,6 @@ def logout_view(request):
     logout(request)  # Clears the session and logs out the user
     return redirect('login')
 
-
-
-otp_storage = {}
-
-
-
-
-from django.core.mail import EmailMultiAlternatives
-from django.utils import timezone
-from django.http import JsonResponse
-from django.contrib.auth import get_user_model
-import json, random
-from datetime import timedelta
-import traceback
-
-User = get_user_model()
 
 def send_otp(request):
     if request.method == "POST":
@@ -129,17 +135,6 @@ def send_otp(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method."})
 
-
-
-
-from django.http import JsonResponse
-from django.utils import timezone
-import json, traceback
-from datetime import timedelta
-from django.contrib.auth import get_user_model
-from .models import ForgotPasswordOTP
-
-User = get_user_model()
 
 def verify_otp(request):
     if request.method != 'POST':
