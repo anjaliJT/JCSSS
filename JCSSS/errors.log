@@ -19082,3 +19082,142 @@ Traceback (most recent call last):
     return func(_wrapped, *args)
 AttributeError: 'AnonymousUser' object has no attribute 'role'
 "GET /fetch/ HTTP/1.1" 500 85921
+Internal Server Error: /csm/complaint/1/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 68, in get
+    return render(request, "complaints/complain_status.html", {
+        "form": form,
+    ...<12 lines>...
+        "total_days": total_days,
+    })
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 518, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 489, in parse
+    raise self.error(token, e)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 487, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\template\base.py", line 710, in __init__
+    raise TemplateSyntaxError(
+    ...<2 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: ' Time' from 'On Time'
+"GET /csm/complaint/1/fetch/ HTTP/1.1" 500 315906
+Internal Server Error: /csm/complaint/3/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 61, in get
+    total_days = (closed_status.updated_at - start_date).days
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'ComplaintStatus'
+"GET /csm/complaint/3/fetch/ HTTP/1.1" 500 87776
+Internal Server Error: /csm/complaint/3/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 62, in get
+    total_days = (closed_status.updated_at - start_date).days
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'ComplaintStatus'
+"GET /csm/complaint/3/fetch/ HTTP/1.1" 500 87697
+Internal Server Error: /csm/complaint/3/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 62, in get
+    total_days = (closed_status.updated_at - start_date).days
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'ComplaintStatus'
+"GET /csm/complaint/3/fetch/ HTTP/1.1" 500 87731
+Internal Server Error: /csm/complaint/3/fetch/
+Traceback (most recent call last):
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\JT-Web\Desktop\JCSSS\env\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\JT-Web\Desktop\JCSSS\JCSSS\apps\oem\views.py", line 62, in get
+    total_days = (closed_status.updated_at - start_date).days
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'ComplaintStatus'
+"GET /csm/complaint/3/fetch/ HTTP/1.1" 500 87786

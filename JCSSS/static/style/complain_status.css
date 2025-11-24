@@ -83,6 +83,7 @@
 .status-active {
   background-color: rgba(44, 90, 160, 0.1);
   color: #2c5aa0;
+  width: 65px;
 }
 
 .status-pending {
@@ -95,9 +96,16 @@
   color: #28a745;
 }
 
+.timeline-info{
+  color: #ff0040;
+  font-size: 12px;
+  margin: 0px;
+}
+
 .location-badge {
+  width: 165px;
   padding: 0.3rem 0.7rem;
-  border-radius: 50px;
+  border-radius: 50px !important;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -432,6 +440,16 @@
   }
   
 }
+@media (max-width: 566px) {
+  .header{
+    display: flex;
+    flex-direction: column;
+  }
+  .location-badge{
+    margin: 5px 0px;
+
+  }
+}
 
 /* Add to existing CSS */
 
@@ -487,24 +505,6 @@
   padding: 0.5rem 0.75rem;
 }
 
-/* Responsive adjustments */
-@media (max-width: 992px) {
-  /* .timeline-container {
-    max-height: 300px;
-  } */
-  
-  .product-image-section {
-    margin-bottom: 1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  /* .timeline-container {
-    max-height: 250px;
-  } */
-  
-  
-}
 
 
 @keyframes pulse {
