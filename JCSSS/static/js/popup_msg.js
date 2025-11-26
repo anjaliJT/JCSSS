@@ -83,9 +83,9 @@
 
 
   // create OEM 
-  function confirmFormSubmit(event) {
-    handleConfirmation(event, {
-      message: "Are you sure you want to update user details?",
-      formId: "createUserForm"
-    });
-}
+//   function confirmFormSubmit(event) {
+//     handleConfirmation(event, {
+//       message: "Are you sure you want to update user details?",
+//       formId: "createUserForm"
+//     });
+// }

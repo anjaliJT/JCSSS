@@ -94,12 +94,12 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Initial Password</label>
-                            <input type="password" name="password1" id="password1" class="form-control" placeholder="Initial password">
+                            <input type="password" name="password1" id="password1" class="form-control" placeholder="Initial password" autocomplete="off">
                             
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Confirm Password</label>
-                            <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm password">
+                            <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm password" autocomplete="off">
                         </div>
                     </div>
                     <div class="row mb-3" id="sendInviteSection">
@@ -122,11 +122,11 @@
                 </div>
 
                     <!-- Form Actions -->
-                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                        <a href="{% url 'user_admin_list' %}" class="btn btn-outline-secondary">
+                    <div class="d-flex justify-content-between align-items-center m-2 pt-3 border-top">
+                        <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
                             <i class="fas fa-times me-2"></i>Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary" onclick="confirmFormSubmit(event)">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
                             <i class="fas fa-save me-2"></i>{% if user %}Update User{% else %}Create User{% endif %}
                         </button>
                     </div>
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const isActiveSwitch = document.getElementById('isActiveSwitch');
             if (isActiveSwitch) {
-                isActiveSwitch.checked = this.dataset.isActive === 'true';
+                isActiveSwitch.checked = this.dataset.isActive === 'True';
             }
             
             // Show/hide sections for edit mode
@@ -246,9 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-{% block extra_scripts %}
-<script src="{% static 'js/popup_msg.js' %}"></script>
-{% endblock %}
 
-{% endblock %}
+
 

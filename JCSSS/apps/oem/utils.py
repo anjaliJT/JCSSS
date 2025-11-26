@@ -21,7 +21,7 @@ def send_mail_csm(event_id):
     except Event.DoesNotExist:
         return f"Event {event_id} not found"
 
-    subject = f"[Complaint Registered] Event {event.unique_token}"
+    subject = f"Regarding Complaint {event.unique_token}"
     message = (
         f"Dear CSM,\n\n"
         f"A new complaint has been registered.\n\n"
