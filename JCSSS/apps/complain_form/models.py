@@ -14,6 +14,7 @@ class Event(models.Model):
     pilot_name = models.CharField(max_length=250)
     # status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    email = models.EmailField(blank=True, null=True)
     certificate_number = models.CharField(max_length=100, blank=True, null=True)
     filed_by = models.CharField(max_length=250, blank=True, null=True)
     designation = models.CharField(max_length=150, blank=True, null=True)
