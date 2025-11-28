@@ -3,12 +3,11 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Event
 from apps.oem.models import  ComplaintStatus
-from apps.oem.tasks import send_mail_csm
+from apps.complain_form.utils import send_mail_thread
 
 
 class ComplaintListView(LoginRequiredMixin, View):
@@ -132,7 +131,17 @@ class ComplaintRegister(LoginRequiredMixin,View):
                 )
 
                 messages.success(request, "Complaint submitted successfully!")
-                send_mail_csm.delay(event.id)   # ✅ send to Celery worker
+
+                template_type = "complaint"  # choose appropriate type for this endpoint
+                title = f"New complaint {event.unique_token}"
+                body = f"A new complaint request comes. Please review it and take necessary actions."
+
+                # launch email send in background
+                send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={"complaint":event
+                })
+                ComplaintStatus.objects.create(
+                    event= event,
+                )
                 return redirect("complaint_list") 
 
         except Exception as e:
