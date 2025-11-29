@@ -26,7 +26,12 @@
             
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" name="password" id="password" required>
+                <div class="input-group">
+                    <input type="password" class="form-control" name="password" id="password" required>
+                    <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
             </div>
             
             <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
@@ -57,5 +62,26 @@ function disableButton(form) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Please wait...';
 }
+
+// Password toggle functionality
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".toggle-password").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+            const icon = this.querySelector("i");
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        });
+    });
+});
 </script>
 {% endblock %}
