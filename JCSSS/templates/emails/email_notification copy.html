@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{{ subject|default:"Notification" }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #ffffff; padding: 20px; }
+        .container { background: #FAFAFA; border: 1px solid #ddd; padding: 20px; max-width: 600px; margin: auto; border-radius: 8px; text-align: center; }
+        .logo { width: 100px; margin: 10px auto; display:block; }
+        .header { font-size: 22px; font-weight: bold; color: #333; }
+        .header2 { font-size: 16px; color: #333; }
+        .message { font-size: 14px; color: #555; margin-top: 10px; }
+        .footer { font-size: 12px; color: #777; margin-top: 20px; }
+        .muted { color:#666; font-size:13px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="background-color:#000;padding:10px;border-radius:6px;">
+            <img src="https://www.johnnette.com/img/logo/logo.png" alt="Company Logo" class="logo" >
+        </div>
+
+        {% if template_type == "status" %}
+            <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span><br>Status Updated</h1>
+            <p class="header2">Model number <strong>{{ model_number }}</strong> status has been updated to <strong>{{ status }}</strong>.</p>
+            {% if extra_info %}
+                <p class="message">{{ extra_info }}</p>
+            {% endif %}
+
+        {% elif template_type == "complaint" %}
+            <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span>,<br>New Complaint Received</h1>
+            <p class="header2">
+                A new complaint request has been submitted for Model Number <strong>{{ model_number }}</strong>
+                {% if tail_number %}
+                    with Tail Number <strong>{{ tail_number }}</strong>
+                {% endif %}.
+                <br>The complaint is currently in <strong>{{ status }}</strong> status.
+            </p>
+            <p class="message muted">Kindly review it and take the necessary actions.</p>
+
+        {% elif template_type == "location" %}
+            {# Fallback: choose by presence of variables if template_type not provided #}
+                {# treat as status update #}
+                <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span><br>Location Updated</h1>
+                <p class="header2">Model number <strong>{{ model_number }}</strong> Repair location is set to here<strong>{{ location }}</strong>.</p>
+            {% else %}
+                <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span></h1>
+            {% endif %}
+        {% endif %}
+
+        <p class="footer">Best regards,<br>JCSSS Team</p>
+    </div>
+</body>
+</html>

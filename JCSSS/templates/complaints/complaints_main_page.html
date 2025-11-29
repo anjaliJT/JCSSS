@@ -64,7 +64,7 @@
 
              
               </div>
-          </form>
+            </form>
         </div>
     </div>
 
@@ -112,27 +112,89 @@
 
 <!-- Complaints List -->
 <div class="card">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Complaints</h5>
-    </div>
+    <!-- <div class="card-header bg-white d-flex justify-content-between align-items-center"> -->
+        
+    <!-- </div> -->
     <div class="card-body">
+      <!-- Column Toggle Controls -->
+        <div class="mb-3 d-flex justify-content-end">
+            <!-- Filter Icon -->
+            <button class="btn btn-outline-primary dropdown-toggle " type="button" id="columnFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-filter"></i>
+            </button>
+
+              <!-- Dropdown Menu with checkboxes -->
+              <ul class="dropdown-menu p-3" aria-labelledby="columnFilterDropdown" style="min-width: 200px;">
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="0" checked id="col0">
+                  <label class="form-check-label" for="col0">Ticket ID</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="1" checked id="col1">
+                  <label class="form-check-label" for="col1">Pilot Name</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="2" checked id="col2">
+                  <label class="form-check-label" for="col2">Model Number</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="3" checked id="col3">
+                  <label class="form-check-label" for="col3">Tail Number</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
+                  <label class="form-check-label" for="col4">Status</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="5" id="col5">
+                  <label class="form-check-label" for="col5">Occurance Date</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="6" id="col6">
+                  <label class="form-check-label" for="col6"> Organization</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="7" id="col7">
+                  <label class="form-check-label" for="col7">Flight Mode</label>
+              </li>
+              <!-- unchecked by default -->
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="8" checked id="col8">
+                  <label class="form-check-label" for="col8">Damage Level</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" checked value="9" id="col9">
+                  <label class="form-check-label" for="col9">Actions</label>
+              </li>
+              </ul>
+        </div>
+
+        
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="complainTable">
                 <thead>
                     <tr>
-                        <th style="width: 12%">Ticket ID</th>
-                        <th style="width: 10%">Status</th>
-                        <th style="width: 15%">Uav Details</th>
-                        <!-- <th style="width: 25%">Command name</th> -->
-                        <!-- <th style="width: 12%">Complaint Date</th> -->
-                        <!-- <th style="width: 12%">Last Updated Person</th>  -->
-                        <th style="width: 14%">Actions</th>
+                        <th>Ticket ID</th>
+                        <th>Pilot Name</th>
+                        <th>Model Number</th>
+                        <th>Tail Number</th>
+                        <th>Status</th>
+                        <th>Occurance Date</th>
+                        <th>Organization</th>
+                        <th>Flight Mode</th>
+                        <th>Damage Level</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for complaint in complaints %}
                     <tr>
                         <td> <a href="{% url 'fetch_complaint_status' complaint.id %}">{{ complaint.unique_token }}</td> </a>
+                        <!-- status -->
+                        
+                        <td>{{ complaint.pilot_name }}</td>
+                        <td>{{ complaint.model_number }}</td>
+                        <td>{{ complaint.tail_number }}</td>
                         <td>
                           {% with latest_status=complaint.complaint_statuses.last %}
                               {% if latest_status %}
@@ -192,9 +254,9 @@
     </div>
 </div>
         
-        <!-- Pagination -->
-        {% if complaints.has_other_pages %}
-        <nav aria-label="Complaints pagination" class="mt-4">
+<!-- Pagination -->
+{% if complaints.has_other_pages %}
+<nav aria-label="Complaints pagination" class="mt-4">
             <ul class="pagination justify-content-end">
                 {% if complaints.has_previous %}
                 <li class="page-item">
@@ -226,10 +288,33 @@
                 </li>
                 {% endif %}
             </ul>
-        </nav>
-        {% endif %}
-    </div>
+</nav>
+{% endif %}
+
 </div>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+        // Apply toggle logic on change
+            document.querySelectorAll(".column-toggle").forEach(checkbox => {
+                checkbox.addEventListener("change", function() {
+                    let colIndex = parseInt(this.value) + 1; // nth-child is 1-based
+                    let display = this.checked ? "" : "none";
+                    
+                    document.querySelectorAll(`#complainTable tr th:nth-child(${colIndex}), 
+                                            #complainTable tr td:nth-child(${colIndex})`)
+                            .forEach(cell => cell.style.display = display);
+                });
+
+                // Hide unchecked columns initially
+                if (!checkbox.checked) {
+                    let colIndex = parseInt(checkbox.value) + 1;
+                    document.querySelectorAll(`#complainTable tr th:nth-child(${colIndex}), 
+                                            #complainTable tr td:nth-child(${colIndex})`)
+                            .forEach(cell => cell.style.display = "none");
+                }
+            });
+        });
+    </script>
 {% block extra_scripts %}
   <script src="{% static 'js/popup_msg.js' %}"></script>
 {% endblock %}

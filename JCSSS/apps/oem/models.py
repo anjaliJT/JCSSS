@@ -35,16 +35,16 @@ from django.utils import timezone
 
 class RepairLocation(models.Model):  
     LOCATION_CHOICES = [
-        ("OEM_SITE", "OEM Site"),
-        ("CUSTOMER_SITE", "Customer Site"),
-        ("VIRTUAL_ASSISTANCE", "Virtual Assistance"),
+        ("OEM Site", "OEM Site"),
+        ("Customer Site", "Customer Site"),
+        ("Virtual Assistance", "Virtual Assistance"),
     ]
 
     event = models.OneToOneField(Event, on_delete=models.PROTECT, related_name="location")
     location = models.CharField(
         max_length=20,
         choices=LOCATION_CHOICES,
-        default="CUSTOMER_SITE"
+        default="OEM Site"
     )
     remarks = models.TextField(blank=True, null=True)
 
@@ -69,6 +69,7 @@ class ComplaintStatus(models.Model):
     remarks = models.TextField(blank=True, null=True)
     attachments = models.FileField(upload_to="attachments/", blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)
+    updated_by = models.ForeignKey(CustomUser, on_delete= models.PROTECT,null=True, blank=True)
 
     def __str__(self):
         return f"{self.event} - {self.get_status_display()} ({self.updated_at.strftime('%Y-%m-%d %H:%M')})"
