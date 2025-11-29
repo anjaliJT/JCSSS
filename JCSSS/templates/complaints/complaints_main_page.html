@@ -146,18 +146,18 @@
                   <label class="form-check-label" for="col4">Status</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="5" id="col5">
+                  <input class="form-check-input column-toggle" type="checkbox" value="5"  id="col5">
                   <label class="form-check-label" for="col5">Occurance Date</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="6" id="col6">
+                  <input class="form-check-input column-toggle" type="checkbox" value="6" checked id="col6">
                   <label class="form-check-label" for="col6"> Organization</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="7" id="col7">
+                  <input class="form-check-input column-toggle" type="checkbox" value="7"  id="col7">
                   <label class="form-check-label" for="col7">Flight Mode</label>
               </li>
-              <!-- unchecked by default -->
+             
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="8" checked id="col8">
                   <label class="form-check-label" for="col8">Damage Level</label>
@@ -213,10 +213,10 @@
                               {% endif %}
                           {% endwith %}
                         </td>
-                        <td>
-                            <div>Sr. no.: {{ complaint.model_number }}</div>
-                            <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>
-                        </td>
+                         <td>{{ complaint.date_of_occurrence|date:"Y-m-d" }}</td>
+                        <td>{{ complaint.organization }}</td>
+                        <td>{{ complaint.flight_mode }}</td>
+                        <td>{{ complaint.damage_level }}</td>
                         <td>
                                <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
                                     <i class="fas fa-eye"></i>
