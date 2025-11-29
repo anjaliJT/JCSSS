@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.complain_form.views import ComplaintRegister, ComplaintListView, ComplaintDetailView
+from apps.complain_form.views import ComplaintRegister, ComplaintListView, ComplaintDetailView,ComplaintEditView
 
 # app_name = "complaints"
 
@@ -8,4 +8,5 @@ urlpatterns = [
     path('fetch/', ComplaintRegister.as_view(), name='complain_detail'),  # Keeping for backward compatibility
     path("complain/list/", ComplaintListView.as_view(), name="complaint_list"),
     path("complain/<int:pk>/detail/", ComplaintDetailView.as_view(), name="complaint_detail"),
+    path("complain/<int:pk>/edit/", ComplaintEditView.as_view(),name="complaint_edit")
 ]

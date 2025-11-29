@@ -28,6 +28,16 @@
         <div class="card-body">
             <form method="get" id="filterForm" class="row g-3">
               <div class="row align-items-end pt-2">
+   <!-- Search -->
+                <div class="col-md-4 mb-2">
+                  <div class="input-group">
+                    <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
+                    <button class="btn btn-outline-primary" type="submit">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+
                 <!-- Status Filter -->
                 <div class="col-md-4 mb-2">
                   <label class="form-label">Status</label>
@@ -52,15 +62,7 @@
                   </select>
                 </div>
 
-                <!-- Search -->
-                <div class="col-md-4 mb-2">
-                  <div class="input-group">
-                    <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
-                    <button class="btn btn-outline-primary" type="submit">
-                      <i class="fas fa-search"></i>
-                    </button>
-                  </div>
-                </div>
+             
               </div>
           </form>
         </div>
@@ -154,28 +156,22 @@
                             <div class="small text-muted">Tail #: {{ complaint.tail_number }}</div>
                         </td>
                         <td>
-                            <div class="btn-group">
-                                <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
+                               <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                {% if complaint.status == 'new' %}
-                                <button type="button" class="btn btn-outline-success btn-sm" title="Approve Complaint">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                                {% endif %}
-                                {% if complaint.status != 'resolved' and request.user.role|slice:":3" == "EMP" %}
-                                <!-- Button to trigger modal -->
-                                <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#submitReportModal{{ complaint.id }}">
+                                 {% with latest_status=complaint.complaint_statuses.last %}
+                                  {% if latest_status and latest_status.status == 'REVIEW' %}
+                                  <a href="{% url 'complaint_edit' complaint.id %}" class="btn btn-outline-primary btn-sm" title="Edit Details">
                                     <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-warning btn-sm" title="Request Parts">
-                                    <i class="fas fa-tools"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-success btn-sm" title="Mark as Resolved">
-                                    <i class="fas fa-check-double"></i>
-                                </button>
-                                {% endif %}
-                            </div>
+                                </a>
+                                {% else %}
+                                          <button class="btn btn-outline-secondary btn-sm" 
+                    title="Can't edit, status updated."
+                    disabled>
+                <i class="fas fa-edit"></i>
+            </button>
+            {%endif%}
+            {% endwith %}
                         </td>
                     </tr>
                     {% empty %}
