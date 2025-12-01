@@ -168,4 +168,23 @@ class ComplaintDetailView(LoginRequiredMixin,View):
                 "is_completed": is_completed,
             },
         )
+    
+class ComplaintEditView(LoginRequiredMixin,View):
+    template_name = "complaints/complain_form.html"
+
+    def get(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        messages.info(request,"You only view your details.")
+
+        is_completed = bool(event)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "event": event,
+                "is_readonly": False,
+                "is_completed": is_completed,
+            },
+        )
 

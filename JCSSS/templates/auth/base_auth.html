@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <title>{% block title %}JCS3 Portal{% endblock %}</title>
+    
+    <style>
+        @media (max-width: 768px) {
+            .auth-div {
+                padding: 25px !important;
+                margin: 5px 0;
+            }
+            .auth-form-container {
+                max-width: 400px !important;
+                margin: 20px 0;
+            }
+            .text-div {
+                padding: 15px !important;
+            }
+        }
+        @media (min-width: 769px) {
+            .auth-form-container {
+                max-width: 450px !important;
+                width: 100%;
+            }
+        }
+        .required-field label::after {
+            content: " *";
+            color: red;
+        }
+        .auth-hero {
+            background-color: #254873;
+        }
+        .auth-container {
+            background-color: #EDF2F7;
+        }
+        .compact-form {
+            padding: 2rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row vh-100 g-0"> <!-- Added g-0 to remove gutters -->
+        <!-- Hero Section -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center auth-hero">
+            <div class="row p-5 auth-div w-100"> <!-- Added w-100 -->
+                <!-- Logo -->
+                <img src="https://johnnette.com/img/logo/logo.png" class="rounded mx-auto d-block" style="width: 150px;" alt="Johnnette Logo">
+                
+                <!-- Hero Title -->
+                <div class="fs-4 text-center text-light mt-3">UAV After Sales Support Portal</div>
+                
+                <!-- Hero Description -->
+                <div class="text-justify text-light mt-2 fs-9 p-5 text-div">
+                    A centralized digital platform for all UAV after sales support activities, providing real time tracking and improved communication between our customers  and support team.
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Form Section -->
+        <div class="col-md-6 d-flex align-items-center justify-content-center auth-container p-3"> <!-- Added p-3 for internal padding -->
+            <div class="auth-form-container w-100"> <!-- New wrapper for consistent width -->
+                {% block auth_content %}
+                <!-- This will be overridden by child templates -->
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Common Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    
+    {% block extra_scripts %}
+    <!-- Child templates can add their specific scripts here -->
+    {% endblock %}
+</body>
+</html>

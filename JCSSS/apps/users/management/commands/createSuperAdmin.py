@@ -13,14 +13,14 @@ class Command(BaseCommand):
         # admin_role, _ = Role.objects.get_or_create(name="SUPERADMIN")
         # default_department, _ = Department.objects.get_or_create(name="OPERATIONS")
 
-        email = 'jcsss@johnnette.com'
+        email = 'amir@johnnette.com'
 
         user, created = User.objects.get_or_create(
             email=email,
             defaults={
                 'first_name': 'Super',
                 'last_name': 'Admin',
-                'phone_number':1234567890
+                'phone_number':1934567890
             }
         )
 
