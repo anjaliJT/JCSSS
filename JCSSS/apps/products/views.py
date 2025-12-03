@@ -77,10 +77,9 @@ def product_list_view(request):
     # Warranty filtering using queryset filters (keeps it as a QuerySet for pagination)
     today = date.today()
     if selected_warranty == "active":
-        products_qs = products_qs.filter(warranty_expiry_date__gte=today)
+        products_qs = [p for p in products_qs if p.warranty_expiry_date >= today]
     elif selected_warranty == "expired":
-        products_qs = products_qs.filter(warranty_expiry_date__lt=today)
-
+        products_qs = [p for p in products_qs if p.warranty_expiry_date < today]
     # Pagination: 10 items per page (adjustable)
     page_number = request.GET.get('page', 1)
     paginator = Paginator(products_qs, 10)
@@ -129,7 +128,7 @@ def edit_product_view(request, pk):
             "selected_warranty": None,
         })
 
-    return render(request, 'edit_product.html', {
+    return render(request, 'products/product_form.html', {
         'product': product,
         'product_models': Product_model.objects.all()
     })
