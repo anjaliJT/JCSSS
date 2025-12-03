@@ -229,34 +229,6 @@
                             </table>
                         </div>
 
-                        <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const editButtons = document.querySelectorAll('.edit-btn');
-                            const form = document.getElementById('productForm');
-
-                            editButtons.forEach(btn => {
-                                btn.addEventListener('click', function () {
-                                    const id = this.dataset.id;
-                                    form.action = `/product/${id}/edit/`;
-
-                                    // Set input fields
-                                    document.getElementById('orderName').value = this.dataset.order;
-                                    document.getElementById('sourceLocation').value = this.dataset.sourceLocation;
-                                    document.getElementById('armyCommand').value = this.dataset.armyCommand;
-                                    document.getElementById('unitName').value = this.dataset.unitName;
-                                    document.getElementById('tailNumber').value = this.dataset.tailNumber;
-                                    document.getElementById('formation').value = this.dataset.formation;
-                                    document.getElementById('manufactureDate').value = this.dataset.manufacture;
-                                    document.getElementById('warrantyExpiry').value = this.dataset.expiry;
-                                    document.getElementById('warrantyStatus').value = this.dataset.warranty;
-
-                                    // Set the select value for ForeignKey
-                                    document.getElementById('productModel').value = this.dataset.model; // model ID
-                                });
-                            });
-                        });
-
-                        </script>
 
                         <!-- Pagination -->
                         {% if products.has_other_pages %}
