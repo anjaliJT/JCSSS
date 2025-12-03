@@ -24,6 +24,11 @@ from django.db import IntegrityError
 
 @login_required(login_url='login')
 def create_product_view(request):
+    """Handle creation of a new Product via POST and redirect to product list.
+
+    On successful creation the user is redirected to the product list.
+    Validation errors are added to the messages framework.
+    """
     if request.method == "POST":
         form = productForm(request.POST)
         if form.is_valid():
@@ -36,7 +41,6 @@ def create_product_view(request):
         else:
             messages.error(request, "Tail Number already exists.")
     else:
-
         form = productForm()
 
     return redirect('product_list')
@@ -45,9 +49,16 @@ def create_product_view(request):
 
 
 def product_list_view(request):
-    products = Product.objects.all()
-    models = Product_model.objects.all()
+    """Display a filtered, paginated list of products.
 
+    Supports filtering by model, sale status and warranty. Results are
+    ordered newest-first so recently created products appear on top.
+    Returns a Django `Page` object as `products` in the template context.
+    """
+
+    # Use a queryset so we can paginate efficiently and show newest first
+    products_qs = Product.objects.all().order_by('-id')
+    models = Product_model.objects.all()
 
     selected_model = request.GET.get("model")
     selected_status = request.GET.get("status")
@@ -55,25 +66,28 @@ def product_list_view(request):
 
     # Filter by product model
     if selected_model:
-        products = products.filter(product_model_id=selected_model)
+        products_qs = products_qs.filter(product_model_id=selected_model)
 
     # Filter by status
     if selected_status == "available":
-        products = products.filter(is_sold=False)
+        products_qs = products_qs.filter(is_sold=False)
     elif selected_status == "sold":
-        products = products.filter(is_sold=True)
+        products_qs = products_qs.filter(is_sold=True)
 
-    # Warranty filtering
+    # Warranty filtering using queryset filters (keeps it as a QuerySet for pagination)
     today = date.today()
     if selected_warranty == "active":
-        products = [p for p in products if p.warranty_expiry_date >= today]
+        products_qs = products_qs.filter(warranty_expiry_date__gte=today)
     elif selected_warranty == "expired":
-        products = [p for p in products if p.warranty_expiry_date < today]
+        products_qs = products_qs.filter(warranty_expiry_date__lt=today)
 
-
+    # Pagination: 10 items per page (adjustable)
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(products_qs, 10)
+    products_page = paginator.get_page(page_number)
 
     return render(request, "products/products_main_page.html", {
-        "products": products,
+        "products": products_page,
         "models": models,
         "selected_model": selected_model,
         "selected_status": selected_status,
@@ -83,6 +97,8 @@ def product_list_view(request):
 
 def edit_product_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
+
+    """Edit an existing product; on POST save and render the products page."""
 
     if request.method == "POST":
         model_id = request.POST.get('product_model')
@@ -121,6 +137,12 @@ def edit_product_view(request, pk):
 
 @login_required(login_url='login')
 def import_products_view(request): 
+    """Import products from an uploaded CSV or Excel file.
+
+    The view reads rows, creates or updates `Product` and `Product_model`
+    instances and reports progress via Django messages.
+    """
+
     if request.method == "POST": 
         if "import_file" not in request.FILES:
             messages.error(request, "⚠️ No file uploaded.")
