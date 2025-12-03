@@ -45,7 +45,7 @@
         <div class="sidebar-menu d-flex flex-column" style="height: 89vh;">
             <ul class="nav flex-column flex-grow-1">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/users/fetch/' %}active{% endif %}" href="{% url 'user-details' %}">
+                    <a class="nav-link {% if request.path == '/fetch/' %}active{% endif %}" href="{% url 'user-details' %}">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>
@@ -57,7 +57,7 @@
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link {% if 'complaints' in request.path %}active{% endif %}" href="{% url 'complaint_list' %}">
+                    <a class="nav-link {% if '/complain/' in request.path %}active{% endif %}" href="{% url 'complaint_list' %}">
                         <i class="fas fa-ticket-alt"></i> Complaints
                     </a>
                 </li>
@@ -70,11 +70,11 @@
                 </li>
                
                 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="fas fa-cog"></i> Settings
                     </a>
-                </li>
+                </li> -->
                  {% endif %}
             </ul>
 
@@ -123,7 +123,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="{% url 'profile' %}" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <!-- <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li> -->
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
