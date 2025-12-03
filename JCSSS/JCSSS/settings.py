@@ -28,6 +28,16 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+# AWS credentials from environment
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+AWS_DEFAULT_ACL = None  # Optional: Set default ACL for uploaded files
+AWS_S3_FILE_OVERWRITE = False  # Prevent overwriting files with the same name
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'  # Optional: Set custom domain for S3 bucket
+
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage User Permissions - {{ user.get_full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .permission-management {
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .permission-group {
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .group-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 20px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .group-header:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #6a3f94 100%);
+    }
+
+    .group-header i {
+        transition: transform 0.3s ease;
+    }
+
+    .group-header.collapsed i {
+        transform: rotate(-90deg);
+    }
+
+    .permissions-list {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .permissions-list.hidden {
+        display: none;
+    }
+
+    .permission-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background: #fafafa;
+        transition: all 0.2s ease;
+    }
+
+    .permission-item:hover {
+        background: #f0f0f0;
+        border-color: #667eea;
+    }
+
+    .permission-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+        cursor: pointer;
+        accent-color: #667eea;
+    }
+
+    .permission-item label {
+        margin: 0;
+        cursor: pointer;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .permission-name {
+        font-weight: 500;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .permission-code {
+        font-size: 0.8rem;
+        color: #999;
+        margin-top: 2px;
+        font-family: monospace;
+    }
+
+    .permission-item input[type="checkbox"]:checked + label .permission-name {
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .header-section h2 {
+        margin: 0;
+    }
+
+    .select-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .select-buttons button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+        justify-content: flex-end;
+    }
+
+    .user-info {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-info h5 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .user-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .detail-item {
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    .detail-item label {
+        font-weight: 600;
+        color: #666;
+        display: block;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+
+    .detail-item span {
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .stats {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .stat-card {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    .stat-label {
+        color: #999;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="permission-management">
+    <div class="container-main">
+        <!-- Header -->
+        <div class="header-section">
+            <div>
+                <h2>Manage Permissions</h2>
+                <p class="text-muted">Assign and manage permissions for user access control</p>
+            </div>
+            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Users
+            </a>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="user-info">
+            <h5><i class="fas fa-user-circle me-2"></i>User Information</h5>
+            <div class="user-details">
+                <div class="detail-item">
+                    <label>Full Name</label>
+                    <span>{{ user.get_full_name }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Email</label>
+                    <span>{{ user.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Role</label>
+                    <span>{{ user.get_role_display }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Status</label>
+                    <span>
+                        {% if user.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPerms">0</div>
+                <div class="stat-label">Total Permissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="assignedPerms">0</div>
+                <div class="stat-label">Assigned Permissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="availablePerms">0</div>
+                <div class="stat-label">Available Permissions</div>
+            </div>
+        </div>
+
+        <!-- Permission Assignment Form -->
+        <form method="post" id="permissionForm">
+            {% csrf_token %}
+
+            <!-- Select All / Deselect All Buttons -->
+            <div class="select-buttons mb-3">
+                <button type="button" class="btn btn-outline-primary" id="selectAllBtn">
+                    <i class="fas fa-check-square me-2"></i>Select All
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="deselectAllBtn">
+                    <i class="fas fa-square me-2"></i>Deselect All
+                </button>
+            </div>
+
+            <!-- Permissions Grouped by Model -->
+            {% for key, group in permissions_by_model.items %}
+            <div class="permission-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>
+                        <i class="fas fa-cube me-2"></i>{{ group.display_name }}
+                    </span>
+                    <div>
+                        <span class="badge bg-light text-dark me-2" id="count-{{ key }}">
+                            {{ group.permissions|length }}
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="permissions-list" data-group="{{ key }}">
+                    {% for perm in group.permissions %}
+                    <div class="permission-item">
+                        <input 
+                            type="checkbox" 
+                            name="permissions[]" 
+                            value="{{ perm.id }}" 
+                            id="perm-{{ perm.id }}"
+                            data-group="{{ key }}"
+                            {% if perm.id in user_permissions %}checked{% endif %}
+                            onchange="updateStats()"
+                        >
+                        <label for="perm-{{ perm.id }}">
+                            <span class="permission-name">{{ perm.name }}</span>
+                            <span class="permission-code">{{ perm.codename }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                No permissions available yet.
+            </div>
+            {% endfor %}
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Save Permissions
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Toggle group collapse/expand
+    function toggleGroup(headerElement) {
+        const icon = headerElement.querySelector('i');
+        const group = headerElement.nextElementSibling;
+        
+        headerElement.classList.toggle('collapsed');
+        group.classList.toggle('hidden');
+    }
+
+    // Select all permissions
+    document.getElementById('selectAllBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        updateStats();
+    });
+
+    // Deselect all permissions
+    document.getElementById('deselectAllBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        updateStats();
+    });
+
+    // Update statistics
+    function updateStats() {
+        const totalPerms = document.querySelectorAll('input[name="permissions[]"]').length;
+        const assignedPerms = document.querySelectorAll('input[name="permissions[]"]:checked').length;
+        const availablePerms = totalPerms - assignedPerms;
+
+        document.getElementById('totalPerms').textContent = totalPerms;
+        document.getElementById('assignedPerms').textContent = assignedPerms;
+        document.getElementById('availablePerms').textContent = availablePerms;
+    }
+
+    // Initialize stats on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateStats();
+    });
+
+    // Form submission with confirmation
+    document.getElementById('permissionForm').addEventListener('submit', function(e) {
+        const assignedCount = document.querySelectorAll('input[name="permissions[]"]:checked').length;
+        if (assignedCount === 0) {
+            e.preventDefault();
+            if (confirm('No permissions selected. This user will have no access. Continue?')) {
+                this.submit();
+            }
+        }
+    });
+</script>
+
+{% if messages %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for message in messages %}
+            showMessage('{{ message.tags }}', '{{ message }}');
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+{% endblock %}

@@ -293,6 +293,7 @@
 
       <!-- Right Column - OEM Panels -->
       {% if user.role != "CUSTOMER" %}
+      {% if  perms.oem.change_repairlocation %}
       <div class="col-lg-4" id="oemPanels">
         
         <!-- Set Repair Location -->
@@ -309,7 +310,7 @@
             {% endif %}
 
           </div>
-
+          {%endif%}
 
           <div class="card-body">
             <form method="POST" action="{% url 'set_complaint_location' event.id %}" id="locationForm">
