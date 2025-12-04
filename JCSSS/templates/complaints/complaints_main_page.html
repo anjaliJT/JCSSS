@@ -14,8 +14,7 @@
         </div>
         <div class="col-auto">
             <a class="btn btn-primary"
-            href="{% url 'complain_submit' %}"
-            onclick="complainNavigation(event, '{% url 'complain_submit' %}')">
+            href="{% url 'complain_submit' %}">
             <i class="fas fa-plus-circle me-2"></i>New Complaint
           </a>
           
@@ -28,7 +27,8 @@
         <div class="card-body">
             <form method="get" id="filterForm" class="row g-3">
               <div class="row align-items-end pt-2">
-   <!-- Search -->
+                
+                <!-- Search -->
                 <div class="col-md-4 mb-2">
                   <div class="input-group">
                     <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
@@ -201,8 +201,9 @@
                                 <span class="badge 
                                     {% if latest_status.status == 'REVIEW' %}bg-primary
                                     {% elif latest_status.status == 'ACCEPTED' %}bg-info
-                                    {% elif latest_status.status == 'REJECTED' %}bg-warning
-                                    {% elif latest_status.status == 'CLOSED' %}bg-danger
+                                    {% elif latest_status.status == 'REPAIR' %}bg-warning
+                                    {% elif latest_status.status == 'REJECTED' %}bg-danger
+                                    {% elif latest_status.status == 'CLOSED' %}bg-dark
                                     {% elif latest_status.status == 'COMPLETED' %}bg-success
                                     {% else %} bg-secondary
                                     {% endif %}">
