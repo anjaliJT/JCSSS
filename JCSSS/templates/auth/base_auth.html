@@ -12,6 +12,18 @@
     <title>{% block title %}JCS3 Portal{% endblock %}</title>
     
     <style>
+            .password-button{
+                background-color: #e9effd;
+                color: rgb(0, 0, 0);
+                /* border: 1px black !important; */
+            }
+            .password-button:focus,
+            .password-button:active,
+            .password-button:focus-visible {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+            
         @media (max-width: 768px) {
             .auth-div {
                 padding: 25px !important;

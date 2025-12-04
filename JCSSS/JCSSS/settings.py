@@ -161,7 +161,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'asr@johnnette.com'  # Your email
-EMAIL_HOST_PASSWORD = 'xbvr fogy alax nnaw'  # Your app password
+EMAIL_HOST_PASSWORD = 'szpc imbs bhrs aobs'  # Your app password
 DEFAULT_FROM_EMAIL = 'asr@johnnette.com'
 
 

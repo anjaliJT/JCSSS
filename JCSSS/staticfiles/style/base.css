@@ -188,6 +188,10 @@ body {
   .sidebar-toggle {
     display: none;
   }
+  
+  .popup-header{
+    padding: .5rem;
+  }
 }
 
 @media (min-width: 993px) {

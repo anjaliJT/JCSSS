@@ -160,6 +160,7 @@ body {
 
   .sidebar.mobile-visible {
     margin-left: 0;
+    z-index: 10000;
   }
 
   .main-content {
@@ -172,6 +173,15 @@ body {
 
   .sidebar-toggle {
     display: none;
+  }
+  .popup-header{
+    padding: .5rem !important;
+  }
+  #popupMessage{
+    padding: 0.5rem !important;
+  }
+  .popup-button{
+    padding: 0.25rem !important;
   }
 }
 
