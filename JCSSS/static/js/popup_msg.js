@@ -60,12 +60,12 @@
   }
 
   // NEW → Link / redirect confirmation
-  function complainNavigation(event, targetUrl) {
-    handleConfirmation(event, {
-      message: "Are you sure you want to create a new Complaint?",
-      redirectUrl: targetUrl
-    });
-  }
+  // function complainNavigation(event, targetUrl) {
+  //   handleConfirmation(event, {
+  //     message: "Are you sure you want to create a new Complaint?",
+  //     redirectUrl: targetUrl
+  //   });
+  // }
   // user management
   function userNavigation(event, targetUrl) {
     handleConfirmation(event, {

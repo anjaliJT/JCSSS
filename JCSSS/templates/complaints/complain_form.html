@@ -67,7 +67,7 @@
     </div>
 </div>
 
-<form method="post" action="{% url 'complain_submit' %}" enctype="multipart/form-data" id="complaintForm" >
+<form method="post" action="{% if is_valid %} {% url 'complaint_edit' event.id %} {% else %}{% url 'complain_submit' %}{% endif %}" enctype="multipart/form-data" id="complaintForm" >
         {% csrf_token %}
         
         <!-- Pilot Information Card -->
@@ -216,7 +216,7 @@
                             <span class="input-group-text"><i class="fas fa-plane"></i></span>
                             <select class="form-select" id="uavSelect" name="uav_type" required {% if is_readonly %}disabled{% endif %}>
                                 <option value="">Select type</option>
-                                <option value="FixedWing" {% if event.uav_type == "fixedWing" %}selected{% endif %}>Fixed Wing</option>
+                                <option value="FixedWing" {% if event.uav_type == "FixedWing" %}selected{% endif %}>Fixed Wing</option>
                             </select>
                         </div>
                     </div>
@@ -422,7 +422,7 @@
                         </label>
 
                         <div class="input-group">
-                            <input type="file" class="form-control" name="log_file" accept=".txt,.log,.csv" required id="logFile">
+                            <input type="file" class="form-control" name="log_file" accept=".txt,.log,.csv" {% if not is_valid %}required{% endif %} id="logFile">
                             <label class="input-group-text" for="logFile">Browse</label>
                         </div>
                         <small class="text-muted">Accepted formats: .txt, .log, .csv</small>
@@ -492,7 +492,7 @@
                     </button> -->
 
                     <button type="submit" class="btn btn-primary" {% if is_readonly %}disabled{% endif %}>
-                        <i class="fas fa-paper-plane me-2" ></i>Submit Complaint
+                        <i class="fas fa-paper-plane me-2" ></i>{% if is_valid %}Update Changes {% else %} Save Changes{% endif %}
                     </button>
                 </div>
             </div>
