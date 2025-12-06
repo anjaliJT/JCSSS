@@ -6,6 +6,31 @@
             content: " *";
             color: red;
         }
+        .progress-icon{
+                z-index: 1; 
+                background: white; 
+                padding: 0 10px;
+            }
+        .progress-icon-inner{
+            width: 40px;
+            height: 40px;
+        }
+        @media (max-width: 560px) {
+            .card-control{
+                padding: 10px ;
+                height: 90px;
+            }
+            .progress-icon{
+                padding: 0 0px;
+            }
+            .progress-icon-inner{
+            width: 25px;
+            height: 25px;
+        }
+        .progress-icon-text{
+            font-size: 12px;
+        }
+        }
     </style>
 {% endblock %}
 
@@ -28,40 +53,40 @@
 
 <!-- Progress Steps -->
 <div class="card mb-4 sticky-top" style="z-index: 1000; top:10px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-    <div class="card-body">
+    <div class="card-body card-control">
         <div class="d-flex justify-content-between position-relative">
             <div class="progress position-absolute" style="width: 100%; height: 2px; top: 50%; transform: translateY(-50%); z-index: 0;">
                 <div class="progress-bar" role="progressbar" style="width: 0%" id="formProgress"></div>
             </div>
-            <div class="step active text-center position-relative" style="z-index: 1; background: white; padding: 0 10px;">
-                <div class="step-icon rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+            <div class="step active text-center position-relative progress-icon">
+                <div class="step-icon rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2 progress-icon-inner">
                     <i class="fas fa-user"></i>
                 </div>
-                <div class="step-label small">Pilot Info</div>
+                <div class="step-label small progress-icon-text">Pilot Info</div>
             </div>
-            <div class="step text-center position-relative" style="z-index: 1; background: white; padding: 0 10px;">
-                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+            <div class="step text-center position-relative progress-icon">
+                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2 progress-icon-inner">
                     <i class="fas fa-plane"></i>
                 </div>
-                <div class="step-label small">UAV Details</div>
+                <div class="step-label small progress-icon-text">UAV Details</div>
             </div>
-            <div class="step text-center position-relative" style="z-index: 1; background: white; padding: 0 10px;">
-                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+            <div class="step text-center position-relative progress-icon">
+                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2 progress-icon-inner">
                     <i class="fas fa-cloud"></i>
                 </div>
-                <div class="step-label small">Conditions</div>
+                <div class="step-label small progress-icon-text">Conditions</div>
             </div>
-            <div class="step text-center position-relative" style="z-index: 1; background: white; padding: 0 10px;">
-                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+            <div class="step text-center position-relative progress-icon">
+                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2 progress-icon-inner">
                     <i class="fas fa-file-pen"></i> 
                 </div>
-                <div class="step-label small">Description</div>
+                <div class="step-label small progress-icon-text">Description</div>
             </div>
-            <div class="step text-center position-relative" style="z-index: 1; background: white; padding: 0 10px;">
-                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+            <div class="step text-center position-relative progress-icon">
+                <div class="step-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-2 progress-icon-inner">
                     <i class="fas fa-file-alt"></i>
                 </div>
-                <div class="step-label small">Upload Files</div>
+                <div class="step-label small progress-icon-text">Upload Files</div>
             </div>
         </div>
     </div>
@@ -128,7 +153,7 @@
                         <label for="modelNumber" class="form-label required">Serial Number</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                            <input type="text" class="form-control" id="modelNumber" name="model_number" placeholder="Enter serial number" required value="{{ event.model_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="text" class="form-control" id="modelNumber" name="serial_number" placeholder="Enter serial number" required value="{{ event.serial_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -216,7 +241,8 @@
                             <span class="input-group-text"><i class="fas fa-plane"></i></span>
                             <select class="form-select" id="uavSelect" name="uav_type" required {% if is_readonly %}disabled{% endif %}>
                                 <option value="">Select type</option>
-                                <option value="FixedWing" {% if event.uav_type == "FixedWing" %}selected{% endif %}>Fixed Wing</option>
+                                <option value="JF2" {% if event.uav_type == "JF2" %}selected{% endif %}>Fixed Wing</option>
+                                <option value="JM1" {% if event.uav_type == "JM1" %}selected{% endif %}>Fixed Wing</option>
                             </select>
                         </div>
                     </div>

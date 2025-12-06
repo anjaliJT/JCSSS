@@ -48,26 +48,39 @@
       <div class="row">
         <div class="col-md-8">
           <div class="complaint-id">#{{event.unique_token}}</div>
-          <div class="customer-name">{{event.model_number}}</div>
+          <div class="customer-name">{{event.serial_number}}</div>
           <div class="mt-2 header">
            
             <span class="status-badge status-active">  {{ latest_status.get_status_display|default:"No Status" }}</span>
             <span class="location-badge location-oem" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
+            {% if timing_status == "Not Started" %}
+            <span class="badge bg-secondary location-badge p-2">
+              <i class="fas fa-info-circle"></i> Not Started
+            </span>
+
+          {% elif timing_status == "On Time" %}
             {% if total_days is not None %}
-              {% if total_days <= 10 %}
-                  <span class="badge bg-success location-badge p-2">
-                      <i class="fas fa-check-circle"></i> On Time ({{ total_days }} days)
-                  </span>
-              {% else %}
-                  <span class="badge bg-danger location-badge p-2">
-                      <i class="fas fa-exclamation-triangle"></i> Late ({{ total_days }} days)
-                  </span>
-              {% endif %}
+              <span class="badge bg-success location-badge p-2">
+                <i class="fas fa-check-circle"></i> On Time ({{ total_days }} days)
+              </span>
             {% else %}
-              <span class="badge bg-secondary location-badge p-2">
-                  <i class="fas fa-info-circle"></i> Not Started
+              <span class="badge bg-success location-badge p-2">
+                <i class="fas fa-check-circle"></i> On Time
               </span>
             {% endif %}
+
+          {% elif timing_status == "Late" %}
+            {% if total_days is not None %}
+              <span class="badge bg-danger location-badge p-2">
+                <i class="fas fa-exclamation-triangle"></i> Late ({{ total_days }} days)
+              </span>
+            {% else %}
+              <span class="badge bg-danger location-badge p-2">
+                <i class="fas fa-exclamation-triangle"></i> Late
+              </span>
+            {% endif %}
+          {% endif %}
+
 
             
             <!-- <span class="customer-only ms-2">Awaiting Your Approval</span> -->
@@ -92,7 +105,7 @@
                   <i class="fas fa-arrow-left me-2"></i>Back to Complaints
               </button>
           </div>
-          <div class="text-muted small">Product: {{event.model_number}}</div>
+          <div class="text-muted small">Product: {{event.serial_number}}</div>
           <div class="text-muted small">Tail No: {{event.tail_number}}</div>
           <div class="text-muted small">Registered at: {{ event.reported_at|date:"d/m/Y" }}</div>
         </div>
@@ -297,9 +310,13 @@
                 <span class="cost-value customer-cost" id="customerTotalCost">₹{{ total_customer_cost|floatformat:2 }}</span>
               </div>
               <div class="mt-2">
+                {% if event.customer_pricing.invoice %}
                 <a href="{{ event.customer_pricing.invoice.url }}" class="attachment-link" id="customerInvoiceLink" target="_blank">
                   <i class="fas fa-file-invoice me-1"></i>View Invoice
                 </a>
+                {% else %}
+                <i class="fas fa-file-invoice me-1"></i>No Invoice
+                {% endif %}
               </div>
             </div>
             

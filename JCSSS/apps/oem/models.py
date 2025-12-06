@@ -55,11 +55,12 @@ class RepairLocation(models.Model):
 
 class ComplaintStatus(models.Model):
     STATUS_CHOICES = [
-        ("REVIEW", "Review"),
+        ("REVIEW", "In Review"),
         ("ACCEPTED", "Accepted"),
+        ("REJECTED", "Rejected"),
+        ("PRODUCT_RECEIVED", "Product Received"),
         ("DIAGNOSIS", "Diagnosis"),
         ("REPAIR", "Repair"),
-        ("REJECTED", "Rejected"),
         ("READY FOR DISPATCH", "Ready for Dispatch"),
         ("CLOSED", "Closed"),
     ]
@@ -92,6 +93,7 @@ class CustomerPricing(models.Model):
     invoice = models.FileField(upload_to="attachments/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
+    approved_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Customer Price for {self.event}: ₹{self.total_price}"

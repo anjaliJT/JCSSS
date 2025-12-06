@@ -36,8 +36,8 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(f'Failed to create seed user: {e}'))
                 return
 
-        model_numbers = ['JF2', 'JM1', 'JM2', 'X1', 'X2']
-        uav_types = ['Fixed-wing', 'Multi-rotor', 'VTOL']
+        serial_numbers = ['JF2', 'JM1', 'JM2', 'X1', 'X2']
+        uav_types = ['JF2', 'JM1', 'JM2', 'X1', 'X2']
         gcs_types = ['GCS-A', 'GCS-B', 'GCS-C']
         field_sites = ['Site A', 'Site B', 'Site C']
         event_types = ['Crash', 'Hard Landing', 'Loss of Control', 'Component Failure']
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         start_index = existing + 1
 
         for i in range(start_index, start_index + count):
-            model_number = random.choice(model_numbers)
+            serial_number = random.choice(serial_numbers)
             tail_number = f'TN{i:04d}'
             pilot_name = f'Pilot {i}'
             email = f'pilot{i}@example.com'
@@ -97,7 +97,7 @@ class Command(BaseCommand):
                     certificate_number=certificate_number,
                     filed_by=filed_by,
                     designation=designation,
-                    model_number=model_number,
+                    serial_number=serial_number,
                     tail_number=tail_number,
                     uav_type=uav_type,
                     gcs_type=gcs_type,

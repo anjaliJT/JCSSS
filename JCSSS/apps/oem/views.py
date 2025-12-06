@@ -40,47 +40,81 @@ class ComplaintStatusView(View):
         if trc != Decimal('0'):
             profit_percent = (profit_value / trc) * Decimal('100')
         # --- end compute ---
-        
-        # ✅ Always include location info — even if it doesn't exist yet
+
+        # Always include location info
         location = getattr(event, 'location', None)
         location_data = {
             "id": location.id if location else "",
             "location": location.location if location else "",
             "remarks": location.remarks if location else "",
         }
-        
-        
-        # --- Calculate total days based on statuses ---
-        total_days = None
+
+        # --- timing logic ---
+        total_days = None       # days from PRODUCT_RECEIVED to CLOSED (if closed) or to today (if not)
+        timing_status = "Not Started"   # One of: "Not Started", "On Time", "Late"
+        timing_stage = None     # helpful string: "awaiting_diagnosis", "awaiting_repair", "closed", etc.
+
         today = timezone.now()
-        review_status = statuses.filter(status="REVIEW").order_by('updated_at').first()
-        accepted_status = statuses.filter(status="ACCEPTED").order_by('updated_at').first()
-        closed_status = statuses.filter(status="CLOSED").order_by('updated_at').first()
-        
-        # CASE 1 – Closed exists → Calculate from ACCEPTED if possible
-        if closed_status:
-            if accepted_status:
-                start_date = accepted_status.updated_at
-            else:
-                start_date = review_status.updated_at
-                
-            total_days = (closed_status.updated_at - start_date).days
 
-        # CASE 2 – Not closed yet → Calculate till today
+        received_status  = statuses.filter(status="PRODUCT_RECEIVED").order_by('updated_at').first()
+        diagnosis_status = statuses.filter(status="DIAGNOSIS").order_by('updated_at').first()
+        repair_status    = statuses.filter(status="REPAIR").order_by('updated_at').first()
+        closed_status    = statuses.filter(status="CLOSED").order_by('updated_at').first()
+
+        if not received_status:
+            # No product received yet → process not started
+            total_days = None
+            timing_status = "Not Started"
+            timing_stage = "not_started"
+
         else:
-            if accepted_status:
-                start_date = accepted_status.updated_at
-                total_days = (today - start_date).days
+            start_date = received_status.updated_at
+            end_date = closed_status.updated_at if closed_status else today
+            total_days = (end_date - start_date).days
 
-            elif review_status:
-                start_date = review_status.updated_at
-                total_days = (today - start_date).days
+            pricing = getattr(event, 'customer_pricing', None)
+            approved = pricing.approved if pricing else False
+
+            # ✅ If already closed: final rule wins (10-day total window from PRODUCT_RECEIVED)
+            if closed_status:
+                timing_stage = "closed"
+                timing_status = "On Time" if total_days <= 10 else "Late"
 
             else:
-                total_days = None  # nothing started yet
+                # 🚩 Not closed yet — apply phase-based rules
 
-            
+                # 1️⃣ PRODUCT_RECEIVED + DIAGNOSIS must be completed within 3 days
+                if not diagnosis_status:
+                    # Still waiting for DIAGNOSIS
+                    timing_stage = "awaiting_diagnosis"
+                    days_since_received = (today - start_date).days
+                    timing_status = "Late" if days_since_received > 3 else "On Time"
 
+                # DIAGNOSIS done but payment not yet approved
+                elif not approved:
+                    timing_stage = "awaiting_payment_approval"
+                    days_since_received = (today - start_date).days
+                    # Still same 3-day SLA for received+diagnosis+approval side
+                    timing_status = "Late" if days_since_received > 3 else "On Time"
+
+                else:
+                    # 2️⃣ Payment approved – now we look at REPAIR window
+
+                    if not repair_status:
+                        # Payment approved but repair not started yet
+                        timing_stage = "awaiting_repair"
+                        # No explicit SLA given here; keep an overall 10-day guard from PRODUCT_RECEIVED
+                        days_since_received = (today - start_date).days
+                        timing_status = "Late" if days_since_received > 10 else "On Time"
+                    else:
+                        # Repair started – 7 days allowed from REPAIR to (future) CLOSED
+                        timing_stage = "under_repair"
+                        days_since_repair = (today - repair_status.updated_at).days
+                        timing_status = "Late" if days_since_repair > 7 else "On Time"
+        # --- end timing logic ---
+
+
+        # pass timing_status & timing_stage to template so template can show accurate badge/text
         return render(request, "complaints/complain_status.html", {
             "form": form,
             "cost_form": cost_form,
@@ -91,13 +125,14 @@ class ComplaintStatusView(View):
             "total_customer_cost": total_customer_cost,
             "latest_status": latest_status,
             "status_choices": status_choices,
-            "location_data": location_data,# ✅ Always available in template
+            "location_data": location_data,
             "location_choices": location_choices,
             "profit_value": profit_value,
             "profit_percent": profit_percent,
             "total_days": total_days,
+            "timing_status": timing_status,
+            "timing_stage": timing_stage,
         })
-
 
 
 @require_POST
@@ -180,7 +215,7 @@ class UpdateStatusView(View):
             
             template_type = "status"  # choose appropriate type for this endpoint
             title = f"Status Updated for complaint {event.unique_token}"
-            body = f"Model number {event.model_number} status has been updated to { status_instance.status }."
+            body = f"Model number {event.serial_number} status has been updated to { status_instance.status }."
             attachments = None
             if status_instance.attachments:
                 attachments = status_instance.attachments
@@ -332,17 +367,18 @@ def customer_price_approve_view(request, pk):
     if request.method == "POST":
         pricing = get_object_or_404(CustomerPricing, pk=pk)
         pricing.approved = True
+        pricing.approved_at = timezone.now()
         pricing.save()
         messages.success(request, "You approved successfully.")
         
         template_type = "approval"
-        title = f"Repair Cost Approved"
-        body = f"Repair cost is approved by customer."
+        title = f"Repair Cost Approved {pricing.event.unique_token}"
+        body = f"Repair cost is approved by customer of {pricing.total_price}rs."
 
 
         # Launch email sending in background thread
         send_mail_thread(
-                event_id=pk,
+                event_id = pricing.event.id,
                 template_type=template_type,
                 title=title,
                 body=body,
