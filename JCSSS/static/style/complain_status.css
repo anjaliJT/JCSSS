@@ -83,7 +83,7 @@
 .status-active {
   background-color: rgba(44, 90, 160, 0.1);
   color: #2c5aa0;
-  width: 65px;
+  width: 100px;
 }
 
 .status-pending {

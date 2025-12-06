@@ -20,7 +20,7 @@ class Event(models.Model):
     designation = models.CharField(max_length=150, blank=True, null=True)
 
     #UAV details 
-    model_number = models.CharField(max_length=50)
+    serial_number = models.CharField(max_length=50)
     tail_number = models.CharField(max_length=50, blank=True)
     uav_type = models.CharField(max_length=150, blank=True)
     gcs_type = models.CharField(max_length=100, blank=True)
@@ -72,9 +72,9 @@ class Event(models.Model):
     
 
     def save(self, *args, **kwargs):
-        # Always store model_number in uppercase
-        if self.model_number:
-            self.model_number = self.model_number.upper()
+        # Always store serial_number in uppercase
+        if self.serial_number:
+            self.serial_number = self.serial_number.upper()
 
         # First save to get the ID
         super().save(*args, **kwargs)
@@ -86,14 +86,14 @@ class Event(models.Model):
                 self.date_of_occurrence = datetime.strptime(self.date_of_occurrence, "%Y-%m-%d").date()
 
             # Count how many events already exist for this model
-            count = Event.objects.filter(model_number=self.model_number).count()
+            count = Event.objects.filter(serial_number=self.serial_number).count()
 
             # Use next serial number (count is including current, so it's correct)
             serial_number = str(count).zfill(4)  # 0001, 0002, etc.
 
             # Build unique token
             self.unique_token = (
-                f"0{self.id}-{self.model_number}-"
+                f"0{self.id}-{self.serial_number}-"
                 f"{self.reported_at.strftime('%Y%m%d')}-{serial_number}".upper()
             )
 

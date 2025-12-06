@@ -177,6 +177,7 @@
                         <th>Ticket ID</th>
                         <th>Pilot Name</th>
                         <th>Model Number</th>
+                        <th>UAV Type</th>
                         <th>Tail Number</th>
                         <th>Status</th>
                         <th>Occurance Date</th>
@@ -193,7 +194,8 @@
                         <!-- status -->
                         
                         <td>{{ complaint.pilot_name }}</td>
-                        <td>{{ complaint.model_number }}</td>
+                        <td>{{ complaint.serial_number }}</td>
+                        <td>{{ complaint.uav_type }}</td>
                         <td>{{ complaint.tail_number }}</td>
                         <td>
                           {% with latest_status=complaint.complaint_statuses.last %}

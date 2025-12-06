@@ -52,7 +52,7 @@ def compute_active_complain(user):
         progress = progress_map.get(e.latest_status, 25)
 
         event_data.append({
-            "model_number": e.model_number,
+            "serial_number": e.serial_number,
             "tail_number": e.tail_number,
             "current_status": e.latest_status,
             "progress": progress,

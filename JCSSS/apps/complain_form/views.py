@@ -47,7 +47,7 @@ class ComplaintListView(LoginRequiredMixin, View):
         if search:
             # split words optionally (search terms), here we treat entire string as one term
             q = (
-                Q(model_number__icontains=search) |
+                Q(serial_number__icontains=search) |
                 Q(pilot_name__icontains=search) |
                 Q(tail_number__icontains=search) |
                 Q(unique_token__icontains=search) |
@@ -99,7 +99,7 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     user = request.user,
                     filed_by=request.POST.get("filed_by"),   # Person who filed
                     designation=request.POST.get("designation"),
-                    model_number=request.POST.get("model_number"),
+                    serial_number=request.POST.get("serial_number"),
                     date_of_occurrence=request.POST.get("date_of_occurrence"),
                     time_of_occurrence=request.POST.get("time_of_occurrence"),
                     field_site=request.POST.get("field_site"),
@@ -229,7 +229,7 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 event.certificate_number = request.POST.get("certificate_number", event.certificate_number)
                 event.filed_by = request.POST.get("filed_by", event.filed_by)
                 event.designation = request.POST.get("designation", event.designation)
-                event.model_number = request.POST.get("model_number", event.model_number)
+                event.serial_number = request.POST.get("serial_number", event.serial_number)
                 event.field_site = request.POST.get("field_site", event.field_site)
                 event.event_type = request.POST.get("event_type", event.event_type)
                 event.damage_level = request.POST.get("damage_level", event.damage_level)
@@ -283,7 +283,7 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 if request.FILES.get("log_file"):
                     event.file_log = request.FILES.get("log_file")
 
-                # ---------- Severity/damage potential ----------
+                # ---------- Severity/damage pote ntial ----------
                 # You have both damage_level (string) and damage_potential (choice). Map as you like:
                 dp = request.POST.get("damage_level")
                 if dp:
