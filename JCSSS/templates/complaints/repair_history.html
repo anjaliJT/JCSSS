@@ -5,10 +5,37 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'style/repair_history.css' %}">
 {% endblock %}
+
+
 {% block content %}
+<style>
+       .product-image-wrapper {
+        width: 150px ;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-Right:95px;
+    }
+    
+    .product-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .product-image-wrapper {
+            width: 60px;
+            height: 60px;
+        }
+    }
+</style>
         <!-- Product Header -->
         <div class="product-header">
             <div class="row align-items-center">
+                <!-- Product Details -->
                 <div class="col-md-8">
                     <div class="d-flex align-items-center mb-3">
                         <i class="fas fa-drone fa-2x text-primary me-3"></i>
@@ -20,15 +47,32 @@
                         </div>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-primary">{{ product.warranty_status }}</span>
+                        <span class="badge bg-primary"> {{ product.warranty_status }}</span>
                         <span class="badge bg-success">Warranty Till {{product.warranty_expiry_date|date:"Y-m-d"}}</span>
                         <span class="badge bg-info">{{repairs_count}} Time Repairs</span>
                     </div>
                 </div>
+                
+                <!-- Prodcut Image Section -->
                 <div class="col-md-4 text-md-end">
-                    <a href="{% url 'repair_history-export' product.id %}" class="btn btn-outline-primary">
-                        <i class="fas fa-download me-1"></i>Export Report
-                    </a>
+                    <div class="d-flex align-items-center justify-content-end gap-3">
+                        <!-- Product Image Section -->
+                        <div class="product-image-wrapper">
+                            {% if first_event.model_number  == "JF2" %}
+                                <img src="{% static 'images/jf2.png' %}" alt="{{ product.tail_number }}" class="product-image">
+                            {% elif "JM" in first_event.model_number  %}
+                                <img src="{% static 'images/jm1.png' %}" alt="{{ product.tail_number }}" class="product-image">
+
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Export Button -->
+                        <div>
+                            <a href="{% url 'repair_history-export' product.id %}" class="btn btn-outline-primary">
+                                <i class="fas fa-download me-1"></i>Export Report
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -74,7 +118,6 @@
 
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <!-- <div class="metric-value profit-metric">₹{{ net_profit|floatformat:2 }}</div> -->
                     <div class="metric-value 
                     {% if net_profit > 0 %}
                         text-success
@@ -127,7 +170,6 @@
                                         </small>
                                 </td>
                                 <td>{{ event.unique_token }}</td>
-                                <!-- <td> {{ event.last_status|default:"N/A" }}</td> -->
                                 <td>
                                 {% if event.last_status %}
                                     <span class="badge 

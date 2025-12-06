@@ -172,7 +172,6 @@
                     {% endif %}
                 </td>
                 <td>
-                    <!-- Only Edit Button -->
                     <button class="edit-user-btn btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal" data-bs-target="#userFormModal"
                         data-id="{{ user.id }}"
@@ -188,7 +187,15 @@
                         title="Edit User">
                         <i class="fas fa-edit"></i>
                     </button>
+                        <!-- Manage Permissions Button -->
+                        <a href="{% url 'user_permissions' user.id %}" 
+                           class="btn btn-outline-secondary btn-sm" 
+                           title="Manage Permissions">
+                            <i class="fas fa-lock"></i>
+                        </a>
+                    {% comment %} </div> {% endcomment %}
                 </td>
+     
             </tr>
             {% empty %}
             <tr>

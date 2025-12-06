@@ -26,6 +26,8 @@ from .models import ForgotPasswordOTP
 from apps.stats.core import compute_all_metrics, compute_complain
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.contrib.auth.models import Permission
+
 
 
 logger = logging.getLogger(__name__)
@@ -604,3 +606,81 @@ class profileView(LoginRequiredMixin,View):
 
 
 #         return redirect("user_list")
+
+
+class UserPermissionManagementView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
+    """View for managing user permissions grouped by model."""
+    
+    login_url = 'login'
+    permission_required = "auth.change_user"
+    template_name = "users/user_permission_management.html"
+    
+    def get_context_data(self, **kwargs):
+        """Builds context data for permission management template."""
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id')
+        
+        # Get the user being edited
+        user = get_object_or_404(CustomUser, id=user_id)
+        
+        # Get all permissions grouped by model
+        permissions_by_model = self._get_permissions_grouped_by_model()
+        
+        # Get user's current permissions
+        user_permissions = set(user.user_permissions.values_list('id', flat=True))
+        
+        context.update({
+            "user": user,
+            "permissions_by_model": permissions_by_model,
+            "user_permissions": user_permissions,
+        })
+        return context
+    
+    def _get_permissions_grouped_by_model(self):
+        """Fetches all permissions and groups them by model."""
+        permissions = Permission.objects.all().select_related('content_type').order_by('content_type__app_label', 'content_type__model')
+        
+        grouped = {}
+        for perm in permissions:
+            model_name = perm.content_type.model
+            app_label = perm.content_type.app_label
+            
+            # Skip Django admin and auth app permissions (except our custom ones)
+            if app_label not in ['admin', 'sessions', 'contenttypes', 'authtoken']:
+                key = f"{app_label}.{model_name}"
+                
+                if key not in grouped:
+                    grouped[key] = {
+                        "app_label": app_label,
+                        "model_name": model_name,
+                        "display_name": perm.content_type.model.replace('_', ' ').title(),
+                        "permissions": []
+                    }
+                
+                grouped[key]["permissions"].append({
+                    "id": perm.id,
+                    "name": perm.name,
+                    "codename": perm.codename,
+                })
+        
+        return grouped
+    
+    def post(self, request, user_id):
+        """Updates user permissions based on POST data."""
+        try:
+            user = get_object_or_404(CustomUser, id=user_id)
+            
+            # Get permission IDs from request
+            permission_ids = request.POST.getlist('permissions[]')
+            permission_ids = [int(pid) for pid in permission_ids if pid.isdigit()]
+            
+            # Update user permissions
+            user.user_permissions.set(permission_ids)
+            
+            messages.success(request, f"Permissions for {user.first_name} {user.last_name} updated successfully!")
+            return redirect('user_list')
+        
+        except Exception as e:
+            messages.error(request, f"Error updating permissions: {str(e)}")
+            logger.error(f"Permission update error: {str(e)}")
+            return redirect('user_list')
