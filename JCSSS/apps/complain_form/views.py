@@ -306,3 +306,7 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 "is_readonly": False,
             })
 
+def delete_complaint_view(request, pk):
+    Event_obj = get_object_or_404(Event, id=pk)
+    Event_obj.delete()
+    return redirect('complaint_list')
