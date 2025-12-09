@@ -42,7 +42,7 @@
                         <div>
                             <h1 class="h3 mb-1">{{product.tail_number}}</h1>
                             <p class="text-muted mb-0">
-                                <i class="fas fa-hashtag me-1"></i>{{ first_event.model_number }}
+                                <i class="fas fa-hashtag me-1"></i>{{ first_event.serial_number }}
                             </p>
                         </div>
                     </div>
@@ -58,22 +58,23 @@
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Product Image Section -->
                         <div class="product-image-wrapper">
-    {% if first_event.model_number  == "JF2" %}
-        <img src="{% static 'images/jf2.png' %}" alt="{{ product.tail_number }}" class="product-image">
-    {% elif "JM" in first_event.model_number  %}
-        <img src="{% static 'images/jm1.png' %}" alt="{{ product.tail_number }}" class="product-image">
+                            {% if first_event.model_number  == "JF2" %}
+                                <img src="{% static 'images/jf2.png' %}" alt="{{ product.tail_number }}" class="product-image">
+                            {% elif "JM" in first_event.model_number  %}
+                                <img src="{% static 'images/jm1.png' %}" alt="{{ product.tail_number }}" class="product-image">
 
-{% endif %}
-</div>
+                            {% endif %}
+                        </div>
                         
                         <!-- Export Button -->
                         <div>
-                            <button class="btn btn-outline-primary">
+                            <a href="{% url 'repair_history-export' product.id %}" class="btn btn-outline-primary">
                                 <i class="fas fa-download me-1"></i>Export Report
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -142,7 +143,7 @@
         <!-- Repair History -->
         <div class="card">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Repair History</h5>
+                <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Repair History</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -160,7 +161,7 @@
                         <tbody>
                             {% for event in events %}
                             <tr>
-                                <td >{{ event.model_number }}</td>
+                                <td >{{ event.serial_number }}</td>
                                 <td>{{ event.tail_number }}</td>
                                 <td>₹{{ event.total_repair_cost|default:"0.00" }}
                                     <br>

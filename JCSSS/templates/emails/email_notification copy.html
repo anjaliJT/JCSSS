@@ -22,7 +22,7 @@
 
         {% if template_type == "status" %}
             <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span><br>Status Updated</h1>
-            <p class="header2">Model number <strong>{{ model_number }}</strong> status has been updated to <strong>{{ status }}</strong>.</p>
+            <p class="header2">Model number <strong>{{ serial_number }}</strong> status has been updated to <strong>{{ status }}</strong>.</p>
             {% if extra_info %}
                 <p class="message">{{ extra_info }}</p>
             {% endif %}
@@ -30,7 +30,7 @@
         {% elif template_type == "complaint" %}
             <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span>,<br>New Complaint Received</h1>
             <p class="header2">
-                A new complaint request has been submitted for Model Number <strong>{{ model_number }}</strong>
+                A new complaint request has been submitted for Model Number <strong>{{ serial_number }}</strong>
                 {% if tail_number %}
                     with Tail Number <strong>{{ tail_number }}</strong>
                 {% endif %}.
@@ -42,7 +42,7 @@
             {# Fallback: choose by presence of variables if template_type not provided #}
                 {# treat as status update #}
                 <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span><br>Location Updated</h1>
-                <p class="header2">Model number <strong>{{ model_number }}</strong> Repair location is set to here<strong>{{ location }}</strong>.</p>
+                <p class="header2">Model number <strong>{{ serial_number }}</strong> Repair location is set to here<strong>{{ location }}</strong>.</p>
             {% else %}
                 <h1 class="header">Hi <span style="color: #4CAF50;">{{ user }}</span></h1>
             {% endif %}

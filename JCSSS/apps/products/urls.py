@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:pk>/edit/', edit_product_view, name='edit_product'),
     path('<int:pk>/delete/', delete_product_view, name='delete_product'),
     path('<int:pk>/repair-history/', repair_history_view, name='repair_history'),
+    path('<int:pk>/repair-history-export/', repair_history_export_view, name='repair_history-export'),
 ]
 
 

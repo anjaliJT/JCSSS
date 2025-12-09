@@ -1,10 +1,3 @@
-from django.core.mail import send_mail
-from django.conf import settings
-# from apps.oem.models import  CSMApprovalHistory
-from apps.users.models import CustomUser
-
-
-# apps/oem/tasks.py
 from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
@@ -27,7 +20,7 @@ def send_mail_csm(event_id):
         f"A new complaint has been registered.\n\n"
         f"Unique ID: {event.unique_token}\n"
         f"Pilot Name: {event.pilot_name}\n"
-        f"Model Number: {event.model_number}\n"
+        f"Model Number: {event.serial_number}\n"
         f"Date of Occurrence: {event.date_of_occurrence}\n"
         f"Description: {event.event_description}\n\n"
         f"Please review and take necessary actions.\n\n"
