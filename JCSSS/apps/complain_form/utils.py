@@ -80,6 +80,10 @@ def _send_email_sync(event_id, template_type, title, body, extra_context=None, a
     if extra_context:
         context.update(extra_context)
         
+    # ✅ Add this block:
+    if attachments:
+        context["attachments"] = attachments
+        
     # To: All CSM role users
     if template_type == "customer_price":
         
@@ -101,7 +105,7 @@ def _send_email_sync(event_id, template_type, title, body, extra_context=None, a
         return
 
     
-    subject = f"JCSSS [{event.unique_token}] {title}"
+    subject = f"JCSSS {title}"
 
     try:
         html_body = render_to_string("emails/email_notification.html", context)
@@ -151,7 +155,7 @@ def _send_customer_price_email(event_id, title, body, extra_context=None, attach
     if extra_context:
         context.update(extra_context)
 
-    subject = f"JCSSS [{event.unique_token}] {title}"
+    subject = f"JCSSS {title}"
 
     html_body = render_to_string("emails/email_notification.html", context)
 
@@ -184,7 +188,7 @@ def send_mail_thread(event_id, template_type, title, body, extra_context=None, a
             daemon=True,
         )
         thread_1.start()
-        print("start thread1----------------")
+        # print("start thread1----------------")
 
         # 2nd email → internal team
         thread_2 = threading.Thread(
@@ -194,7 +198,7 @@ def send_mail_thread(event_id, template_type, title, body, extra_context=None, a
             daemon=True,
         )
         thread_2.start()
-        print("start thread2---------------")
+        # print("start thread2---------------")
 
         return thread_1, thread_2
 
@@ -207,5 +211,5 @@ def send_mail_thread(event_id, template_type, title, body, extra_context=None, a
             daemon=True,
         )
         thread.start()
-        print("start------------------")
+        # print("start------------------")
         return thread

@@ -163,6 +163,7 @@ def set_complaint_location_view(request, pk):
     send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
         "location": location_value,
         "remarks": remarks,
+        "updated_by":request.user.first_name
     })
 
     return redirect("fetch_complaint_status", pk=pk)
@@ -220,9 +221,9 @@ class UpdateStatusView(View):
             if status_instance.attachments:
                 attachments = status_instance.attachments
                 
-            diagnosis_by = None
-            if status_instance.status == "DIAGNOSIS":
-                diagnosis_by = status_instance.updated_by.first_name
+            # diagnosis_by = None
+            # if status_instance.status == "DIAGNOSIS":
+            #     diagnosis_by = status_instance.updated_by.first_name
 
             # launch email send in background
             send_mail_thread(event.id, template_type=template_type, title=title, 
@@ -231,7 +232,8 @@ class UpdateStatusView(View):
             extra_context={
                 "Current Status": status_instance.status,
                 "remarks": status_instance.remarks,
-                "diagnosis_by":diagnosis_by
+                # "diagnosis_by":diagnosis_by,
+                "updated_by":request.user.first_name,
             }
             )
     

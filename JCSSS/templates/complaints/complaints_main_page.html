@@ -9,7 +9,7 @@
     <!-- Page Header -->
     <div class="row mb-4">
         <div class="col">
-            <h2 class="mb-0">My Complaints</h2>
+            <h2 class="mb-0">Complaints</h2>
             <p class="text-muted">View and manage all your support tickets</p>
         </div>
         <div class="col-auto">
@@ -43,11 +43,11 @@
                   <label class="form-label">Status</label>
                   <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
                     <option value="">All Statuses</option>
-                    <option value="REVIEW" {% if current_filters.status == 'REVIEW' %}selected{% endif %}>Review</option>
+                    <option value="REVIEW" {% if current_filters.status == 'IN REVIEW' %}selected{% endif %}>Review</option>
                     <option value="ACCEPTED" {% if current_filters.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
                     <option value="REJECTED" {% if current_filters.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
-                    <option value="UNDER_PROCESS" {% if current_filters.status == 'UNDER_PROCESS' %}selected{% endif %}>Under Process</option>
-                    <option value="COMPLETED" {% if current_filters.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
+                    <option value="UNDER_PROCESS" {% if current_filters.status == 'UNDER_PROCESS' %}selected{% endif %}>Diagnosis</option>
+                    <option value="COMPLETED" {% if current_filters.status == 'COMPLETED' %}selected{% endif %}>Closed</option>
                   </select>
                 </div>
 
@@ -238,12 +238,19 @@
             {%endif%}
                      <!-- Delete Button -->
               {% if perms.products.delete_product%}
-            <form method="POST" action="{% url 'delete_product' product.id %}" class="d-inline-block" onsubmit="event.preventDefault(); confirmDelete(this);">
+            <form method="POST" action="{% url 'complaint_delete' complaint.id %}" class="d-inline-block" onsubmit="event.preventDefault(); confirmDelete(this);">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Delete Product">
                     <i class="fas fa-trash"></i>
                 </button>
             </form>
+            <script>
+                              function confirmDelete(form) {
+                                openPopup('Are you sure you want to delete this Complaint?', function() {
+                                  form.submit(); // Submit the form only if OK is clicked
+                                });
+                              }
+                            </script>
             {% endif %}
             {% endwith %}
                         </td>
