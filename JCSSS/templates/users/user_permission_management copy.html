@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage User Permissions - {{ user.get_full_name }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'style/user_permissions.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="permission-management">
+    <div class="container-main">
+        <!-- Header -->
+        <div class="header-section">
+            <div>
+                <h2>Manage Permissions</h2>
+                <p class="text-muted">Assign and manage permissions for user access control</p>
+            </div>
+            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Users
+            </a>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="user-info">
+            <h5><i class="fas fa-user-circle me-2"></i>User Information</h5>
+            <div class="user-details">
+                <div class="detail-item">
+                    <label>Full Name</label>
+                    <span>{{ user.get_full_name }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Email</label>
+                    <span>{{ user.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Role</label>
+                    <span>{{ user.get_role_display }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Status</label>
+                    <span>
+                        {% if user.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPerms">0</div>
+                <div class="stat-label">Total Permissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="assignedPerms">0</div>
+                <div class="stat-label">Assigned Permissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="availablePerms">0</div>
+                <div class="stat-label">Available Permissions</div>
+            </div>
+        </div>
+
+        <!-- Permission Assignment Form -->
+        <form method="post" id="permissionForm">
+            {% csrf_token %}
+
+            <!-- Select All / Deselect All Buttons -->
+            <div class="select-buttons mb-3">
+                <button type="button" class="btn btn-outline-primary" id="selectAllBtn">
+                    <i class="fas fa-check-square me-2"></i>Select All
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="deselectAllBtn">
+                    <i class="fas fa-square me-2"></i>Deselect All
+                </button>
+            </div>
+
+            <!-- Permissions Grouped by Model -->
+            {% for key, group in permissions_by_model.items %}
+            <div class="permission-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>
+                        <i class="fas fa-cube me-2"></i>{{ group.display_name }}
+                    </span>
+                    <div>
+                        <span class="badge bg-light text-dark me-2" id="count-{{ key }}">
+                            {{ group.permissions|length }}
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="permissions-list" data-group="{{ key }}">
+                    {% for perm in group.permissions %}
+                    <div class="permission-item">
+                        <input 
+                            type="checkbox" 
+                            name="permissions[]" 
+                            value="{{ perm.id }}" 
+                            id="perm-{{ perm.id }}"
+                            data-group="{{ key }}"
+                            {% if perm.id in user_permissions %}checked{% endif %}
+                            onchange="updateStats()"
+                        >
+                        <label for="perm-{{ perm.id }}">
+                            <span class="permission-name">{{ perm.name }}</span>
+                            <span class="permission-code">{{ perm.codename }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                No permissions available yet.
+            </div>
+            {% endfor %}
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Save Permissions
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Toggle group collapse/expand
+    function toggleGroup(headerElement) {
+        const icon = headerElement.querySelector('i');
+        const group = headerElement.nextElementSibling;
+        
+        headerElement.classList.toggle('collapsed');
+        group.classList.toggle('hidden');
+    }
+
+    // Select all permissions
+    document.getElementById('selectAllBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        updateStats();
+    });
+
+    // Deselect all permissions
+    document.getElementById('deselectAllBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('input[name="permissions[]"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        updateStats();
+    });
+
+    // Update statistics
+    function updateStats() {
+        const totalPerms = document.querySelectorAll('input[name="permissions[]"]').length;
+        const assignedPerms = document.querySelectorAll('input[name="permissions[]"]:checked').length;
+        const availablePerms = totalPerms - assignedPerms;
+
+        document.getElementById('totalPerms').textContent = totalPerms;
+        document.getElementById('assignedPerms').textContent = assignedPerms;
+        document.getElementById('availablePerms').textContent = availablePerms;
+    }
+
+    // Initialize stats on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateStats();
+    });
+
+    // Form submission with confirmation
+    document.getElementById('permissionForm').addEventListener('submit', function(e) {
+        const assignedCount = document.querySelectorAll('input[name="permissions[]"]:checked').length;
+        if (assignedCount === 0) {
+            e.preventDefault();
+            if (confirm('No permissions selected. This user will have no access. Continue?')) {
+                this.submit();
+            }
+        }
+    });
+</script>
+
+{% if messages %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for message in messages %}
+            showMessage('{{ message.tags }}', '{{ message }}');
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+{% endblock %}
