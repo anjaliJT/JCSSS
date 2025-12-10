@@ -2,12 +2,15 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
     
@@ -17,95 +20,117 @@
 
     <!-- <link rel="stylesheet" href="../style/base.css"> -->
     <title>JCS3 Login</title>
-    {% block extra_head %}{% endblock %}
-    
-
-    {% block extra_css %}
-    
-    {% endblock %}
-</head>
-<body>
+    {% block extra_head %}{% endblock %} {% block extra_css %} {% endblock %}
+  </head>
+  <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="d-flex align-items-center">
-                <div class="me-3">
-                    <i class="fas fa-drone fa-2x text-accent"></i>
-                </div>
-                <div>
+      <!-- Company Logo Top -->
+      {% comment %}
+      <div class="sidebar-logo text-center py-3" style="background: #fff">
+        <a href="{% url 'user-details' %}">
+          <img
+            src="{% static 'images/johnnette_logo_black.png' %}"
+            alt="Company Logo"
+            style="height: 40px; max-width: 90%; object-fit: contain"
+          />
+        </a>
+      </div>
+      {% endcomment %}
+      <div class="sidebar-header">
+        <div class="d-flex align-items-center m-2 p-2 ">
+          {% comment %} <div class="me-3">
+            <i class="fas fa-drone fa-2x text-accent"></i>
+          </div> {% endcomment %}
+          <div>
                     <h5 class="mb-0">UAV Support</h5>
-                    <small class="text-white-50">Customer Portal</small>
-                </div>
-            </div>
-            <!-- <div class="sidebar-toggle" id="sidebarToggleInner">
-                <i class="fas fa-chevron-left"></i>
-            </div> -->
+            <small class="text-white-50">Customer Portal</small>
+          </div>
         </div>
-        
-        <div class="sidebar-menu d-flex flex-column" style="height: 89vh;">
-            <ul class="nav flex-column flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/fetch/' %}active{% endif %}" href="{% url 'user-details' %}">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
-                </li>
-                {%if perms.products.view_product%}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/product/' %}active{% endif %}" href="{% url 'product_list' %}">
-                        <i class="fas fa-box"></i> Products
-                    </a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link {% if '/complain/' in request.path %}active{% endif %}" href="{% url 'complaint_list' %}">
-                        <i class="fas fa-ticket-alt"></i> Complaints
-                    </a>
-                </li>
+    
+      </div>
 
-                {% if perms.users.view_customuser %}
-                <li class="nav-item">
-                    <a class="nav-link {% if '/users/' in request.path %}active{% endif %}" href="{% url 'user_list' %}">
-                        <i class="fas fa-users-cog"></i> User Management
-                    </a>
-                </li>
-               
-                
-                <!-- <li class="nav-item">
+      <div class="sidebar-menu d-flex flex-column" style="height: 89vh">
+        <ul class="nav flex-column flex-grow-1">
+          <li class="nav-item">
+            <a
+              class="nav-link {% if request.path == '/fetch/' %}active{% endif %}"
+              href="{% url 'user-details' %}"
+            >
+              <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+          </li>
+          {%if perms.products.view_product%}
+          <li class="nav-item">
+            <a
+              class="nav-link {% if request.path == '/product/' %}active{% endif %}"
+              href="{% url 'product_list' %}"
+            >
+              <i class="fas fa-box"></i> Products
+            </a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a
+              class="nav-link {% if '/complain/' in request.path %}active{% endif %}"
+              href="{% url 'complaint_list' %}"
+            >
+              <i class="fas fa-ticket-alt"></i> Complaints
+            </a>
+          </li>
+
+          {% if perms.users.view_customuser %}
+          <li class="nav-item">
+            <a
+              class="nav-link {% if '/users/' in request.path %}active{% endif %}"
+              href="{% url 'user_list' %}"
+            >
+              <i class="fas fa-users-cog"></i> User Management
+            </a>
+          </li>
+
+          <!-- <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="fas fa-cog"></i> Settings
                     </a>
                 </li> -->
-                 {% endif %}
-            </ul>
+          {% endif %}
+        </ul>
 
-                <!-- <li class="nav-item mt-3">
+        <!-- <li class="nav-item mt-3">
                     <a class="nav-link support-card rounded mx-2" href="#">
                         <i class="fas fa-phone-alt"></i> Offline Support
                     </a>
                 </li> -->
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link support-card rounded" href="#">
-                        <i class="fas fa-phone-alt"></i> Offline Support
-                    </a>
-                </li>
-            </ul>
-        </div>
-
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link support-card rounded" href="#">
+              <i class="fas fa-phone-alt"></i> Offline Support
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content expanded" id="mainContent">
-        <!-- Header/Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-            <div class="container-fluid">
-                <button id="navbarToggle" class="btn-nav btn-dark-nav me-3">
-                    <i class="fas fa-bars" id="navbarToggleIcon"></i>
-                </button>
-
-
-                <div class="d-flex align-items-center">
-                    <!-- <div class="dropdown me-3">
+      <!-- Header/Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+          <div class="container-fluid d-flex align-items-center">
+            <div class="d-flex align-items-center">
+              <button id="navbarToggle" class="btn-nav btn-dark-nav me-2">
+                <i class="fas fa-bars" id="navbarToggleIcon" style="border:none; box-shadow:none; outline:none; color:inherit; background:none;"></i>
+              </button>
+              <a href="{% url 'user-details' %}" class="d-flex align-items-center me-3">
+                <img
+                  src="{% static 'images/johnnette_logo.png' %}"
+                  alt="Company Logo"
+                  style="height: 45px; width:auto; object-fit:contain;"
+                />
+              </a>
+            </div>
+          <div class="d-flex align-items-center">
+            <!-- <div class="dropdown me-3">
                         <a href="#" class="text-white dropdown-toggle" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-bell"></i>
                             <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1">3</span>
@@ -116,56 +141,90 @@
                             <li><a class="dropdown-item" href="#">Payment received</a></li>
                         </ul>
                     </div> -->
-                    
-                    <div class="dropdown">
-                        <a href="#" class="text-white dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=random&size=120" class="rounded-circle me-2" width="32" height="32">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'profile' %}" id="profileLink"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <!-- <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li> -->
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
+
+            <div class="dropdown">
+              <a
+                href="#"
+                class="text-white dropdown-toggle d-flex align-items-center"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=random&size=120"
+                  class="rounded-circle me-2"
+                  width="32"
+                  height="32"
+                />
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="userDropdown"
+              >
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'profile' %}"
+                    id="profileLink"
+                    ><i class="fas fa-user me-2"></i>Profile</a
+                  >
+                </li>
+                <!-- <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li> -->
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'logout' %}"
+                    ><i class="fas fa-sign-out-alt me-2"></i>Logout</a
+                  >
+                </li>
+              </ul>
             </div>
-        </nav>
-            <!-- messages  -->
-       {% if messages %}
-        <div class="toast-container position-fixed top-1 end-0 p-3" style="z-index: 1100;">
-            {% for message in messages %}
-            <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ message }}
-                    </div>
-                    <!-- Close button -->
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-            {% endfor %}
+          </div>
         </div>
-        {% endif %}
-
-        <!-- Bootstrap Toast Init -->
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const toastElList = [].slice.call(document.querySelectorAll('.toast'))
-                toastElList.forEach(function(toastEl) {
-                    let t = new bootstrap.Toast(toastEl, { delay: 3000 }) // auto close after 3s
-                    t.show()
-                })
-            });
-        </script>
-
-
-
-        <!-- Main Content Area -->
-        <div class="container-fluid">
-            {% block content %}
-            {% endblock %}
+      </nav>
+      <!-- messages  -->
+      {% if messages %}
+      <div
+        class="toast-container position-fixed top-1 end-0 p-3"
+        style="z-index: 1100"
+      >
+        {% for message in messages %}
+        <div
+          class="toast align-items-center text-bg-{{ message.tags }} border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="d-flex">
+            <div class="toast-body">{{ message }}</div>
+            <!-- Close button -->
+            <button
+              type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
         </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Bootstrap Toast Init -->
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const toastElList = [].slice.call(
+            document.querySelectorAll(".toast")
+          );
+          toastElList.forEach(function (toastEl) {
+            let t = new bootstrap.Toast(toastEl, { delay: 3000 }); // auto close after 3s
+            t.show();
+          });
+        });
+      </script>
+
+      <!-- Main Content Area -->
+      <div class="container-fluid">{% block content %} {% endblock %}</div>
     </div>
 
     <!-- Modals -->
@@ -174,141 +233,169 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('mainContent');
-        const sidebarToggleInner = document.getElementById('sidebarToggleInner');
-        const navbarToggle = document.getElementById('navbarToggle');
-        const navbarToggleIcon = document.getElementById('navbarToggleIcon');
+      document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+        const sidebarToggleInner =
+          document.getElementById("sidebarToggleInner");
+        const navbarToggle = document.getElementById("navbarToggle");
+        const navbarToggleIcon = document.getElementById("navbarToggleIcon");
 
         // Function to switch icon
         function toggleIcon(isOpen) {
-            if (isOpen) {
-                navbarToggleIcon.classList.remove('fa-bars');
-                navbarToggleIcon.classList.add('fa-times');
-            } else {
-                navbarToggleIcon.classList.remove('fa-times');
-                navbarToggleIcon.classList.add('fa-bars');
-            }
+          if (isOpen) {
+            navbarToggleIcon.classList.remove("fa-bars");
+            navbarToggleIcon.classList.add("fa-times");
+          } else {
+            navbarToggleIcon.classList.remove("fa-times");
+            navbarToggleIcon.classList.add("fa-bars");
+          }
         }
 
         // Inner toggle (arrow inside sidebar)
         if (sidebarToggleInner) {
-            sidebarToggleInner.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-                toggleIcon(!sidebar.classList.contains('collapsed'));
-            });
+          sidebarToggleInner.addEventListener("click", function () {
+            sidebar.classList.toggle("collapsed");
+            mainContent.classList.toggle("expanded");
+            toggleIcon(!sidebar.classList.contains("collapsed"));
+          });
         }
 
         // Hamburger toggle (desktop + mobile)
         if (navbarToggle) {
-            navbarToggle.addEventListener('click', function() {
-                if (window.innerWidth < 993) {
-                    sidebar.classList.toggle('mobile-visible');
-                    toggleIcon(sidebar.classList.contains('mobile-visible'));
-                } else {
-                    sidebar.classList.toggle('collapsed');
-                    mainContent.classList.toggle('expanded');
-                    toggleIcon(!sidebar.classList.contains('collapsed'));
-                }
-            });
+          navbarToggle.addEventListener("click", function () {
+            if (window.innerWidth < 993) {
+              sidebar.classList.toggle("mobile-visible");
+              toggleIcon(sidebar.classList.contains("mobile-visible"));
+            } else {
+              sidebar.classList.toggle("collapsed");
+              mainContent.classList.toggle("expanded");
+              toggleIcon(!sidebar.classList.contains("collapsed"));
+            }
+          });
         }
 
         // Auto collapse on small screens
- function checkWidth() {
-    if (window.innerWidth < 993) {
-        // Mobile behavior
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('expanded');
-        sidebar.classList.remove('mobile-visible');
-        toggleIcon(false);
-    } else {
-        // Desktop behavior - keep expanded
-        sidebar.classList.remove('collapsed');  // Remove collapsed class
-        mainContent.classList.remove('expanded');  // Remove expanded from main content
-        sidebar.classList.remove('mobile-visible');
-        toggleIcon(true);  // Show close icon since sidebar is expanded
-    }
-}
+        function checkWidth() {
+          if (window.innerWidth < 993) {
+            // Mobile behavior
+            sidebar.classList.add("collapsed");
+            mainContent.classList.add("expanded");
+            sidebar.classList.remove("mobile-visible");
+            toggleIcon(false);
+          } else {
+            // Desktop behavior - keep expanded
+            sidebar.classList.remove("collapsed"); // Remove collapsed class
+            mainContent.classList.remove("expanded"); // Remove expanded from main content
+            sidebar.classList.remove("mobile-visible");
+            toggleIcon(true); // Show close icon since sidebar is expanded
+          }
+        }
         checkWidth();
-        window.addEventListener('resize', checkWidth);
+        window.addEventListener("resize", checkWidth);
 
         // Close sidebar on mobile when clicking outside
-        document.addEventListener('click', function(event) {
-            if (window.innerWidth < 993 &&
-                sidebar.classList.contains('mobile-visible') &&
-                !sidebar.contains(event.target) &&
-                event.target !== navbarToggle &&
-                !navbarToggle.contains(event.target)) {
-                sidebar.classList.remove('mobile-visible');
-                toggleIcon(false);
-            }
+        document.addEventListener("click", function (event) {
+          if (
+            window.innerWidth < 993 &&
+            sidebar.classList.contains("mobile-visible") &&
+            !sidebar.contains(event.target) &&
+            event.target !== navbarToggle &&
+            !navbarToggle.contains(event.target)
+          ) {
+            sidebar.classList.remove("mobile-visible");
+            toggleIcon(false);
+          }
         });
-    });
-
-
+      });
     </script>
     <!-- Profile Modal -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div
+      class="modal fade"
+      id="profileModal"
+      tabindex="-1"
+      aria-labelledby="profileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="profileModalLabel">User Profile</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header">
+            <h5 class="modal-title" id="profileModalLabel">User Profile</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="profileModalBody">
+            <!-- Profile content will be loaded here -->
+            <div class="text-center py-4">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
-            <div class="modal-body" id="profileModalBody">
-                <!-- Profile content will be loaded here -->
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-        
-    </div>
-</div>
-
-<!-- Custom Center Popup -->
-<div class="modal fade" id="customPopup" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content text-center">
-      <div class="modal-header bg-primary text-white popup-header">
-        <h5 class="modal-title">Confirmation</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" id="popupMessage">
-        Are you sure you want to continue?
-      </div>
-      <div class="modal-footer justify-content-center popup-button">
-        <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">No</button>
-        <button type="button" class="btn btn-success btn-sm" id="popupOkBtn">Yes</button>
       </div>
     </div>
-  </div>
-</div>
 
-<script>
-  function openPopup(message, onConfirm) {
-    document.getElementById('popupMessage').innerText = message;
+    <!-- Custom Center Popup -->
+    <div class="modal fade" id="customPopup" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+          <div class="modal-header bg-primary text-white popup-header">
+            <h5 class="modal-title">Confirmation</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="popupMessage">
+            Are you sure you want to continue?
+          </div>
+          <div class="modal-footer justify-content-center popup-button">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              data-bs-dismiss="modal"
+            >
+              No
+            </button>
+            <button
+              type="button"
+              class="btn btn-success btn-sm"
+              id="popupOkBtn"
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    const popup = new bootstrap.Modal(document.getElementById('customPopup'));
-    const okBtn = document.getElementById('popupOkBtn');
+    <script>
+      function openPopup(message, onConfirm) {
+        document.getElementById("popupMessage").innerText = message;
 
-    // Reset previous click listeners
-    okBtn.replaceWith(okBtn.cloneNode(true));
-    const newOkBtn = document.getElementById('popupOkBtn');
+        const popup = new bootstrap.Modal(
+          document.getElementById("customPopup")
+        );
+        const okBtn = document.getElementById("popupOkBtn");
 
-    newOkBtn.addEventListener('click', () => {
-      popup.hide();
-      if (onConfirm) onConfirm();
-    });
+        // Reset previous click listeners
+        okBtn.replaceWith(okBtn.cloneNode(true));
+        const newOkBtn = document.getElementById("popupOkBtn");
 
-    popup.show();
-  }
-</script>
-{% block extra_js %}{% endblock %}
+        newOkBtn.addEventListener("click", () => {
+          popup.hide();
+          if (onConfirm) onConfirm();
+        });
 
-</body>
+        popup.show();
+      }
+    </script>
+    {% block extra_js %}{% endblock %}
+  </body>
 </html>

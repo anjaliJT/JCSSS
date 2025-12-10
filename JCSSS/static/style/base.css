@@ -1,10 +1,15 @@
 :root {
   /* --primary: #1e40af; */
-  --primary:#ff0800;
-  --secondary: #3b82f6;
+  --primary:#000000;
+  --secondary: #f63b3b;
   --accent: #f59e0b;
   --dark: #1e293b;
   --light: #f8fafc;
+  /* --primary:#ff0800;
+  --secondary: #3b82f6;
+  --accent: #f59e0b;
+  --dark: #1e293b;
+  --light: #f8fafc; */
 }
 
 body {
@@ -16,7 +21,7 @@ body {
 
 .btn-dark-nav,
 .btn-dark-nav:hover {
-  border-color: red !important;
+
   background: #21252900;
   box-shadow: none;
   transition: none !important;
@@ -73,9 +78,17 @@ body {
 .navbar {
   background: linear-gradient(to right, var(--primary), var(--secondary));
 }
+.navbar {
+  background: linear-gradient(
+    to right,
+    var(--primary) 0%,
+    var(--primary) 50%,
+    var(--secondary) 100%
+  );
+}
 
 .sidebar-header {
-  padding: 20px 15px;
+  padding: 20px 15px; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
 }
