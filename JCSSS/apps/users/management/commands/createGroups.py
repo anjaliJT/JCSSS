@@ -14,6 +14,7 @@ class Command(BaseCommand):
         "Customer": [
             "add_event",
             "view_event",
+            "delete_event",
             "view_complaintstatus",  # "status view"
         ],
         "Inventory": [
