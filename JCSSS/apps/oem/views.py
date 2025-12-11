@@ -57,7 +57,7 @@ class ComplaintStatusView(View):
         today = timezone.now()
 
         received_status  = statuses.filter(status="PRODUCT_RECEIVED").order_by('updated_at').first()
-        diagnosis_status = statuses.filter(status="DIAGNOSIS").order_by('updated_at').first()
+        diagnosis_status = statuses.filter(status="DIAGNOSIS REPORT").order_by('updated_at').first()
         repair_status    = statuses.filter(status="REPAIR").order_by('updated_at').first()
         closed_status    = statuses.filter(status="CLOSED").order_by('updated_at').first()
 
@@ -83,14 +83,14 @@ class ComplaintStatusView(View):
             else:
                 # 🚩 Not closed yet — apply phase-based rules
 
-                # 1️⃣ PRODUCT_RECEIVED + DIAGNOSIS must be completed within 3 days
+                # 1️⃣ PRODUCT_RECEIVED + DIAGNOSIS REPORT must be completed within 3 days
                 if not diagnosis_status:
-                    # Still waiting for DIAGNOSIS
+                    # Still waiting for DIAGNOSIS REPORT
                     timing_stage = "awaiting_diagnosis"
                     days_since_received = (today - start_date).days
                     timing_status = "Late" if days_since_received > 3 else "On Time"
 
-                # DIAGNOSIS done but payment not yet approved
+                # DIAGNOSIS REPORT done but payment not yet approved
                 elif not approved:
                     timing_stage = "awaiting_payment_approval"
                     days_since_received = (today - start_date).days
@@ -222,7 +222,7 @@ class UpdateStatusView(View):
                 attachments = status_instance.attachments
                 
             # diagnosis_by = None
-            # if status_instance.status == "DIAGNOSIS":
+            # if status_instance.status == "DIAGNOSIS REPORT":
             #     diagnosis_by = status_instance.updated_by.first_name
 
             # launch email send in background

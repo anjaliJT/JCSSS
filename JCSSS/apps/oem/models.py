@@ -59,7 +59,7 @@ class ComplaintStatus(models.Model):
         ("ACCEPTED", "Accepted"),
         ("REJECTED", "Rejected"),
         ("PRODUCT_RECEIVED", "Product Received"),
-        ("DIAGNOSIS", "Diagnosis"),
+        ("DIAGNOSIS REPORT", "Diagnosis Report"),
         ("REPAIR", "Repair"),
         ("READY FOR DISPATCH", "Ready for Dispatch"),
         ("CLOSED", "Closed"),

@@ -139,32 +139,36 @@
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="3" checked id="col3">
-                  <label class="form-check-label" for="col3">Tail Number</label>
+                  <label class="form-check-label" for="col3">UAV Type</label>
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
-                  <label class="form-check-label" for="col4">Status</label>
+                  <label class="form-check-label" for="col4">Tail Number</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="5"  id="col5">
-                  <label class="form-check-label" for="col5">Occurance Date</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
+                  <label class="form-check-label" for="col5">Status</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="6" checked id="col6">
-                  <label class="form-check-label" for="col6"> Organization</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="6"  id="col6">
+                  <label class="form-check-label" for="col6">Occurance Date</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="7"  id="col7">
-                  <label class="form-check-label" for="col7">Flight Mode</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="7" checked id="col7">
+                  <label class="form-check-label" for="col7"> Organization</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="8"  id="col8">
+                  <label class="form-check-label" for="col8">Flight Mode</label>
               </li>
              
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="8" checked id="col8">
-                  <label class="form-check-label" for="col8">Damage Level</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="9" checked id="col9">
+                  <label class="form-check-label" for="col9">Damage Level</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" checked value="9" id="col9">
-                  <label class="form-check-label" for="col9">Actions</label>
+                  <input class="form-check-input column-toggle" type="checkbox" checked value="10" id="col10">
+                  <label class="form-check-label" for="col10">Actions</label>
               </li>
               </ul>
         </div>
@@ -176,7 +180,7 @@
                     <tr>
                         <th>Ticket ID</th>
                         <th>Pilot Name</th>
-                        <th>Model Number</th>
+                        <th>Serial Number</th>
                         <th>UAV Type</th>
                         <th>Tail Number</th>
                         <th>Status</th>
@@ -206,7 +210,7 @@
                                     {% elif latest_status.status == 'REPAIR' %}bg-warning
                                     {% elif latest_status.status == 'REJECTED' %}bg-danger
                                     {% elif latest_status.status == 'CLOSED' %}bg-dark
-                                    {% elif latest_status.status == 'COMPLETED' %}bg-success
+                                    {% elif latest_status.status == 'DIAGNOSIS REPORT' %}bg-success
                                     {% else %} bg-secondary
                                     {% endif %}">
                                     {{ latest_status.get_status_display }}
@@ -237,7 +241,7 @@
             </button>
             {%endif%}
                      <!-- Delete Button -->
-              {% if perms.products.delete_product%}
+              {% if perms.complain_form.delete_event and latest_status.status != 'CLOSED' %}
             <form method="POST" action="{% url 'complaint_delete' complaint.id %}" class="d-inline-block" onsubmit="event.preventDefault(); confirmDelete(this);">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Delete Product">
@@ -273,42 +277,42 @@
     </div>
 </div>
         
-<!-- Pagination -->
-{% if complaints.has_other_pages %}
-<nav aria-label="Complaints pagination" class="mt-4">
-            <ul class="pagination justify-content-end">
-                {% if complaints.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ complaints.previous_page_number }}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">&laquo;</span>
-                </li>
-                {% endif %}
-                
-                {% for i in complaints.paginator.page_range %}
-                <li class="page-item {% if complaints.number == i %}active{% endif %}">
-                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                </li>
-                {% endfor %}
-                
-                {% if complaints.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ complaints.next_page_number }}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">&raquo;</span>
-                </li>
-                {% endif %}
-            </ul>
-</nav>
-{% endif %}
+  <!-- Pagination -->
+  {% if complaints.has_other_pages %}
+  <nav aria-label="Complaints pagination" class="mt-4">
+              <ul class="pagination justify-content-end">
+                  {% if complaints.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ complaints.previous_page_number }}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                      </a>
+                  </li>
+                  {% else %}
+                  <li class="page-item disabled">
+                      <span class="page-link">&laquo;</span>
+                  </li>
+                  {% endif %}
+                  
+                  {% for i in complaints.paginator.page_range %}
+                  <li class="page-item {% if complaints.number == i %}active{% endif %}">
+                      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                  </li>
+                  {% endfor %}
+                  
+                  {% if complaints.has_next %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ complaints.next_page_number }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                      </a>
+                  </li>
+                  {% else %}
+                  <li class="page-item disabled">
+                      <span class="page-link">&raquo;</span>
+                  </li>
+                  {% endif %}
+              </ul>
+  </nav>
+  {% endif %}
 
 </div>
 <script>
@@ -333,7 +337,7 @@
                 }
             });
         });
-    </script>
+</script>
 {% block extra_scripts %}
   <script src="{% static 'js/popup_msg.js' %}"></script>
 {% endblock %}

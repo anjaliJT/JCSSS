@@ -76,18 +76,19 @@
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Product Image Section -->
                         <div class="product-image-wrapper">
-    {% if event.serial_number  == "JF2" %}
+    {% if event.uav_type  == "JF2" %}
         <img src="{% static 'images/jf2.png' %}" alt="{{ event.tail_number }}" class="product-image">
-    {% elif "JM" in event.serial_number  %}
+    {% elif "JM" in event.uav_type  %}
         <img src="{% static 'images/jm1.png' %}" alt="{{ event.tail_number }}" class="product-image">
 
 {% endif %}
 </div>
         <div class="col-md-6 text-md-end">
           <div class="col-auto">
-              <button type="button" class="btn btn-sm btn-outline-primary" onclick="history.back()">
-                  <i class="fas fa-arrow-left me-2"></i>Back to Complaints
-              </button>
+              <a href="{% url 'complaint_list' %}" class="btn btn-sm btn-outline-primary">
+                  <i class="fas fa-arrow-left me-2"></i> Back to Complaints
+              </a>
+
           </div>
           <div class="text-muted small">Product: {{event.serial_number}}</div>
           <div class="text-muted small">Tail No: {{event.tail_number}}</div>
@@ -121,7 +122,7 @@
                             <i class="fas fa-check"></i>
                           {% elif s.status == "ACCEPTED" %}
                             <i class="fas fa-user-check"></i>
-                          {% elif s.status == "DIAGNOSIS" %}
+                          {% elif s.status == "DIAGNOSIS REPORT" %}
                             <i class="fas fa-cog"></i>
                           {% elif s.status == "REPAIR" %}
                             <i class="fas fa-tools"></i>
@@ -146,7 +147,7 @@
                         {%if s.status == "ACCEPTED" %}
                           <p class="timeline-info">You will get the diagnosis report within 3 days once we receive the product at our warehouse.</p>
                         {% endif %}
-                        {% if s.status == 'DIAGNOSIS' and event.customer_pricing.approved == True %}
+                        {% if s.status == 'DIAGNOSIS REPORT' and event.customer_pricing.approved == True %}
                           <p class="timeline-info">When the payment is approved by you, it takes 7 days to repair the product.</p>
                         {% endif %}
 
