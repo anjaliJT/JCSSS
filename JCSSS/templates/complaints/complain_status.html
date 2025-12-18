@@ -15,30 +15,6 @@
 
 
 {% block content %}
-<style>
-       .product-image-wrapper {
-        width: 200px ;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-Right:95px;
-    }
-    
-    .product-image {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .product-image-wrapper {
-            width: 60px;
-            height: 60px;
-        }
-    }
-</style>
   <div class="container-main">
     {% if latest_status.status == 'CLOSED' %}
     <div class="alert alert-warning d-flex align-items-center mb-4" style="border-radius:8px; font-size:1.1rem;">
@@ -63,13 +39,13 @@
             <span class="location-badge location-oem" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
             {% if timing_status == "Not Started" %}
             <span class="badge bg-secondary location-badge p-2">
-              <i class="fas fa-info-circle"></i> Not Started
+              <i class="fa-solid fa-clock"></i> Not Started
             </span>
 
           {% elif timing_status == "On Time" %}
             {% if total_days is not None %}
               <span class="badge bg-success location-badge p-2">
-                <i class="fas fa-check-circle"></i> On Time ({{ total_days }} days)
+<i class="fa-solid fa-clock"></i> On Time ({{ total_days }} days) <i class="fas fa-check-circle"></i>
               </span>
             {% else %}
               <span class="badge bg-success location-badge p-2">
@@ -80,7 +56,7 @@
           {% elif timing_status == "Late" %}
             {% if total_days is not None %}
               <span class="badge bg-danger location-badge p-2">
-                <i class="fas fa-exclamation-triangle"></i> Late ({{ total_days }} days)
+                <i class="fa-solid fa-clock"></i> Late ({{ total_days }} days) <i class="fas fa-exclamation-triangle"></i>
               </span>
             {% else %}
               <span class="badge bg-danger location-badge p-2">
@@ -100,16 +76,16 @@
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Product Image Section -->
                         <div class="product-image-wrapper">
-    {% if event.model_number  == "JF2" %}
+    {% if event.serial_number  == "JF2" %}
         <img src="{% static 'images/jf2.png' %}" alt="{{ event.tail_number }}" class="product-image">
-    {% elif "JM" in event.model_number  %}
+    {% elif "JM" in event.serial_number  %}
         <img src="{% static 'images/jm1.png' %}" alt="{{ event.tail_number }}" class="product-image">
 
 {% endif %}
 </div>
-        <div class="col-md-4 text-md-end">
+        <div class="col-md-6 text-md-end">
           <div class="col-auto">
-              <button type="button" class="btn  btn-outline-primary" onclick="history.back()">
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="history.back()">
                   <i class="fas fa-arrow-left me-2"></i>Back to Complaints
               </button>
           </div>
@@ -141,7 +117,7 @@
                           {% elif not forloop.last %}completed
                           {% endif %}">
                           
-                          {% if s.status == "REVIEW" %}
+                          {% if s.status == "IN REVIEW" %}
                             <i class="fas fa-check"></i>
                           {% elif s.status == "ACCEPTED" %}
                             <i class="fas fa-user-check"></i>
@@ -179,7 +155,6 @@
                             <i class="fas fa-paperclip"></i> View Attachment
                           </a>
                         {% else %}
-                          <span>No attachment</span>
                         {% endif %}
 
                         <!-- ✅ Edit button opens modal with the status ID -->

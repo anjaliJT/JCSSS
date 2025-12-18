@@ -40,7 +40,7 @@ class RepairLocation(models.Model):
         ("Virtual Assistance", "Virtual Assistance"),
     ]
 
-    event = models.OneToOneField(Event, on_delete=models.PROTECT, related_name="location")
+    event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="location")
     location = models.CharField(
         max_length=20,
         choices=LOCATION_CHOICES,
@@ -55,7 +55,7 @@ class RepairLocation(models.Model):
 
 class ComplaintStatus(models.Model):
     STATUS_CHOICES = [
-        ("REVIEW", "In Review"),
+        ("IN REVIEW", "In Review"),
         ("ACCEPTED", "Accepted"),
         ("REJECTED", "Rejected"),
         ("PRODUCT_RECEIVED", "Product Received"),
@@ -65,7 +65,7 @@ class ComplaintStatus(models.Model):
         ("CLOSED", "Closed"),
     ]
 
-    event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="complaint_statuses")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="complaint_statuses")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="REVIEW")
     remarks = models.TextField(blank=True, null=True)
     attachments = models.FileField(upload_to="attachments/", blank=True, null=True)

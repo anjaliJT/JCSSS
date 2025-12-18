@@ -43,17 +43,19 @@
             <h3>Location update</h3>
             <p class="message-update">
                 Location: {{ location|default:"Not provided" }}<br>
-                Remarks: {{ remarks|default:"-" }}
+                Remarks: {{ remarks|default:"-" }}<br>
+                Updated_By: {{ updated_by }}
             </p>
         {% elif template_type == "status" %}
             <hr>
             <h3>Status update</h3>
             <span class="message-update">
                 New status: {{ latest_status }}
-
-            {% if latest_status == "DIAGNOSIS" %}
-                Diagnosis By: {{ diagnosis_by }}
+                <br>
+                Updated_By: {{ updated_by }}
             </span>
+
+            {% if attachments %}
                 <p class="meta">Invoice: Attached to this email.</p>
             {% endif %}
 

@@ -163,6 +163,7 @@ def set_complaint_location_view(request, pk):
     send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
         "location": location_value,
         "remarks": remarks,
+        "updated_by":request.user.first_name
     })
 
     return redirect("fetch_complaint_status", pk=pk)
@@ -200,6 +201,7 @@ def update_location_view(request, pk):
     
     return redirect("fetch_complaint_status", pk=event.id)
     
+
 class UpdateStatusView(View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
@@ -219,27 +221,29 @@ class UpdateStatusView(View):
                 )
 
             messages.success(request, "Complaint status updated successfully.")
+            # ✅ Redirect to Status view
+            
+            template_type = "status"  # choose appropriate type for this endpoint
+            title = f"Status Updated for complaint {event.unique_token}"
+            body = f"Model number {event.serial_number} status has been updated to { status_instance.status }."
+            attachments = None
+            if status_instance.attachments:
+                attachments = status_instance.attachments
+                
+            # diagnosis_by = None
+            # if status_instance.status == "DIAGNOSIS":
+            #     diagnosis_by = status_instance.updated_by.first_name
 
-            # Handle mail attachments (first file only)
-            mail_file = None
-            if request.FILES.getlist("attachments"):
-                mail_file = request.FILES.getlist("attachments")[0]
-
-            diagnosis_by = None
-            if status_instance.status == "DIAGNOSIS":
-                diagnosis_by = status_instance.updated_by.first_name
-
-            send_mail_thread(
-                event.id,
-                template_type="status",
-                title=f"Status Updated for complaint {event.unique_token}",
-                body=f"Model number {event.serial_number} status updated to {status_instance.status}.",
-                attachments=mail_file,
-                extra_context={
-                    "Current Status": status_instance.status,
-                    "remarks": status_instance.remarks,
-                    "diagnosis_by": diagnosis_by
-                }
+            # launch email send in background
+            send_mail_thread(event.id, template_type=template_type, title=title, 
+            body=body, 
+            attachments=attachments,
+            extra_context={
+                "Current Status": status_instance.status,
+                "remarks": status_instance.remarks,
+                # "diagnosis_by":diagnosis_by,
+                "updated_by":request.user.first_name,
+            }
             )
 
             return redirect("fetch_complaint_status", pk=pk)

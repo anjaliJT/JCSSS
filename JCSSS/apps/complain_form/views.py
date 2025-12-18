@@ -33,7 +33,11 @@ class ComplaintListView(LoginRequiredMixin, View):
         # Base queryset annotated with latest_status
         complaints = Event.objects.annotate(
             latest_status=Subquery(latest_status_subquery)
-        ).order_by('-date_of_occurrence')
+        ).order_by('-id')
+        
+        # Restrict to only the customer's complaints
+        if request.user.role == "CUSTOMER":
+            complaints = complaints.filter(user=request.user)
 
         # Filter by status (latest status only)
         if status:
@@ -96,6 +100,7 @@ class ComplaintRegister(LoginRequiredMixin,View):
                 event = Event.objects.create(
                     pilot_name=request.POST.get("pilot_name"),
                     certificate_number=request.POST.get("certificate_number"),
+                    email = request.POST.get("email"),
                     user = request.user,
                     filed_by=request.POST.get("filed_by"),   # Person who filed
                     designation=request.POST.get("designation"),
@@ -198,7 +203,7 @@ class ComplaintEditView(LoginRequiredMixin,View):
 
     def get(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
-        messages.info(request,"You only view your details.")
+        # messages.info(request,"You only view your details.")
 
         is_completed = bool(event)
 
@@ -307,6 +312,17 @@ class ComplaintEditView(LoginRequiredMixin,View):
             })
 
 def delete_complaint_view(request, pk):
-    Event_obj = get_object_or_404(Event, id=pk)
-    Event_obj.delete()
-    return redirect('complaint_list')
+    event = get_object_or_404(Event, id=pk)
+
+    if request.method == "POST":
+        # Get latest status of that event
+        latest_status = event.complaint_statuses.order_by('updated_at').last()
+
+        # Check if status exists and is "IN REVIEW"
+        if latest_status and latest_status.status == "IN REVIEW":
+            event.delete()
+            return redirect('complaint_list')
+
+        # Otherwise do NOT delete
+        messages.error(request, "You can delete complaint only when it is in 'IN REVIEW' status.")
+        return redirect('complaint_list')
