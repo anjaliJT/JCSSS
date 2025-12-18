@@ -237,13 +237,13 @@
             </button>
             {%endif%}
                      <!-- Delete Button -->
-              {% if perms.products.delete_product%}
+              {% comment %} {% if perms.products.delete_product%}
             <form method="POST" action="{% url 'delete_product' product.id %}" class="d-inline-block" onsubmit="event.preventDefault(); confirmDelete(this);">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-danger ms-1" title="Delete Product">
                     <i class="fas fa-trash"></i>
                 </button>
-            </form>
+            </form> {% endcomment %}
             {% endif %}
             {% endwith %}
                         </td>

@@ -3,13 +3,17 @@ from django import forms
 from .models import ComplaintStatus, RepairCost, CustomerPricing
 
 class ComplaintStatusForm(forms.ModelForm):
+    attachments = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'multiple': True}),
+        required=False
+    )
+
     class Meta:
         model = ComplaintStatus
-        fields = ['status', 'remarks', 'attachments']
+        fields = ['status', 'remarks']   # REMOVE 'attachments'
         widgets = {
-            'status': forms.Select(attrs={'class': 'form-select'}),
-            'remarks': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'attachments': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class':'form-select'}),
+            'remarks': forms.Textarea(attrs={'class':'form-control', 'rows':3}),
         }
 
 class RepairCostForm(forms.ModelForm):

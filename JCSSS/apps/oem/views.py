@@ -200,46 +200,52 @@ def update_location_view(request, pk):
     
     return redirect("fetch_complaint_status", pk=event.id)
     
-
 class UpdateStatusView(View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
         form = ComplaintStatusForm(request.POST, request.FILES)
+
         if form.is_valid():
             status_instance = form.save(commit=False)
             status_instance.event = event
-            status_instance.updated_by = request.user   # ✅ FIX
+            status_instance.updated_by = request.user
             status_instance.save()
+
+            # Save attachments into new model
+            for file in request.FILES.getlist('attachments'):
+                ComplaintStatusAttachment.objects.create(
+                    status=status_instance,
+                    file=file
+                )
+
             messages.success(request, "Complaint status updated successfully.")
-            # ✅ Redirect to Status view
-            
-            template_type = "status"  # choose appropriate type for this endpoint
-            title = f"Status Updated for complaint {event.unique_token}"
-            body = f"Model number {event.serial_number} status has been updated to { status_instance.status }."
-            attachments = None
-            if status_instance.attachments:
-                attachments = status_instance.attachments
-                
+
+            # Handle mail attachments (first file only)
+            mail_file = None
+            if request.FILES.getlist("attachments"):
+                mail_file = request.FILES.getlist("attachments")[0]
+
             diagnosis_by = None
             if status_instance.status == "DIAGNOSIS":
                 diagnosis_by = status_instance.updated_by.first_name
 
-            # launch email send in background
-            send_mail_thread(event.id, template_type=template_type, title=title, 
-            body=body, 
-            attachments=attachments,
-            extra_context={
-                "Current Status": status_instance.status,
-                "remarks": status_instance.remarks,
-                "diagnosis_by":diagnosis_by
-            }
+            send_mail_thread(
+                event.id,
+                template_type="status",
+                title=f"Status Updated for complaint {event.unique_token}",
+                body=f"Model number {event.serial_number} status updated to {status_instance.status}.",
+                attachments=mail_file,
+                extra_context={
+                    "Current Status": status_instance.status,
+                    "remarks": status_instance.remarks,
+                    "diagnosis_by": diagnosis_by
+                }
             )
-    
-            return redirect("fetch_complaint_status", pk=pk)
-        else:
-            messages.error(request, "Error updating complaint status.")
-        return redirect("fetch_complaint_status", pk=pk)
 
+            return redirect("fetch_complaint_status", pk=pk)
+
+        messages.error(request, "Error updating complaint status.")
+        return redirect("fetch_complaint_status", pk=pk)
 
 @require_POST
 def edit_status_view(request, pk):
@@ -247,14 +253,13 @@ def edit_status_view(request, pk):
 
     status_obj.status = request.POST.get("status")
     status_obj.remarks = request.POST.get("remarks")
-
-    if 'attachments' in request.FILES:
-        status_obj.attachments = request.FILES['attachments']
-
     status_obj.save()
 
-    return redirect("fetch_complaint_status", pk=status_obj.event.id)
+    # Add new attachments
+    for file in request.FILES.getlist("attachments"):
+        ComplaintStatusAttachment.objects.create(status=status_obj, file=file)
 
+    return redirect("fetch_complaint_status", pk=status_obj.event.id)
 
 @require_POST
 def delete_status_view(request, status_id):

@@ -76,6 +76,19 @@ class ComplaintStatus(models.Model):
         return f"{self.event} - {self.get_status_display()} ({self.updated_at.strftime('%Y-%m-%d %H:%M')})"
 
 
+class ComplaintStatusAttachment(models.Model):
+    status = models.ForeignKey(
+        ComplaintStatus,
+        on_delete=models.CASCADE,
+        related_name="attachments_list"
+    )
+    file = models.FileField(upload_to="attachments/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Attachment for Status {self.status.id}"
+
+
 class RepairCost(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="repair_costs")
     description = models.TextField(blank=True, null=True)
