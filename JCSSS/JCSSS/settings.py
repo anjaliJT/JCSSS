@@ -37,7 +37,6 @@ AWS_DEFAULT_ACL = None  # Optional: Set default ACL for uploaded files
 AWS_S3_FILE_OVERWRITE = False  # Prevent overwriting files with the same name
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'  # Optional: Set custom domain for S3 bucket
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -157,8 +156,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

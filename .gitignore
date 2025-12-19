@@ -1,7 +1,16 @@
+# Python
 __pycache__/
-*.__pycache__
+*.pyc
 
-*.pyc  
-env
+# Virtual env
+venv/
+env/
+
+# Django
 db.sqlite3
-git rm --cached db.sqlite3
+
+# Environment files
+.env
+JCSSS/JCSSS/.env
+JCSSS/.env
+**/.env
