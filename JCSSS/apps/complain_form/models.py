@@ -5,6 +5,8 @@ import hashlib
 from datetime import datetime
 from django.db import models
 from apps.users.models import CustomUser
+
+
 class Event(models.Model):
     """Complaint model: fields for registering a new complaint."""
 
@@ -26,7 +28,7 @@ class Event(models.Model):
     # gcs_type = models.CharField(max_length=100, blank=True)
     gcs_number = models.CharField(max_length=50, blank=True)
     logbook_entry = models.CharField(max_length=50, blank=True)
-    uav_weight = models.FloatField(help_text="Weight in kg")
+    uav_weight = models.FloatField(help_text="Weight in kg", null= True, blank=True)
 
     #damage event details
     date_of_occurrence = models.DateField(blank=True)
@@ -46,7 +48,7 @@ class Event(models.Model):
     wind = models.CharField(max_length=100, help_text="Wind condition")
     temperature = models.CharField(max_length=50, help_text="Temperature")
     # pressure_qnh = models.CharField(max_length=50, help_text="QNH Pressure")
-    visibility = models.FloatField(max_length=100, blank=True)
+    visibility = models.FloatField(max_length=100, blank=True, null=True)
     # clouds = models.CharField(max_length=100, blank=True)
     # humidity = models.CharField(max_length=50, blank=True)
     turbulence = models.BooleanField(default=False)
