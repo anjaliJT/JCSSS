@@ -5,14 +5,16 @@
 {% block content %}
 <div class="row mb-4">
     <div class="col">
-        <h2 class="mb-0">Dashboard</h2>
-        <p class="text-muted">Welcome {{ request.user.first_name }}</p>
+        <h2 class="mb-0">Welcome {{ request.user.first_name }}</h2>
+        <!-- <p class="text-muted">Good to see you</p> -->
     </div>
+    {% if user.role == "CSM" or user.role == "CUSTOMER" %}
     <div class="col-auto">
           <a class="btn btn-primary" href="{% url 'complain_submit' %}" role="botton">
             <i class="fas fa-plus-circle me-2"></i>New Complaint
           </a>
     </div>
+    {%endif%}
 </div>
 <!-- Stats Cards -->
 <div class="row mb-4">

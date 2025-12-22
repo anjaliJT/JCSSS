@@ -12,11 +12,14 @@
             <h2 class="mb-0">Complaints</h2>
             <p class="text-muted">View and manage all your support tickets</p>
         </div>
+        {% if user.role == "CSM" or user.role == "CUSTOMER" %}
+        
         <div class="col-auto">
             <a class="btn btn-primary"
             href="{% url 'complain_submit' %}">
             <i class="fas fa-plus-circle me-2"></i>New Complaint
           </a>
+          {% endif %}
           
 
         </div>
