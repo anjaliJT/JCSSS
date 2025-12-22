@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
-import os 
+
+from dotenv import load_dotenv
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-wh2+caj(i(t^pclf1%yri&inrbps+(lc8c_^rhnly3e^l3_bz3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1','52.66.113.10','support.johnnette.com','www.support.johnnette.com','192.168.1.4']
 
 
 # AWS credentials from environment
@@ -37,6 +39,36 @@ AWS_DEFAULT_ACL = None  # Optional: Set default ACL for uploaded files
 AWS_S3_FILE_OVERWRITE = False  # Prevent overwriting files with the same name
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'  # Optional: Set custom domain for S3 bucket
 
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
+STORAGES = {
+    # Media files (uploads)
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "location": "media",
+            "file_overwrite": False,
+        },
+    },
+
+    # Static files (CSS, JS)
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "location": "static",
+        },
+    },
+}
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://support.johnnette.com",
+    "http://support.johnnette.com",
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -105,8 +137,7 @@ LOGGING = {
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-from dotenv import load_dotenv
-load_dotenv()
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -185,7 +216,6 @@ DEFAULT_FROM_EMAIL = 'asr@johnnette.com'
 
 
 # Celery task
-CELERY_TASK_ALWAYS_EAGER = True
 
 
 from django.contrib.messages import constants as message_constants

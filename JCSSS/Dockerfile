@@ -1,32 +1,33 @@
-
-# Use official Python image
 FROM python:3.10-slim
 
-# Prevent Python from writing pyc files to disk
+# Security & performance
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Set working directory
+# Create non-root user
+RUN addgroup --system django \
+    && adduser --system --ingroup django django
+
 WORKDIR /app
 
-# Install system dependencies
+# System dependencies (minimal)
 RUN apt-get update && apt-get install -y \
-    build-essential \
     libpq-dev \
-    curl \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Install dependencies first (better caching)
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Copy project
-COPY . /app/
+# Copy project files
+COPY . .
 
-# Expose port 8000
-EXPOSE 8000
+# Permissions
+RUN chown -R django:django /app
+USER django
 
-# Default command runs collectstatic before starting gunicorn
-# CMD ["/bin/sh", "-c", "python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 JCSSS.wsgi:application"]
-CMD ["/bin/sh", "-c", "python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 JCSSS.wsgi:application"]
+EXPOSE 8001
+
+CMD ["gunicorn", "JCSSS.wsgi:application", "--bind", "0.0.0.0:8001", "--workers", "3", "--timeout", "120"]
