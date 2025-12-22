@@ -168,6 +168,7 @@
     </div>
     
     <!-- Support Card -->
+     {%if user.role == "CUSTOMER" %}
     <div class="col-md-4 mb-4">
         <div class="card support-card">
             <div class="card-body text-center">
@@ -179,13 +180,13 @@
                         <h5 class="text-primary">+91 9220155363</h5>
                         <p class="small mb-0">Available from Mon to Sat (0930 hrs to 1830 hrs) for emergency support.</p>
                     </div>
-                    <button class="btn btn-light mt-4">
+                    <!-- <button class="btn btn-light mt-4">
                         <i class="fas fa-download me-2"></i>Download Manuals
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+{%endif%}
 {% endblock %}
