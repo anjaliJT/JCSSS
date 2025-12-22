@@ -15,6 +15,16 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden
 
 
+def to_float(value):
+    """helper function to convert float if it is a string return none"""
+    if value in (None, "", " ",''):
+        return None
+    try:
+        return float(value)
+    except ValueError:
+        return None
+
+
 class ComplaintListView(LoginRequiredMixin, View):
     login_url = 'login'
     template_name = "complaints/complaints_main_page.html"
@@ -144,12 +154,12 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     tail_number=tail_number,
                     gcs_number=request.POST.get("gcs_number"),
                     logbook_entry=request.POST.get("logbook-entry"),
-                    uav_weight=request.POST.get("uav_weight"),
+                    uav_weight=to_float(request.POST.get("uav_weight")),
                     event_description=request.POST.get("event_description"),
                     initial_actions_taken=request.POST.get("initial_actions_taken"),
                     remarks=request.POST.get("remarks"),
                     organization=request.POST.get("organization"),
-                    visibility = request.POST.get("visibility"),
+                    visibility = to_float(request.POST.get("visibility")),
 
                     # if visibility == "":
                     #     visibility = None
@@ -268,18 +278,16 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 event.organization = request.POST.get("organization", event.organization)
                 event.tail_number = request.POST.get("tail_number", event.tail_number)
                 event.uav_type = request.POST.get("uav_type", event.uav_type)
-                event.visibility = request.POST.get("visibility", event.visibility),
+                event.visibility = request.POST.get("visibility", event.visibility)
+                event.date_of_occurrence = request.POST.get("date_of_occurrence", event.date_of_occurrence)
+                event.time_of_occurrence = request.POST.get("time_of_occurrence", event.time_of_occurrence)
                 # event.gcs_type = request.POST.get("gcs_type", event.gcs_type)
                 event.gcs_number = request.POST.get("gcs_number", event.gcs_number)
 
                 # ---------- Date/time fields ----------
                 date_val = request.POST.get("date_of_occurrence")
                 time_val = request.POST.get("time_of_occurrence")
-                if date_val:
-                    event.date_of_occurrence = date_val
-                # keep previous if not provided; similarly for time
-                if time_val:
-                    event.time_of_occurrence = time_val
+    
 
                 # ---------- Numeric fields ----------
                 uav_weight = request.POST.get("uav_weight")
@@ -328,10 +336,13 @@ class ComplaintEditView(LoginRequiredMixin,View):
             # Log / flash error
             messages.error(request, f"Error updating complaint: {str(e)}")
             print("ComplaintEdit error:", str(e))
+     
             # Re-render with existing event data and error message
             return render(request, self.template_name, {
                 "event": event,
                 "is_readonly": False,
+                "is_valid": True,
+            
             })
 
 
