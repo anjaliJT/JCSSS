@@ -28,7 +28,8 @@
 
                 <div class="progress mb-2">
                     <div class="progress-bar
-                        {% if e.current_status == "REVIEW" %}bg-warning
+                        {% if e.current_status == "IN REVIEW" %}bg-warning
+                        {% elif e.current_status == "ACCEPTED" %}bg-primary
                         {% elif e.current_status == "REPAIR" %}bg-info
                         {% elif e.current_status == "CLOSED" %}bg-success
                         {% else %}bg-secondary

@@ -30,72 +30,76 @@
     <!-- Complaint Header -->
     <div class="complaint-header">
       <div class="row">
-        <div class="col-md-8">
-          <div class="complaint-id">#{{event.unique_token}}</div>
-          <div class="customer-name">{{event.serial_number}}</div>
-          <div class="mt-2 header">
-           
-            <span class="status-badge status-active">  {{ latest_status.get_status_display|default:"No Status" }}</span>
-            <span class="location-badge location-oem" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
-            {% if timing_status == "Not Started" %}
-            <span class="badge bg-secondary location-badge p-2">
-              <i class="fa-solid fa-clock"></i> Not Started
-            </span>
+        <div class="complaint-id">#{{event.unique_token}}</div>
+        <div class="customer-name">{{event.serial_number}}</div>
 
-          {% elif timing_status == "On Time" %}
-            {% if total_days is not None %}
-              <span class="badge bg-success location-badge p-2">
-<i class="fa-solid fa-clock"></i> On Time ({{ total_days }} days) <i class="fas fa-check-circle"></i>
+        <div class="row">
+          <div class="col-md-8 order-2 order-md-1">
+            <div class="mt-2 header">
+              <span class="status-badge status-active">  {{ latest_status.get_status_display|default:"No Status" }}</span>
+              <span class="location-badge location-oem" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
+              {% if timing_status == "Not Started" %}
+              <span class="badge bg-secondary location-badge p-2">
+                <i class="fa-solid fa-clock"></i> Not Started
               </span>
-            {% else %}
-              <span class="badge bg-success location-badge p-2">
-                <i class="fas fa-check-circle"></i> On Time
-              </span>
+
+            {% elif timing_status == "On Time" %}
+              {% if total_days is not None %}
+                <span class="badge bg-success location-badge p-2">
+            <i class="fa-solid fa-clock"></i> On Time ({{ total_days }} days) <i class="fas fa-check-circle"></i>
+                </span>
+              {% else %}
+                <span class="badge bg-success location-badge p-2">
+                  <i class="fas fa-check-circle"></i> On Time
+                </span>
+              {% endif %}
+
+            {% elif timing_status == "Late" %}
+              {% if total_days is not None %}
+                <span class="badge bg-danger location-badge p-2">
+                  <i class="fa-solid fa-clock"></i> Late ({{ total_days }} days) <i class="fas fa-exclamation-triangle"></i>
+                </span>
+              {% else %}
+                <span class="badge bg-danger location-badge p-2">
+                  <i class="fas fa-exclamation-triangle"></i> Late
+                </span>
+              {% endif %}
             {% endif %}
 
-          {% elif timing_status == "Late" %}
-            {% if total_days is not None %}
-              <span class="badge bg-danger location-badge p-2">
-                <i class="fa-solid fa-clock"></i> Late ({{ total_days }} days) <i class="fas fa-exclamation-triangle"></i>
-              </span>
-            {% else %}
-              <span class="badge bg-danger location-badge p-2">
-                <i class="fas fa-exclamation-triangle"></i> Late
-              </span>
-            {% endif %}
-          {% endif %}
 
-
-            
-            <!-- <span class="customer-only ms-2">Awaiting Your Approval</span> -->
-            <!-- <span class="oem-only ms-2">Assigned to: John Smith</span> -->
+              
+              <!-- <span class="customer-only ms-2">Awaiting Your Approval</span> -->
+              <!-- <span class="oem-only ms-2">Assigned to: John Smith</span> -->
+            </div>
           </div>
-        </div>
-                        <!-- Right side with Image and Export Button -->
-                <div class="col-md-4 text-md-end">
-                    <div class="d-flex align-items-center justify-content-end gap-3">
-                        <!-- Product Image Section -->
-                        <div class="product-image-wrapper">
-    {% if event.uav_type  == "JF2" %}
-        <img src="{% static 'images/jf2.png' %}" alt="{{ event.tail_number }}" class="product-image">
-    {% elif "JM" in event.uav_type  %}
-        <img src="{% static 'images/jm1.png' %}" alt="{{ event.tail_number }}" class="product-image">
+        
+        <!-- Right side with Image and Export Button -->
+          <div class="col-md-4 order-1 order-md-2 text-md-end p-0">
+            <div class="d-flex align-items-center justify-content-end gap-3">
+              <!-- Product Image Section -->
+              <div class="product-image-wrapper">
+                {% if event.uav_type  == "JF2" %}
+                    <img src="{% static 'images/jf2.png' %}" alt="{{ event.tail_number }}" class="product-image">
+                {% elif "JM" in event.uav_type  %}
+                    <img src="{% static 'images/jm1.png' %}" alt="{{ event.tail_number }}" class="product-image">
 
-{% endif %}
-</div>
-        <div class="col-md-6 text-md-end">
-          <div class="col-auto">
-              <a href="{% url 'complaint_list' %}" class="btn btn-sm btn-outline-primary">
-                  <i class="fas fa-arrow-left me-2"></i> Back to Complaints
-              </a>
+                {% endif %}
+              </div>
+              <div class="col-md-6 text-md-end">
+                <div class="col-auto">
+                    <a href="{% url 'complaint_list' %}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Complaints
+                    </a>
 
+                </div>
+                <div class="text-muted small">Product: {{event.serial_number}}</div>
+                <div class="text-muted small">Tail No: {{event.tail_number}}</div>
+                <div class="text-muted small">Registered at: {{ event.reported_at|date:"d/m/Y" }}</div>
+              </div>
+            </div>
           </div>
-          <div class="text-muted small">Product: {{event.serial_number}}</div>
-          <div class="text-muted small">Tail No: {{event.tail_number}}</div>
-          <div class="text-muted small">Registered at: {{ event.reported_at|date:"d/m/Y" }}</div>
         </div>
       </div>
-    </div>
 
     <div class="row">
       <!-- Left Column - Complaint Tracking -->
@@ -147,7 +151,7 @@
                         {%if s.status == "ACCEPTED" %}
                           <p class="timeline-info">You will get the diagnosis report within 3 days once we receive the product at our warehouse.</p>
                         {% endif %}
-                        {% if s.status == 'DIAGNOSIS REPORT' and event.customer_pricing.approved == True %}
+                        {% if s.status == 'DIAGNOSIS REPORT' and event.customer_pricing.approved_pay == True %}
                           <p class="timeline-info">When the payment is approved by you, it takes 7 days to repair the product.</p>
                         {% endif %}
 
@@ -304,19 +308,35 @@
               </div>
             </div>
             
-            {% if event.customer_pricing.approved == False %}
+            {% if event.customer_pricing and not event.customer_pricing.approved_pay and not event.customer_pricing.approved_pay_later %}
             <div class="action-buttons mt-4">
-              <form action="{% url 'customer_price_approve' event.customer_pricing.id %}" method="post" class="flex-fill me-2">
+              <form action="{% url 'customer_price_approve' event.customer_pricing.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-success w-50">
-                  <i class="fas fa-check-circle me-2"></i>Approve & Proceed
-                </button>
+                <div class="d-flex flex-column flex-md-row gap-2 mt-4">
+  <button
+    type="submit"
+    name="action"
+    value="pay_now"
+    class="btn btn-success flex-fill"
+  >
+    <i class="fas fa-check-circle"></i>
+    Approve & Pay Now
+  </button>
+
+  <button
+    type="submit"
+    name="action"
+    value="pay_later"
+    class="btn btn-primary flex-fill"
+  >
+    <i class="fas fa-hourglass-half me-2"></i>
+    Approve & Pay Later
+  </button>
+</div>
+
+
+
               </form>
-              {% comment %} <form action="{% url 'fetch_complaint_status' event.id %}" method="get" class="flex-fill">
-                <button type="submit" class="btn btn-outline-danger w-100">
-                  <i class="fas fa-times-circle me-2"></i>Reject Estimate
-                </button>
-              </form> {% endcomment %}
             </div>
             {% endif %}
 

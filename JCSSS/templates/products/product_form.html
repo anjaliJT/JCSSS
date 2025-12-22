@@ -73,8 +73,8 @@
                     </h6>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Source Location</label>
-                            <input type="text" name="source_location" id="sourceLocation" class="form-control" placeholder="Warehouse">
+                            <label class="form-label">Delivery  Location</label>
+                            <input type="text" name="delivery_location" id="deliveryLocation" class="form-control" placeholder="Warehouse">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Army Command</label>
@@ -114,19 +114,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 🔹 Create Product with confirmation popup
     window.createProduct = function(event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        openPopup("Are you sure you want to create a new product?", function () {
+    resetForm();
+    formTitle.textContent = 'Create New Product';
+    submitBtn.innerHTML = 'Create Product';
+    productForm.action = "{% url 'create_product' %}";
+    tailNumberField.disabled = false;
 
-            resetForm();
-            formTitle.textContent = 'Create New Product';
-            submitBtn.innerHTML = 'Create Product';
-            productForm.action = "{% url 'create_product' %}";
-            tailNumberField.disabled = false;
+    modal.show();
+};
 
-            modal.show();
-        });
-    };
 
     // 🔹 Edit Product Handler
     const editButtons = document.querySelectorAll('.edit-btn');
@@ -141,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tailNumberField.disabled = true;
 
             document.getElementById('orderName').value = this.dataset.order || '';
-            document.getElementById('sourceLocation').value = this.dataset.sourceLocation || '';
+            document.getElementById('deliveryLocation').value = this.dataset.deliveryLocation || '';
             document.getElementById('armyCommand').value = this.dataset.armyCommand || '';
             document.getElementById('unitName').value = this.dataset.unitName || '';
             document.getElementById('tailNumber').value = this.dataset.tailNumber || '';

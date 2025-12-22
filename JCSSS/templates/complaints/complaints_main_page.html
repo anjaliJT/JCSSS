@@ -205,12 +205,14 @@
                           {% with latest_status=complaint.complaint_statuses.last %}
                               {% if latest_status %}
                                 <span class="badge 
-                                    {% if latest_status.status == 'REVIEW' %}bg-primary
+                                    {% if latest_status.status == 'IN REVIEW' %}bg-primary
                                     {% elif latest_status.status == 'ACCEPTED' %}bg-info
                                     {% elif latest_status.status == 'REPAIR' %}bg-warning
                                     {% elif latest_status.status == 'REJECTED' %}bg-danger
                                     {% elif latest_status.status == 'CLOSED' %}bg-dark
+                                    {% elif latest_status.status == 'PRODUCT RECEIVED' %}bg-info
                                     {% elif latest_status.status == 'DIAGNOSIS REPORT' %}bg-success
+                                    {% elif latest_status.status == 'READY FOR DISPATCH' %}bg-success
                                     {% else %} bg-secondary
                                     {% endif %}">
                                     {{ latest_status.get_status_display }}
@@ -229,7 +231,7 @@
                                     <i class="fas fa-eye"></i>
                                 </a>
                                  {% with latest_status=complaint.complaint_statuses.last %}
-                                  {% if latest_status and latest_status.status == 'REVIEW' %}
+                                  {% if latest_status and latest_status.status == 'IN REVIEW' %}
                                   <a href="{% url 'complaint_edit' complaint.id %}" class="btn btn-outline-primary btn-sm" title="Edit Details">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -338,6 +340,7 @@
             });
         });
 </script>
+
 {% block extra_scripts %}
   <script src="{% static 'js/popup_msg.js' %}"></script>
 {% endblock %}

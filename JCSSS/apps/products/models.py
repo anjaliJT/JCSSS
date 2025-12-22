@@ -17,9 +17,9 @@ class Product(models.Model):
     tail_number = models.CharField(max_length=50, unique=True)  # tail number 
     order_name = models.CharField(max_length=255)
     manufecturing_Date = models.DateField()
-    is_sold = models.BooleanField(default=False)
-    sold_date = models.DateField(null=True, blank = True) # ATP date 
-    source_location = models.CharField(max_length=255, blank=True, null=True)
+    obsolete = models.BooleanField(default=False)
+    delivery_date = models.DateField(null=True, blank = True) # ATP date 
+    delivery_location = models.CharField(max_length=255, blank=True, null=True)
     army_command = models.CharField(max_length=255, blank=True, null=True)
     unit_name = models.CharField(max_length=250, blank=True, null=True)
     formation = models.CharField(max_length=250, blank=True, null=True)

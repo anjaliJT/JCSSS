@@ -211,11 +211,12 @@ class UserDetails(LoginRequiredMixin,View):
     redirect_field_name = 'next'
     def get(self, request):
         return render(request, "dashboard.html", {"user": None})
+
 class UserManagementListView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
     """View for displaying and managing user lists with filtering and pagination."""
     
     login_url = 'login'
-    permission_required = "auth.view_user"
+    permission_required = "users.view_customuser"
     template_name = "users/user_management.html"
 
     def get_context_data(self, **kwargs):
@@ -462,7 +463,7 @@ class UserDataProcessor:
         return access_tags
 class CreateOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = 'login'
-    permission_required = "auth.add_user"
+    permission_required = "users.add_customuser"
     template_name = "users/create_oem_user_form.html"
     
     def get(self, request):
@@ -517,7 +518,7 @@ class CreateOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
 
 class EditOEMUserView(PermissionRequiredMixin, LoginRequiredMixin, View):
     login_url = 'login'
-    permission_required = "auth.change_user"
+    permission_required = "users.change_customuser"
     template_name = "users/create_oem_user_form.html"
     
     def get(self, request, pk):
@@ -612,7 +613,7 @@ class UserPermissionManagementView(PermissionRequiredMixin, LoginRequiredMixin, 
     """View for managing user permissions grouped by model."""
     
     login_url = 'login'
-    permission_required = "auth.change_user"
+    permission_required = "users.change_customuser"
     template_name = "users/user_permission_management.html"
     
     def get_context_data(self, **kwargs):

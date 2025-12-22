@@ -58,15 +58,17 @@ class ComplaintStatus(models.Model):
         ("IN REVIEW", "In Review"),
         ("ACCEPTED", "Accepted"),
         ("REJECTED", "Rejected"),
-        ("PRODUCT_RECEIVED", "Product Received"),
+        ("PRODUCT RECEIVED", "Product Received"),
+        ("PRE QA REPORT", "Pre QA Report"),
         ("DIAGNOSIS REPORT", "Diagnosis Report"),
         ("REPAIR", "Repair"),
         ("READY FOR DISPATCH", "Ready for Dispatch"),
+        ("CTF", "CTF"),
         ("CLOSED", "Closed"),
     ]
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="complaint_statuses")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="REVIEW")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="In REVIEW")
     remarks = models.TextField(blank=True, null=True)
     attachments = models.FileField(upload_to="attachments/", blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)
@@ -92,7 +94,8 @@ class CustomerPricing(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     invoice = models.FileField(upload_to="attachments/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    approved = models.BooleanField(default=False)
+    approved_pay = models.BooleanField(default=False)
+    approved_pay_later = models.BooleanField(default=False)
     approved_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

@@ -44,7 +44,7 @@
             <p class="message-update">
                 Location: {{ location|default:"Not provided" }}<br>
                 Remarks: {{ remarks|default:"-" }}<br>
-                Updated_By: {{ updated_by }}
+                Updated By: {{ updated_by }}
             </p>
         {% elif template_type == "status" %}
             <hr>
@@ -52,7 +52,7 @@
             <span class="message-update">
                 New status: {{ latest_status }}
                 <br>
-                Updated_By: {{ updated_by }}
+                Updated By: {{ updated_by }}
             </span>
 
             {% if attachments %}
@@ -65,6 +65,8 @@
             <h3>Customer Pricing</h3>
             <p class="message-update">
                 {{ price_details|default:"Price details not provided." }}
+                <br>
+                Updated By: {{user_name}}
             </p>
             <p class="meta">Invoice: Attached to this email.</p>
         
