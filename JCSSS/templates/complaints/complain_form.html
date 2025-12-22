@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="fieldSite" class="form-label">Field/Site</label>
+                        <label for="fieldSite" class="form-label required">Field/Site</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                             <input type="text" class="form-control required" id="fieldSite" name="field_site" placeholder="Enter location" required value="{{ event.field_site|default:'' }}" {% if is_readonly %}disabled{% endif %}>
@@ -194,9 +194,9 @@
                         <label for="damageLevel" class="form-label required">Damage Level</label>
                         <select class="form-select" id="damageLevel" name="damage_level" required {% if is_readonly %}disabled{% endif %}>
                             <option value="">Select level</option>
-                            <option value="severe" {% if event.damage_level == "severe" %}selected{% endif %}>Severe</option>
-                            <option value="moderate" {% if event.damage_level == "moderate" %}selected{% endif %}>Moderate</option>
-                            <option value="minor" {% if event.damage_level == "minor" %}selected{% endif %}>Minor</option>
+                            <option value="Severe" {% if event.damage_level == "Severe" %}selected{% endif %}>Severe</option>
+                            <option value="Moderate" {% if event.damage_level == "Moderate" %}selected{% endif %}>Moderate</option>
+                            <option value="Minor" {% if event.damage_level == "Minor" %}selected{% endif %}>Minor</option>
                             <option value="none" {% if event.damage_level == "none" %}selected{% endif %}>None</option>
                         </select>
                     </div>
@@ -217,15 +217,11 @@
                         <select class="form-select" id="eventPhase" name="event_phase" required {% if is_readonly %}disabled{% endif %}>
                             <option value="">Select phase</option>
                             <option value="maintenance" {% if event.event_phase == "maintenance" %}selected{% endif %}>Maintenance</option>
-                            <option value="positioning" {% if event.event_phase == "positioning" %}selected{% endif %}>Positioning</option>
                             <option value="startup" {% if event.event_phase == "startup" %}selected{% endif %}>Startup</option>
-                            <option value="chuckpoint" {% if event.event_phase == "chuckpoint" %}selected{% endif %}>Chuck Point</option>
                             <option value="takeoff" {% if event.event_phase == "takeoff" %}selected{% endif %}>Take Off</option>
                             <option value="climb" {% if event.event_phase == "climb" %}selected{% endif %}>Climb</option>
-                            <option value="departure" {% if event.event_phase == "departure" %}selected{% endif %}>Departure</option>
                             <option value="cruise" {% if event.event_phase == "cruise" %}selected{% endif %}>Cruise</option>
                             <option value="descent" {% if event.event_phase == "descent" %}selected{% endif %}>Descent</option>
-                            <option value="approach" {% if event.event_phase == "approach" %}selected{% endif %}>Rejoin/Approach</option>
                             <option value="final" {% if event.event_phase == "final" %}selected{% endif %}>Final Phase</option>
                             <option value="landing" {% if event.event_phase == "landing" %}selected{% endif %}>Landing/Recovery</option>
                         </select>
@@ -253,28 +249,38 @@
                             <input type="text" class="form-control" style="text-transform: uppercase;" id="tailNumber" name="tail_number" placeholder="Enter tail number" required value="{{ event.tail_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                         <label for="gcsType" class="form-label required">GCS Type</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-laptop"></i></span>
                             <input type="text" class="form-control" id="gcsType" name="gcs_type" placeholder="Enter GCS type" required value="{{ event.gcs_type|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-md-3">
                         <label for="gcsNumber" class="form-label required">GCS Number</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                            <input type="text" class="form-control" id="gcsNumber" name="gcs_number" placeholder="Enter GCS number" required value="{{ event.gcs_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="text" class="form-control" id="gcsNumber" name="gcs_number" placeholder="Enter GCS number" value="{{ event.gcs_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
+
+                    <div class="col-md-3">
+                        <label for="eventType" class="form-label required">Entry in Logbook</label>
+                        <select class="form-select" id="logbookEntry" name="logbook-entry" required {% if is_readonly %}disabled{% endif %}>
+                            <option value="">Select type</option>
+                            <option value="Yes" {% if event.logbook_entry == "Yes" %}selected{% endif %}>Yes</option>
+                            <option value="No" {% if event.logbook_entry == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        <label for="uavWeight" class="form-label required">UAV Weight (kg)</label>
+                        <label for="uavWeight" class="form-label">UAV Weight (kg)</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-weight"></i></span>
-                            <input type="number" id="uavWeight" name="uav_weight" class="form-control" placeholder="Enter weight" step="any" required value="{{ event.uav_weight|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="number"id="uavWeight"name="uav_weight"class="form-control"placeholder="Enter weight (kg)"step="0.01" min="0" value="{{ event.uav_weight|default:'' }}"{% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
 
@@ -294,10 +300,10 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="pressure" class="form-label">Pressure QNH (hPa)</label>
+                        <label for="pressure" class="form-label">Visibility</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-compress-arrows-alt"></i></span>
-                            <input type="number" class="form-control" id="pressure" name="pressure_qnh" placeholder="Enter QNH" value="{{ event.pressure_qnh|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <input type="number" class="form-control" id="visibility" name="visibility" placeholder="Enter QNH" step="0.01" min="0" value="{{ event.visibility|default:'0' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                 </div>
@@ -341,13 +347,25 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="turbulence" name="turbulence" value="true" {% if event.turbulence %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="turbulence">
-                                    <i class="fas fa-wind me-2"></i>Turbulence
+                                    <i class="fas fa-tornado me-2"></i> Turbulence
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="windShear" name="windshear" {% if event.windshear %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
                                 <label class="form-check-label" for="windShear">
-                                    <i class="fas fa-wind me-2"></i>Wind Shear
+                                    <i class="fas fa-arrows-alt-v me-2"></i> Wind Shear
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="moderate" name="moderate" value="true" {% if event.moderate %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
+                                <label class="form-check-label" for="moderate">
+                                    <i class="fas fa-wind me-2"></i> Moderate
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="clear" name="clear" value="true" {% if event.clear %}checked{% endif %} {% if is_readonly %}disabled{% endif %}>
+                                <label class="form-check-label" for="clear">
+                                   <i class="fas fa-sun me-2"></i> Clear
                                 </label>
                             </div>
                         </div>
@@ -370,12 +388,12 @@
             <div class="card-body">
                 <div class="mb-4">
                     <label class="form-label">Event Description</label>
-                    <textarea class="form-control" name="event_description" rows="3" placeholder="Provide a detailed description of what occurred..." {% if is_readonly %}disabled{% endif %}>{{ event.event_description|default:'' }}</textarea>
+                    <textarea class="form-control" name="event_description" rows="3" placeholder="Provide a detailed description of what occurred (e.g., The bird crashed during launch. It reached a height of 10–15 meters before losing stability and stalling to the right.)" {% if is_readonly %}disabled{% endif %}>{{ event.event_description|default:'' }}</textarea>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label">Initial Actions Taken</label>
-                    <textarea class="form-control" name="initial_actions_taken" rows="3" placeholder="Describe the immediate actions taken after the incident..." {% if is_readonly %}disabled{% endif %}>{{ event.initial_actions_taken|default:'' }}</textarea>
+                    <textarea class="form-control" name="initial_actions_taken" rows="3" placeholder="Describe the immediate actions taken after the incident (e.g., The bird was recovered and damaged parts were assesed.)" {% if is_readonly %}disabled{% endif %}>{{ event.initial_actions_taken|default:'' }}</textarea>
                 </div>
 
                 <div class="mb-4">
@@ -437,7 +455,7 @@
                         <small class="text-muted">Accepted formats: .jpg, .jpeg, .png</small>
                     </div>
 
-                    <div class="col-md-12 mb-3">
+                    <!-- <div class="col-md-12 mb-3">
                         <label class="form-label d-flex justify-content-between align-items-center">
                             <span>
                                 <i class="fas fa-file-alt me-2"></i>
@@ -452,7 +470,7 @@
                             <label class="input-group-text" for="logFile">Browse</label>
                         </div>
                         <small class="text-muted">Accepted formats: .txt, .log, .csv</small>
-                    </div>
+                    </div> -->
                 {% endif %}
 
 
@@ -491,9 +509,9 @@
             {% endif %}
 
             {% if event.file_log %}
-            <p><strong>Log File:</strong> 
+            <!-- <p><strong>Log File:</strong> 
                 <a href="{{ event.file_log.url }}" target="_blank">Download Log</a>
-            </p>
+            </p> -->
             {% endif %}
 
             {% if not event.file_video and not event.file_image1 and not event.file_image2 and not event.file_image3 and not event.file_log %}
@@ -596,6 +614,26 @@ document.addEventListener('DOMContentLoaded', function() {
             step.classList.add('bg-primary', 'text-white');
         });
     {% endif %}
+});
+</script>
+
+<!-- Automatically enters the tail number -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const serialInput = document.getElementById("modelNumber");
+    const tailInput = document.getElementById("tailNumber");
+
+    serialInput.addEventListener("input", function () {
+        let serialValue = serialInput.value.trim();
+
+        // Example Auto Logic: 
+        // Make tail number = "TAIL-" + serial number (customize as needed)
+        if (serialValue !== "") {
+            tailInput.value = "" + serialValue.toUpperCase();
+        } else {
+            tailInput.value = "";
+        }
+    });
 });
 </script>
 

@@ -56,7 +56,7 @@ class ComplaintStatusView(View):
 
         today = timezone.now()
 
-        received_status  = statuses.filter(status="PRODUCT_RECEIVED").order_by('updated_at').first()
+        received_status  = statuses.filter(status="PRODUCT RECEIVED").order_by('updated_at').first()
         diagnosis_status = statuses.filter(status="DIAGNOSIS REPORT").order_by('updated_at').first()
         repair_status    = statuses.filter(status="REPAIR").order_by('updated_at').first()
         closed_status    = statuses.filter(status="CLOSED").order_by('updated_at').first()
@@ -73,7 +73,9 @@ class ComplaintStatusView(View):
             total_days = (end_date - start_date).days
 
             pricing = getattr(event, 'customer_pricing', None)
-            approved = pricing.approved if pricing else False
+            approved = (
+                pricing.approved_pay or pricing.approved_pay_later
+            ) if pricing else False
 
             # ✅ If already closed: final rule wins (10-day total window from PRODUCT_RECEIVED)
             if closed_status:
@@ -354,7 +356,8 @@ class CustomerCostView(View):
                 template_type=template_type,
                 title=title,
                 body=body,
-                extra_context={"price_details": price_details},
+                extra_context={"price_details": price_details,
+                               "user_name":request.user.first_name},
                 attachments=attachments,
             )
             
@@ -366,31 +369,53 @@ class CustomerCostView(View):
 
 
 def customer_price_approve_view(request, pk):
-    if request.method == "POST":
-        pricing = get_object_or_404(CustomerPricing, pk=pk)
-        pricing.approved = True
-        pricing.approved_at = timezone.now()
-        pricing.save()
-        messages.success(request, "You approved successfully.")
-        
-        template_type = "approval"
-        title = f"Repair Cost Approved {pricing.event.unique_token}"
-        body = f"Repair cost is approved by customer of {pricing.total_price}rs."
-
-
-        # Launch email sending in background thread
-        send_mail_thread(
-                event_id = pricing.event.id,
-                template_type=template_type,
-                title=title,
-                body=body,
-                extra_context=None,
-            )
-            
-            
-    else:
+    if request.method != "POST":
         messages.error(request, "Invalid request method.")
-    return redirect('fetch_complaint_status', pk=pk)
+        return redirect('fetch_complaint_status', pk=pk)
+
+    pricing = get_object_or_404(CustomerPricing, pk=pk)
+
+    action = request.POST.get("action")
+
+    if action == "pay_now":
+        pricing.approved_pay = True
+        pricing.approved_pay_later = False
+        approval_text = "Customer approved the repair cost and will pay immediately."
+
+    elif action == "pay_later":
+        pricing.approved_pay_later = True
+        pricing.approved_pay = False
+        approval_text = "Customer approved the repair cost and opted to pay later."
+
+    else:
+        messages.error(request, "Invalid approval action.")
+        return redirect('fetch_complaint_status', pk=pricing.event.id)
+
+    pricing.approved_at = timezone.now()
+    pricing.save()
+
+    # ---- Email content ----
+    template_type = "approval"
+    title = f"Repair Cost Approved | {pricing.event.unique_token}"
+    body = (
+        f"{approval_text}\n\n"
+        f"Approved Amount: ₹{pricing.total_price}\n"
+        f"Complaint ID: {pricing.event.unique_token}"
+    )
+
+    send_mail_thread(
+        event_id=pricing.event.id,
+        template_type=template_type,
+        title=title,
+        body=body,
+        extra_context={
+            "action": action,
+            "pay_later": action == "pay_later",
+        },
+    )
+
+
+    return redirect('fetch_complaint_status', pk=pricing.event.id)
 
 
 

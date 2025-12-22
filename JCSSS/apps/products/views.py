@@ -25,29 +25,40 @@ from openpyxl.utils import get_column_letter
 
 
 @login_required(login_url='login')
-def create_product_view(request):
-    """Handle creation of a new Product via POST and redirect to product list.
+# def create_product_view(request):
+#     """Handle creation of a new Product via POST and redirect to product list.
 
-    On successful creation the user is redirected to the product list.
-    Validation errors are added to the messages framework.
-    """
+#     On successful creation the user is redirected to the product list.
+#     Validation errors are added to the messages framework.
+#     """
+#     if request.method == "POST":
+#         form = productForm(request.POST)
+#         if form.is_valid():
+#             try:
+#                 form.save()
+#                 messages.success(request, "Product created successfully.")
+#                 return redirect("product_list")
+#             except IntegrityError:
+#                 messages.error(request, "Tail Number already exists.")
+#         else:
+#             messages.error(request, "Tail Number already exists.")
+#     else:
+#         form = productForm()
+
+#     return redirect('product_list')
+
+def create_product_view(request):
     if request.method == "POST":
         form = productForm(request.POST)
         if form.is_valid():
-            try:
-                form.save()
-                messages.success(request, "Product created successfully.")
-                return redirect("product_list")
-            except IntegrityError:
-                messages.error(request, "Tail Number already exists.")
+            form.save()
+            messages.success(request, "Product created successfully.")
+            return redirect("product_list")
         else:
-            messages.error(request, "Tail Number already exists.")
-    else:
-        form = productForm()
+            form = productForm()
 
     return redirect('product_list')
 
-        
 
 
 def product_list_view(request):
@@ -71,10 +82,10 @@ def product_list_view(request):
         products_qs = products_qs.filter(product_model_id=selected_model)
 
     # Filter by status
-    if selected_status == "available":
-        products_qs = products_qs.filter(is_sold=False)
-    elif selected_status == "sold":
-        products_qs = products_qs.filter(is_sold=True)
+    if selected_status == "active":
+        products_qs = products_qs.filter(obsolete=False)
+    elif selected_status == "obsolete":
+        products_qs = products_qs.filter(obsolete=True)
 
     # Warranty filtering using queryset filters (keeps it as a QuerySet for pagination)
     today = date.today()
@@ -107,7 +118,7 @@ def edit_product_view(request, pk):
             product.product_model = get_object_or_404(Product_model, pk=model_id)
 
         product.order_name = request.POST.get('order_name')
-        product.source_location = request.POST.get('source_location')
+        product.delivery_location = request.POST.get('delivery_location')
         product.army_command = request.POST.get('army_command')
         product.unit_name = request.POST.get('unit_name')
         product.formation = request.POST.get('formation')
@@ -119,16 +130,18 @@ def edit_product_view(request, pk):
         product.save()
 
         # Load data for the list view
-        products = Product.objects.all()
-        models = Product_model.objects.all()
+        # products = Product.objects.all()
+        # models = Product_model.objects.all()
 
-        return render(request, "products/products_main_page.html", {
-            "products": products,
-            "models": models,
-            "selected_model": None,
-            "selected_status": None,
-            "selected_warranty": None,
-        })
+        # return render(request, "products/products_main_page.html", {
+        #     "products": products,
+        #     "models": models,
+        #     "selected_model": None,
+        #     "selected_status": None,
+        #     "selected_warranty": None,
+        # })
+        
+        return redirect('product_list')
 
     return render(request, 'products/product_form.html', {
         'product': product,
@@ -171,8 +184,8 @@ def import_products_view(request):
 
             # Check required columns
             required_columns = [
-                "product_code", "order_name", "manufecturing_Date", 
-                "is_sold", "sold_date", "source_location", "warranty_period", "army_command", "unit_name", "formation"
+            "tail_number","order_name", "manufecturing_Date", "obsolete",
+                 "delivery_date", "delivery_location", "warranty_period", "army_command", "unit_name", "formation"
             ]
             
             # Convert column names to lowercase for case-insensitive comparison
@@ -193,10 +206,13 @@ def import_products_view(request):
                 try:
                     # Handle date formats with flexible parsing
                     manufecturing_date = pd.to_datetime(row["manufecturing_Date"]).date() if pd.notna(row["manufecturing_Date"]) else None
-                    sold_date = pd.to_datetime(row["sold_date"]).date() if pd.notna(row["sold_date"]) else None
-                    
-                    # Handle boolean values more flexibly
-                    is_sold = str(row.get("is_sold", "")).upper().strip() in ["TRUE", "YES", "1"]
+                    delivery_date = (
+                        pd.to_datetime(row["delivery_date"]).date()
+                        if pd.notna(row.get("delivery_date"))
+                        else None
+                    )
+                    obsolete = str(row.get("obsolete", "")).upper().strip() in ["TRUE", "YES", "1"]
+
                     
                     # Try to get product model from order_name
                     product_model = None
@@ -220,22 +236,24 @@ def import_products_view(request):
                         pass  # Keep default value if conversion fails
                     
                     Product.objects.update_or_create(
-                        product_code=str(row["product_code"]).strip(),
+                        tail_number=str(row["product_code"]).strip(),
                         defaults={
                             "product_model": product_model,
                             "order_name": order_name,
                             "manufecturing_Date": manufecturing_date,
-                            "is_sold": is_sold,
-                            "sold_date": sold_date,
-                            "source_location": str(row.get("source_location", "")).strip(),
+                            "obsolete": obsolete,
+                            "delivery_date": delivery_date,
+                            "delivery_location": str(row["delivery_location"]).strip(),
                             "warranty_period": warranty_period,
-                            "army_command": str(row.get("army_command", "")).strip(),
-                            "unit_name": str(row.get("unit_name", "")).strip(),
-                            "formation": str(row.get("formation", "")).strip(),
+                            "army_command": str(row["army_command"]).strip(),
+                            "unit_name": str(row["unit_name"]).strip(),
+                            "formation": str(row["formation"]).strip(),
                         }
                     )
+
                 except Exception as e:
                     messages.error(request, f"Error processing row {row['product_code']}: {str(e)}")
+                    print(f"Error processing row {row['product_code']}: {str(e)}")
                     continue
 
             messages.success(request, "Products imported successfully.")

@@ -44,8 +44,13 @@ def compute_active_complain(user):
     event_data = []
     for e in events[:4]:
         progress_map = {
-            "REVIEW": 25,
-            "REPAIR": 75,
+            "IN REVIEW": 10,
+            "ACCEPTED": 25,
+            "PRODUCT_RECEIVED": 35,
+            "DIAGNOSIS REPORT": 40,
+            "REPAIR": 55,
+            "CTF": 75,
+            "READY FOR DISPATCH": 85,
             "CLOSED": 100,
         }
 

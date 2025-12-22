@@ -39,7 +39,7 @@ class ComplaintStatusAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerPricing)
 class CustomerPricingAdmin(admin.ModelAdmin):
-    list_display = ("id", "event_unique_token", "total_price", "approved", "created_at")
+    list_display = ("id", "event_unique_token", "total_price", "created_at")
     search_fields = ("event__unique_token",)
 
     def event_unique_token(self, obj):

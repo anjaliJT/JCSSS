@@ -94,15 +94,43 @@ class ComplaintRegister(LoginRequiredMixin,View):
         return render(request, "complaints/complain_form.html")
 
     def post(self, request):
+        tail_number = request.POST.get("tail_number")
+
+        # 🔹 1️⃣ Check existing complaints for this tail number
+        existing_event = (
+            Event.objects
+            .filter(tail_number=tail_number)
+            .order_by("-id")
+            .first()
+        )
+
+        if existing_event:
+            # 🔹 2️⃣ Get latest status of that complaint
+            latest_status = (
+                existing_event.complaint_statuses
+                .order_by("-updated_at")
+                .first()
+            )
+
+            # 🔹 3️⃣ Block duplicate if not CLOSED
+            if latest_status and latest_status.status != "CLOSED":
+                messages.error(
+                    request,
+                    f"A complaint already exists for this UAV (Tail No: {tail_number}) "
+                    f"and is currently in '{latest_status.get_status_display()}' status."
+                )
+                return redirect("complaint_list")  # or back to form
+
+        # 🔹 4️⃣ Create complaint if allowed
         try:
             with transaction.atomic():
-                # Create Event
+
                 event = Event.objects.create(
                     pilot_name=request.POST.get("pilot_name"),
                     certificate_number=request.POST.get("certificate_number"),
-                    email = request.POST.get("email"),
-                    user = request.user,
-                    filed_by=request.POST.get("filed_by"),   # Person who filed
+                    email=request.POST.get("email"),
+                    user=request.user,
+                    filed_by=request.POST.get("filed_by"),
                     designation=request.POST.get("designation"),
                     serial_number=request.POST.get("serial_number"),
                     date_of_occurrence=request.POST.get("date_of_occurrence"),
@@ -113,68 +141,64 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     flight_mode=request.POST.get("flight_mode"),
                     event_phase=request.POST.get("event_phase"),
                     uav_type=request.POST.get("uav_type"),
-                    tail_number=request.POST.get("tail_number"),
-                    gcs_type=request.POST.get("gcs_type"),
+                    tail_number=tail_number,
                     gcs_number=request.POST.get("gcs_number"),
+                    logbook_entry=request.POST.get("logbook-entry"),
                     uav_weight=request.POST.get("uav_weight"),
                     event_description=request.POST.get("event_description"),
                     initial_actions_taken=request.POST.get("initial_actions_taken"),
                     remarks=request.POST.get("remarks"),
                     organization=request.POST.get("organization"),
-                # )
+                    visibility = request.POST.get("visibility"),
 
-                # # 2️⃣ Create Meteorology
-                # Meteorology.objects.create(
-                #     event=event,
+                    # if visibility == "":
+                    #     visibility = None
+
+
+                    # Meteorology
                     wind=request.POST.get("wind"),
                     temperature=request.POST.get("temperature"),
-                    pressure_qnh=request.POST.get("pressure_qnh"),
-                    # visibility=request.POST.get("visibility"),
-                    # clouds=request.POST.get("clouds"),
-                    # humidity=request.POST.get("humidity"),
                     turbulence=bool(request.POST.get("turbulence")),
                     windshear=bool(request.POST.get("windshear")),
                     rain=bool(request.POST.get("rain")),
                     icing=bool(request.POST.get("icing")),
                     snow=bool(request.POST.get("snow")),
-                # )
+                    moderate=bool(request.POST.get("moderate")),
+                    clear=bool(request.POST.get("clear")),
 
-                # # 3️⃣ Create Attachments
-                # Attachment.objects.create(
-                #     event=event,
+                    # Attachments
                     file_video=request.FILES.get("video"),
                     file_image1=request.FILES.get("photo1"),
                     file_image2=request.FILES.get("photo2"),
                     file_image3=request.FILES.get("photo3"),
-                    file_log=request.FILES.get("log_file"),
-                    
-                #     )
-                
-                # # 4️⃣ create EventSeverityClassification
-                # EventSeverityClassification.objects.create(
-                #     event=event,
-                    damage_potential = request.POST.get("damage_level"),
+
+                    damage_potential=request.POST.get("damage_level"),
+                )
+
+                # 🔹 Initial status
+                ComplaintStatus.objects.create(
+                    event=event,
+                    status="IN REVIEW",
+                    updated_by=request.user
                 )
 
                 messages.success(request, "Complaint submitted successfully!")
 
-                template_type = "complaint"  # choose appropriate type for this endpoint
-                title = f"New complaint {event.unique_token}"
-                body = f"A new complaint request comes. Please review it and take necessary actions."
-
-                # launch email send in background
-                send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={"complaint":event
-                })
-                ComplaintStatus.objects.create(
-                    event= event,
+                send_mail_thread(
+                    event.id,
+                    template_type="complaint",
+                    title=f"New complaint {event.unique_token}",
+                    body="A new complaint request has been received.",
+                    extra_context={"complaint": event}
                 )
-                return redirect("complaint_list") 
+
+                return redirect("complaint_list")
 
         except Exception as e:
-            messages.error(request, f"Error submitting complaint: {str(e)}")
-            print(str(e))
-            # return render(request, self.template_name)
-            return HttpResponse(f"Error : {e}") 
+            messages.error(request, f"Error submitting complaint: {e}")
+            return redirect("complaint_list")
+
+
 
 class ComplaintDetailView(LoginRequiredMixin,View):
     template_name = "complaints/complain_form.html"
@@ -194,8 +218,6 @@ class ComplaintDetailView(LoginRequiredMixin,View):
                 "is_completed": is_completed,
             },
         )
-
-    # views.py
 
 
 class ComplaintEditView(LoginRequiredMixin,View):
@@ -246,7 +268,8 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 event.organization = request.POST.get("organization", event.organization)
                 event.tail_number = request.POST.get("tail_number", event.tail_number)
                 event.uav_type = request.POST.get("uav_type", event.uav_type)
-                event.gcs_type = request.POST.get("gcs_type", event.gcs_type)
+                event.visibility = request.POST.get("visibility", event.visibility),
+                # event.gcs_type = request.POST.get("gcs_type", event.gcs_type)
                 event.gcs_number = request.POST.get("gcs_number", event.gcs_number)
 
                 # ---------- Date/time fields ----------
@@ -310,6 +333,8 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 "event": event,
                 "is_readonly": False,
             })
+
+
 
 def delete_complaint_view(request, pk):
     event = get_object_or_404(Event, id=pk)

@@ -38,7 +38,7 @@ class Command(BaseCommand):
 
         serial_numbers = ['JF2', 'JM1', 'JM2', 'X1', 'X2']
         uav_types = ['JF2', 'JM1', 'JM2', 'X1', 'X2']
-        gcs_types = ['GCS-A', 'GCS-B', 'GCS-C']
+        # gcs_types = ['GCS-A', 'GCS-B', 'GCS-C']
         field_sites = ['Site A', 'Site B', 'Site C']
         event_types = ['Crash', 'Hard Landing', 'Loss of Control', 'Component Failure']
         damage_levels = ['Minor', 'Moderate', 'Severe']
@@ -58,7 +58,7 @@ class Command(BaseCommand):
             filed_by = pilot_name
             designation = 'Pilot'
             uav_type = random.choice(uav_types)
-            gcs_type = random.choice(gcs_types)
+            # gcs_type = random.choice(gcs_types)
             gcs_number = f'GCS-{random.randint(100,999)}'
             uav_weight = round(random.uniform(0.5, 20.0), 2)
 
@@ -79,7 +79,7 @@ class Command(BaseCommand):
 
             wind = random.choice(['Calm', 'Breezy', 'Windy'])
             temperature = f"{random.randint(10,35)} C"
-            pressure_qnh = f"{random.randint(950,1050)} hPa"
+            # pressure_qnh = f"{random.randint(950,1050)} hPa"
             turbulence = random.choice([True, False])
             windshear = random.choice([True, False])
             rain = random.choice([True, False])
@@ -100,7 +100,7 @@ class Command(BaseCommand):
                     serial_number=serial_number,
                     tail_number=tail_number,
                     uav_type=uav_type,
-                    gcs_type=gcs_type,
+                    # gcs_type=gcs_type,
                     gcs_number=gcs_number,
                     uav_weight=uav_weight,
                     date_of_occurrence=date_of_occurrence,
@@ -116,7 +116,7 @@ class Command(BaseCommand):
                     organization=organization,
                     wind=wind,
                     temperature=temperature,
-                    pressure_qnh=pressure_qnh,
+                    # pressure_qnh=pressure_qnh,
                     turbulence=turbulence,
                     windshear=windshear,
                     rain=rain,
@@ -126,7 +126,7 @@ class Command(BaseCommand):
                 )
 
                 # Create initial complaint status
-                ComplaintStatus.objects.create(event=evt, status='REVIEW', remarks='Seeded')
+                ComplaintStatus.objects.create(event=evt, status='IN REVIEW', remarks='Seeded')
 
                 self.stdout.write(self.style.SUCCESS(f'Created Event: {evt.unique_token or evt.id}'))
             except Exception as e:

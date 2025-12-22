@@ -23,8 +23,9 @@ class Event(models.Model):
     serial_number = models.CharField(max_length=50)
     tail_number = models.CharField(max_length=50, blank=True)
     uav_type = models.CharField(max_length=150, blank=True)
-    gcs_type = models.CharField(max_length=100, blank=True)
+    # gcs_type = models.CharField(max_length=100, blank=True)
     gcs_number = models.CharField(max_length=50, blank=True)
+    logbook_entry = models.CharField(max_length=50, blank=True)
     uav_weight = models.FloatField(help_text="Weight in kg")
 
     #damage event details
@@ -44,8 +45,8 @@ class Event(models.Model):
     # Meteorology
     wind = models.CharField(max_length=100, help_text="Wind condition")
     temperature = models.CharField(max_length=50, help_text="Temperature")
-    pressure_qnh = models.CharField(max_length=50, help_text="QNH Pressure")
-    # visibility = models.CharField(max_length=100, blank=True)
+    # pressure_qnh = models.CharField(max_length=50, help_text="QNH Pressure")
+    visibility = models.FloatField(max_length=100, blank=True)
     # clouds = models.CharField(max_length=100, blank=True)
     # humidity = models.CharField(max_length=50, blank=True)
     turbulence = models.BooleanField(default=False)
@@ -53,13 +54,15 @@ class Event(models.Model):
     rain = models.BooleanField(default=False)
     icing = models.BooleanField(default=False)
     snow = models.BooleanField(default=False)
+    moderate = models.BooleanField(default=False)
+    clear = models.BooleanField(default=False)
     
     # attachments
     file_video = models.FileField(upload_to="attachments/",blank=True)
     file_image1 = models.FileField(upload_to="attachments/",blank=True)
     file_image2 = models.FileField(upload_to="attachments/",blank=True)
     file_image3 = models.FileField(upload_to="attachments/", blank=True)
-    file_log = models.FileField(upload_to="log/", blank=True)
+    # file_log = models.FileField(upload_to="log/", blank=True)
     # uploaded_at = models.DateTimeField(auto_now_add=True)
     
     # EventSeverityClassification

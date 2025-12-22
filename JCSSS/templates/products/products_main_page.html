@@ -1,5 +1,5 @@
-
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Product Details - UAV Support Portal{% endblock %}
 
@@ -16,13 +16,13 @@
                 </div>
                 <div class="col-auto">
                    {% if perms.products.add_product%}
-                    <button class="btn btn-primary"
+                    <button class="btn btn-primary mb-1"
                             onclick="createProduct(event)"
                             id="createProductBtn">
                         <i class="fas fa-plus-circle me-2"></i>Create Product
                     </button>
                     {% endif %}
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importExportModal">
+                    <button class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#importExportModal">
                         <i class="fas fa-file-csv me-2"></i>Import/Export
                     </button>
                 </div>
@@ -50,9 +50,9 @@
                         <div class="col-12 col-md-4">
                             <label class="form-label">Status</label>
                             <select class="form-select" name="status" onchange="this.form.submit()">
-                                <option value="">All Statuses</option>
-                                <option value="available" {% if selected_status == "available" %}selected{% endif %}>Available</option>
-                                <option value="sold" {% if selected_status == "sold" %}selected{% endif %}>Sold</option>
+                                <option value="">All Status</option>
+                                <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active</option>
+                                <option value="obsolete" {% if selected_status == "obsolete" %}selected{% endif %}>Obsolete</option>
                             </select>
                         </div>
 
@@ -103,7 +103,7 @@
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
-                                <label class="form-check-label" for="col4">Sale Status</label>
+                                <label class="form-check-label" for="col4">Obsolete Status</label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
@@ -151,7 +151,7 @@
                                             <th>Model</th>
                                             <th>Order Name</th>
                                             <th>Manufacturing Date</th>
-                                            <th>Sale Status</th>
+                                            <th>Obsolete Status</th>
                                             <th>Warranty Status</th>
                                             <th>Warranty Period (M)</th>
                                             <th>Warranty Expiry</th>
@@ -182,7 +182,7 @@
                                             </td>
                                             <td>{{ product.warranty_period }}</td>
                                             <td>{{ product.warranty_expiry_date|date:"Y-m-d" }}</td>
-                                            <td>{{ product.source_location }}</td>
+                                            <td>{{ product.delivery_location }}</td>
                                             <td>{{ product.army_command }}</td>
                                             <td>{{ product.unit_name }}</td>
                                             <td>{{ product.formation }}</td>
@@ -198,7 +198,7 @@
                                                         data-model=""
                                                     {% endif %}
                                                     data-order="{{ product.order_name }}"
-                                                    data-source-location="{{ product.source_location }}"
+                                                    data-delivery-location="{{ product.delivery_location }}"
                                                     data-army-command="{{ product.army_command }}"
                                                     data-unit-name="{{ product.unit_name }}"
                                                     data-tail-number="{{ product.tail_number }}"
@@ -232,35 +232,6 @@
                                     </tbody>
                             </table>
                         </div>
-
-                        <!-- <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const editButtons = document.querySelectorAll('.edit-btn');
-                            const form = document.getElementById('productForm');
-
-                            editButtons.forEach(btn => {
-                                btn.addEventListener('click', function () {
-                                    const id = this.dataset.id;
-                                    form.action = `/product/${id}/edit/`;
-
-                                    // Set input fields
-                                    document.getElementById('orderName').value = this.dataset.order;
-                                    document.getElementById('sourceLocation').value = this.dataset.sourceLocation;
-                                    document.getElementById('armyCommand').value = this.dataset.armyCommand;
-                                    document.getElementById('unitName').value = this.dataset.unitName;
-                                    document.getElementById('tailNumber').value = this.dataset.tailNumber;
-                                    document.getElementById('formation').value = this.dataset.formation;
-                                    document.getElementById('manufactureDate').value = this.dataset.manufacture;
-                                    document.getElementById('warrantyExpiry').value = this.dataset.expiry;
-                                    document.getElementById('warrantyStatus').value = this.dataset.warranty;
-
-                                    // Set the select value for ForeignKey
-                                    document.getElementById('productModel').value = this.dataset.model; // model ID
-                                });
-                            });
-                        });
-
-                        </script> -->
 
                         <!-- Pagination -->
                         {% if products.has_other_pages %}
@@ -375,16 +346,18 @@
                                 <div class="col-md-6">
                                     <ul class="small">
                                         <li><code>is_sold</code> (true/false)</li>
-                                        <li><code>sold_date</code> (YYYY-MM-DD, optional)</li>
-                                        <li><code>source_location</code></li>
+                                        <li><code>delivery_date</code> (YYYY-MM-DD, optional)</li>
+                                        <li><code>devlivery_location</code></li>
                                         <li><code>warranty_period</code> (months)</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <a href="/static/files/product_report.csv" download class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-download me-1"></i>Download Template
-                                </a>
+                                <a href="{% static 'files/product.csv' %}" 
+   download
+   class="btn btn-sm btn-outline-primary">
+    <i class="fas fa-download me-1"></i>Download Template
+</a>
                             </div>
 
                         </div>
