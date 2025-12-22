@@ -102,11 +102,14 @@
                         <i class="fas fa-phone-alt"></i> Offline Support
                     </a>
                 </li> -->
+                
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link support-card rounded" href="#">
-              <i class="fas fa-phone-alt"></i> Offline Support
-            </a>
+            <a href="tel:+919876543210"
+   class="nav-link support-card rounded"
+   id="offlineSupport">
+  <i class="fas fa-phone-alt"></i> Offline Support
+</a>
           </li>
         </ul>
       </div>
@@ -396,6 +399,32 @@
         popup.show();
       }
     </script>
+    
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const link = document.getElementById("offlineSupport");
+    
+      link.addEventListener("click", function (e) {
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+        if (!isMobile) {
+          e.preventDefault(); // stop tel: on desktop
+    
+          const number = "+91 92201 55363";
+    
+          navigator.clipboard.writeText(number).catch(() => {});
+    
+          alert(
+            "Offline Support\n" +
+            "Call: " + number + "\n" +
+            "Contact our support team directly for immediate assistance."
+          );
+        }
+      });
+    });
+    </script>
     {% block extra_js %}{% endblock %}
   </body>
+
+    
 </html>
