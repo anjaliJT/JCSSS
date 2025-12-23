@@ -30,8 +30,12 @@
                     <div class="progress-bar
                         {% if e.current_status == "IN REVIEW" %}bg-warning
                         {% elif e.current_status == "ACCEPTED" %}bg-primary
-                        {% elif e.current_status == "REPAIR" %}bg-info
-                        {% elif e.current_status == "CLOSED" %}bg-success
+                        {% elif e.current_status == "PRODUCT RECEIVED" %}bg-info
+                        {% elif e.current_status == "DIAGNOSIS REPORT" %}bg-info
+                        {% elif e.current_status == "REPAIR" %}bg-success
+                        {% elif e.current_status == "PRE QA REPORT" %}bg-warning
+                        {% elif e.current_status == "READY FOR DISPATCH" %}bg-success
+                        {% elif e.current_status == "CLOSED" %}bg-dark
                         {% else %}bg-secondary
                         {% endif %}
                     "

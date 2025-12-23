@@ -105,7 +105,7 @@ def _send_email_sync(event_id, template_type, title, body, extra_context=None, a
         return
 
     
-    subject = f"JCSSS {title}"
+    subject = f"JASS {title}"
 
     try:
         html_body = render_to_string("emails/email_notification.html", context)
@@ -155,7 +155,7 @@ def _send_customer_price_email(event_id, title, body, extra_context=None, attach
     if extra_context:
         context.update(extra_context)
 
-    subject = f"JCSSS {title}"
+    subject = f"JASS {title}"
 
     html_body = render_to_string("emails/email_notification.html", context)
 
