@@ -31,10 +31,11 @@ def compute_active_complain(user):
 
     # Annotate computed fields
     events = events.annotate(
-        latest_status=Subquery(latest_status),
-        latest_status_updated_on=Subquery(latest_status_updated_on),
-        had_repair_status=Exists(has_repair_status),
-    )
+    latest_status=Subquery(latest_status),
+    latest_status_updated_on=Subquery(latest_status_updated_on),
+    had_repair_status=Exists(has_repair_status),
+).order_by('-id')
+
 
     # Date logic for last 7 days
     today = timezone.now()
