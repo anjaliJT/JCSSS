@@ -502,7 +502,9 @@
         {% endif %}
         <!-- Set Customer Pricing -->
           {% if perms.oem.add_customerpricing%}
-        <div class="card oem-only mt-4">
+          {% if event.customer_pricing and not event.customer_pricing.approved_pay and not event.customer_pricing.approved_pay_later %}
+        
+          <div class="card oem-only mt-4">
           <div class="card-header d-flex justify-content-between align-items-center">
             <div>
               <i class="fas fa-tag me-2"></i>Set Customer Pricing
@@ -561,10 +563,11 @@
               </div>
             </form>
           </div>
-      </div>
+          </div>
 
 
 
+      {% endif %}
         <!-- Set Customer Pricing Closed --> 
          
         {% endif %}

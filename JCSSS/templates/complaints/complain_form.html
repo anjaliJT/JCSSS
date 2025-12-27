@@ -530,19 +530,150 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
+
+                    {% if not is_valid %}
+<div class="form-check mb-3">
+    <input 
+        class="form-check-input"
+        type="checkbox"
+        id="termsCheckbox"
+        onchange="toggleSubmitBtn()"
+    >
+
+    <label class="form-check-label" for="termsCheckbox">
+        I agree to 
+        <span 
+            class="text-primary text-decoration-underline"
+            style="cursor: pointer;"
+            onclick="openTermsModal()"
+        >
+            Terms & Conditions
+        </span>
+    </label>
+</div>
+{% endif %}
+
+
                     <!-- Trigger button -->
                     <!-- <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#submitReportModal">
                         <i class="fas fa-save me-2"></i> Submit Report
                     </button> -->
 
-                    <button type="submit" class="btn btn-primary" {% if is_readonly %}disabled{% endif %}>
-                        <i class="fas fa-paper-plane me-2" ></i>{% if is_valid %}Update Changes {% else %}Submit Complaint{% endif %}
+                    <button 
+                        type="submit"
+                        id="submitBtn"
+                        class="btn btn-primary"
+                        {% if not is_valid %}disabled{% endif %}
+                        {% if is_readonly %}disabled{% endif %}
+                    >
+                        <i class="fas fa-paper-plane me-2"></i>
+                        {% if is_valid %}Update Changes{% else %}Submit Complaint{% endif %}
                     </button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
+
+<!-- terms and condition modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Terms & Conditions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="border p-3" style="max-height: 350px; overflow-y: auto; font-size: 14px;">
+    <h6 class="fw-bold">Event Definition & Classification – ICAO Annex 13</h6>
+    <hr>
+
+    <p><strong>(a) Accident</strong><br>
+    An occurrence associated with the operation of an unmanned aircraft from the time it is ready for flight
+    until it comes to rest, in which a person is fatally or seriously injured or the aircraft sustains damage,
+    structural failure, is missing, or inaccessible.</p>
+
+    <ul>
+        <li>Direct contact with any part of the aircraft, including parts which have become detached from the
+aircraft, or</li>
+        <li>The aircraft sustains damage or structural failure which
+(aa) Adversely affect the structure, performance or flight characteristics of the aircraft
+(ab) Would normally require major repair or replacement of the affected component, except for
+engine failure or damage, when the damage is limited to a single engine, (including its cowlings or
+accessories), to propellers, wing tips, antennas, probes, vanes, tires, brakes, wheels, fairings,
+panels, landing gear doors, windscreens, the aircraft skin (such as small dents or puncture holes),
+or for minor damages to main rotor blades, tail rotor blades, landing gear, and those resulting from
+hail or bird strike (including holes in the Radom), or
+(ac) The aircraft is missing or is completely inaccessible.</li>
+    </ul>
+
+    <p><strong>(b) Serious Incidents</strong><br>
+    An incident involving circumstances indicating that an accident nearly occurred.</p>
+
+    <p><strong>(c) Incident</strong><br>
+    An occurrence, other than an accident, associated with the operation of an aircraft which affects or
+could affect the safety of operation.</p>
+
+    <p><strong>(d) Incident Examples</strong></p>
+
+    <p><u>During Pilot-in-Command</u></p>
+    <ul>
+        <li>An incident involving circumstances indicating that an accident nearly occurred
+Near-collisions requiring an avoidance maneuver to avoid a collision or an unsafe situation</li>
+        <li>Aborted take-off on a closed or engaged runway</li>
+        <li>Take-offs from a closed or engaged runway with marginal separation from obstacle(s)</li>
+        <li>Gross failures to achieve predicted performance during take-off or initial climb</li>
+        <li>Aircraft structural failures or engine disintegrations failures not classified as an accident
+Multiple malfunctions of one or more aircraft systems seriously affecting the operation of the aircraft</li>
+        <li>Take-off or landing incidents. Incidents such as undershooting, overrunning or running off the side
+of runways</li>
+        <li>System failures, weather phenomena, operations outside the approved flight envelope or other
+occurrences which could have caused difficulties controlling the aircraft</li>
+<li>Failures of more than one system in a redundant system mandatory for flight guidance and
+navigation</li>
+<li>Technical events that caused aborting of the mission.</li>
+    </ul>
+
+    <p><u>During Maintenance</u></p>
+    <ul>
+        <li>Any airframe, engine, propeller, component or system defect/ malfunction/ damage found during
+        scheduled or unscheduled aircraft (airframe/ engines /components) maintenance activities which
+        could possibly lead to an aircraft operational accident or serious incident (if not promptly rectified)</li>
+    </ul>
+</div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- terms and condition logic -->
+<script>
+    function toggleSubmitBtn() {
+        const checkbox = document.getElementById("termsCheckbox");
+        const submitBtn = document.getElementById("submitBtn");
+
+        if (!checkbox || !submitBtn) return;
+
+        submitBtn.disabled = !checkbox.checked;
+    }
+
+    function openTermsModal() {
+        const modalEl = document.getElementById("termsModal");
+        if (!modalEl) return;
+
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    }
+</script>
 
 
 

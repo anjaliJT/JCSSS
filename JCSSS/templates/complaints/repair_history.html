@@ -58,9 +58,9 @@
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Product Image Section -->
                         <div class="product-image-wrapper">
-                            {% if first_event.model_number  == "JF2" %}
+                            {% if first_event.uav_type  == "JF2" %}
                                 <img src="{% static 'images/jf2.png' %}" alt="{{ product.tail_number }}" class="product-image">
-                            {% elif "JM" in first_event.model_number  %}
+                            {% elif "JM1" in first_event.uav_type  %}
                                 <img src="{% static 'images/jm1.png' %}" alt="{{ product.tail_number }}" class="product-image">
 
                             {% endif %}
