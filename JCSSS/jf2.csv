@@ -1,4 +1,4 @@
-tail_number,model_name,delivery_location ,army_command,unit_name ,current_location,contract_number,delivery_date,Remark ,active_status,warranty_period
+tail_number,model_name,delivery_location ,army_command,unit_name ,current_location,contract_number,delivery_date,Remark ,active_status,warranty_period,formation
 JF-2(161),JF-2,kapurthala,Western Command,47 Armd Regt,PATIALA,GEMC-511687734928761 DT 21 DEC 2023,14/05/2024,JF2-001(k) replaced with JF-2(161),TRUE,24
 JF-2(160),JF-2,kapurthala,Western Command,2 Mech Inf ,KAPURTHALA,GEMC-511687734928761 DT 21 DEC 2023,14/05/2024,JF2-002(k) replaced with JF-2(160),TRUE,24
 JF-2(164),JF-2,kapurthala,Western Command,2 Mech Inf ,KAPURTHALA,GEMC-511687734928761 DT 21 DEC 2023,14/05/2024,JF2-003(k) replaced with JF-2(164),TRUE,24
