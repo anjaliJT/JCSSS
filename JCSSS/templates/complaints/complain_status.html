@@ -317,7 +317,9 @@
               </div>
             </div>
             
-            {% if event.customer_pricing and not event.customer_pricing.approved_pay and not event.customer_pricing.approved_pay_later %}
+            {% comment %} {% if perms.oem.change_customerpricing %} {% endcomment %}
+            {% with pricing=event.customer_pricing %}
+            {% if pricing %}
             <div class="action-buttons flex-column mt-4">
 
     <!-- Payment Conditions -->
@@ -380,33 +382,67 @@
     </div>
 
     <!-- Buttons -->
-    <form action="{% url 'customer_price_approve' event.customer_pricing.id %}" method="post">
+     {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+      <span class="text-danger fw-bold">
+        The selected payment option is highlighted.
+      </span>
+    {% endif %}
+
+
+    <form action="{% url 'customer_price_approve' pricing.id %}" method="post">
       {% csrf_token %}
 
       <div class="d-flex flex-column flex-md-row gap-2">
 
-        <button type="submit" name="action" value="pay_now"
-                class="btn btn-success flex-fill">
+        <!-- PAY NOW -->
+        <button type="submit"
+          name="action"
+          value="pay_now"
+          class="btn flex-fill
+          {% if pricing.approved_pay %}btn-success active{% else %}btn-outline-success{% endif %}"
+          {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+            disabled
+          {% endif %}>
           <i class="fas fa-check-circle me-2"></i>
           Approve & Pay Now
         </button>
 
-        <button type="submit" name="action" value="pay_later"
-                class="btn btn-primary flex-fill">
+
+        <!-- PAY LATER -->
+        <button type="submit"
+          name="action"
+          value="pay_later"
+          class="btn flex-fill
+          {% if pricing.approved_pay_later %}btn-primary active{% else %}btn-outline-primary{% endif %}"
+          {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+            disabled
+          {% endif %}>
           <i class="fas fa-hourglass-half me-2"></i>
           Pay on Collection
         </button>
 
-        <button type="submit" name="action" value="gem"
-                class="btn btn-warning flex-fill">
+
+        <!-- GEM -->
+        <button type="submit"
+          name="action"
+          value="gem"
+          class="btn flex-fill
+          {% if pricing.approved_through_gem %}btn-warning active{% else %}btn-outline-warning{% endif %}"
+          {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+            disabled
+          {% endif %}>
           <i class="fas fa-landmark me-2"></i>
           Pay via GeM
         </button>
 
+
       </div>
     </form>
+
+{% endif %}
+{% endwith %}
+
   </div>
-            {% endif %}
 
 
           </div>
