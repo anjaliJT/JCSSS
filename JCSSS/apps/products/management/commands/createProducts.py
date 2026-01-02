@@ -47,8 +47,8 @@ class Command(BaseCommand):
             product = Product.objects.create(
                 product_model=random.choice(product_models),
                 tail_number=tail_number,
-                order_name=f'Order {i}',
-                manufecturing_Date=manufacturing_date,
+                contract_number=f'Order {i}',
+                # manufecturing_Date=manufacturing_date,
                 delivery_date=delivery_date,
                 delivery_location=random.choice([
                     'Delhi', 'Pune', 'Bangalore', 'Hyderabad'
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                 unit_name=f'Unit {random.randint(1, 20)}',
                 formation=f'Formation {random.randint(1, 4)}',
                 warranty_period=random.choice([12, 24, 36]),
-                obsolete=random.choice([False, False, False, True])  # mostly active
+                active_status=random.choice([False, False, False, True])  # mostly active
             )
 
             self.stdout.write(self.style.SUCCESS(

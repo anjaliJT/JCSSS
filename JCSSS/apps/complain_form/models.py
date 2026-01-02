@@ -28,7 +28,7 @@ class Event(models.Model):
     # gcs_type = models.CharField(max_length=100, blank=True)
     gcs_number = models.CharField(max_length=50, blank=True)
     logbook_entry = models.CharField(max_length=50, blank=True)
-    uav_weight = models.FloatField(help_text="Weight in kg", null= True, blank=True)
+    # uav_weight = models.FloatField(help_text="Weight in kg", null= True, blank=True)
 
     #damage event details
     date_of_occurrence = models.DateField(blank=True)
@@ -45,10 +45,10 @@ class Event(models.Model):
     reported_at = models.DateTimeField(auto_now_add=True)
     
     # Meteorology
-    wind = models.CharField(max_length=100, help_text="Wind condition")
-    temperature = models.CharField(max_length=50, help_text="Temperature")
+    # wind = models.CharField(max_length=100, help_text="Wind condition")
+    # temperature = models.CharField(max_length=50, help_text="Temperature")
     # pressure_qnh = models.CharField(max_length=50, help_text="QNH Pressure")
-    visibility = models.FloatField(max_length=100, blank=True, null=True)
+    # visibility = models.FloatField(max_length=100, blank=True, null=True)
     # clouds = models.CharField(max_length=100, blank=True)
     # humidity = models.CharField(max_length=50, blank=True)
     turbulence = models.BooleanField(default=False)

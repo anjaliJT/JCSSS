@@ -16,64 +16,171 @@
             {% endfor %}
         {% endif %}
 
-        <form method="post">
+        <form method="post" id="signupForm">
             {% csrf_token %}
-            {{ form.non_field_errors }}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
 
+
+            <!-- EMAIL + OTP -->
+            <div class="mb-3 required-field">
+                <label>Email</label>
+                <div class="input-group">
+                    {{ form.email }}
+                    <button type="button" id="sendOtpBtn" class="btn-sm btn-outline-primary">
+                        Send OTP
+                    </button>
+                </div>
+                <small class="text-success d-none" id="otpSentMsg">OTP sent to your email</small>
+                <small class="text-danger d-none" id="emailError"></small>
+                
+            </div>
+
+            <!-- OTP INPUT -->
+            <div class="mb-3 d-none" id="otpBlock">
+                <label>Enter OTP</label>
+                <div class="input-group">
+                    <input type="text" id="otpInput" name="otp" class="form-control" placeholder="Enter 6-digit OTP">
+                    <button type="button" id="verifyOtpBtn" class="btn btn-outline-success">
+                        Verify OTP
+                    </button>
+                </div>
+                <small class="text-danger d-none" id="otpError">Invalid OTP</small>
+                <small class="text-success d-none" id="otpSuccess">Email verified successfully</small>
+            </div>
+
+            <!-- OTHER FORM FIELDS -->
             {% for field in form %}
-                {% if field.name != 'password1' and field.name != 'password2' %}
+                {% if field.name != "email" and field.name != "password1" and field.name != "password2" %}
                     <div class="mb-3 {% if field.field.required %}required-field{% endif %}">
                         {{ field.label_tag }}
                         {{ field }}
-                        {% if field.help_text %}
-                            <div class="form-text">{{ field.help_text }}</div>
-                        {% endif %}
                         <div class="text-danger small">{{ field.errors }}</div>
                     </div>
                 {% endif %}
             {% endfor %}
 
-            <!-- Password Fields with Toggle -->
+
+        <!-- PASSWORD -->
             <div class="mb-3">
-                <label for="id_password1" class="form-label">Password</label>
+                <label>Password</label>
                 <div class="input-group">
                     {{ form.password1 }}
-                    <button type="button" class="btn btn-outline-secondary toggle-password password-button" data-target="id_password1">
+                    <button type="button"
+                            class="btn btn-outline-secondary toggle-password"
+                            data-target="id_password1">
                         <i class="bi bi-eye"></i>
                     </button>
                 </div>
-                <div class="text-danger small">{{ form.password1.errors }}</div>
             </div>
 
-            <div class="mb-3">
-                <label for="id_password2" class="form-label">Confirm Password</label>
-                <div class="input-group">
-                    {{ form.password2 }}
-                    <button type="button" class="btn btn-outline-secondary toggle-password password-button" data-target="id_password2">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                </div>
-                <div class="text-danger small">{{ form.password2.errors }}</div>
+        <!-- CONFIRM PASSWORD -->
+        <div class="mb-3">
+            <label>Confirm Password</label>
+            <div class="input-group">
+                {{ form.password2 }}
+                <button type="button"
+                        class="btn btn-outline-secondary toggle-password"
+                        data-target="id_password2">
+                    <i class="bi bi-eye"></i>
+                </button>
             </div>
+        </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-2">Sign Up</button>
+            <!-- SUBMIT -->
+            <button type="submit"
+                    id="signupBtn"
+                    class="btn btn-primary w-100 mt-2"
+                    disabled>
+                Sign Up
+            </button>
         </form>
 
         <p class="mt-3 text-center mb-0">
-            <b>Already have an account? <a href="{% url 'login' %}">Login here</a></b>
+            <b>Already have an account?
+                <a href="{% url 'login' %}">Login here</a>
+            </b>
         </p>
     </div>
 </div>
+
+<!-- ===================== JS ===================== -->
+<script>
+const csrfToken = "{{ csrf_token }}";
+
+// SEND OTP
+document.getElementById("sendOtpBtn").addEventListener("click", function () {
+    const email = document.getElementById("id_email").value;
+
+    if (!email) {
+        alert("Please enter email first");
+        return;
+    }
+
+    fetch("{% url 'send_email_otp' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrfToken,
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `email=${encodeURIComponent(email)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("otpBlock").classList.remove("d-none");
+            document.getElementById("otpSentMsg").classList.remove("d-none");
+            document.getElementById("emailError").classList.add("d-none");
+        } else {
+            document.getElementById("emailError").innerText = data.message;
+            document.getElementById("emailError").classList.remove("d-none");
+        }
+    });
+});
+
+// VERIFY OTP
+document.getElementById("verifyOtpBtn").addEventListener("click", function () {
+    const otp = document.getElementById("otpInput").value;
+
+    fetch("{% url 'verify_email_otp' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrfToken,
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `otp=${encodeURIComponent(otp)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("signupBtn").disabled = false;
+            document.getElementById("otpError").classList.add("d-none");
+            document.getElementById("otpSuccess").classList.remove("d-none");
+        } else {
+            document.getElementById("otpError").classList.remove("d-none");
+        }
+    });
+});
+
+
+</script>
+
 {% endblock %}
+
 
 {% block extra_scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".toggle-password").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            const targetId = this.getAttribute("data-target");
-            const input = document.getElementById(targetId);
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", function () {
+
+            const input = document.getElementById(this.dataset.target);
             const icon = this.querySelector("i");
+
+            if (!input) return;
 
             if (input.type === "password") {
                 input.type = "text";
@@ -88,4 +195,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
 {% endblock %}

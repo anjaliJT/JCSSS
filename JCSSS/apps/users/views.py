@@ -190,21 +190,121 @@ def verify_otp(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+# class SignupView(CreateView):
+#     model = CustomUser
+#     form_class = CustomUserSignupForm
+#     template_name = "auth/signup.html"
+#     success_url = reverse_lazy("login")  # redirect after successful signup
+
+#     def form_valid(self, form):
+#         user = form.save()
+#         messages.success(self.request, "✅ Account created successfully. Please log in.")
+#         return super().form_valid(form)
+
+#     def form_invalid(self, form):
+#         messages.error(self.request, "⚠️ There was an error creating your account. Please check the form.")
+#         return super().form_invalid(form)
+
+from django.views.generic import CreateView
+
 class SignupView(CreateView):
     model = CustomUser
     form_class = CustomUserSignupForm
     template_name = "auth/signup.html"
-    success_url = reverse_lazy("login")  # redirect after successful signup
+    success_url = reverse_lazy("login")
+
+    def get_form_kwargs(self):
+        """
+        Inject the request into the form so that
+        the form can access session (OTP verification).
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
 
     def form_valid(self, form):
-        user = form.save()
-        messages.success(self.request, "✅ Account created successfully. Please log in.")
-        return super().form_valid(form)
+        """
+        This is called ONLY if:
+        - all form fields are valid
+        - password validators pass
+        - OTP validation in form.clean() passes
+        """
+        response = super().form_valid(form)
+
+        # Cleanup OTP session after successful signup
+        self.request.session.pop("email_verified", None)
+        self.request.session.pop("email_otp", None)
+
+        messages.success(
+            self.request,
+            "✅ Account created successfully. Please log in."
+        )
+        return response
 
     def form_invalid(self, form):
-        messages.error(self.request, "⚠️ There was an error creating your account. Please check the form.")
-        return super().form_invalid(form)
-    
+        """
+        Explicitly render the same page with form errors.
+        (CreateView already does this, but we keep it explicit
+        for clarity and debugging.)
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form)
+        )
+
+
+
+import random
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
+from django.conf import settings
+
+
+@require_POST
+def send_email_otp(request):
+    email = request.POST.get("email")
+
+    otp = str(random.randint(100000, 999999))
+
+    request.session["email_otp"] = otp
+    request.session["email_verified"] = False
+    request.session.modified = True
+
+    print("OTP SENT:", otp)
+
+    send_mail(
+        "Your OTP",
+        f"Your OTP is {otp}",
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+    )
+
+    return JsonResponse({"success": True})
+
+
+
+@require_POST
+def verify_email_otp(request):
+    entered_otp = request.POST.get("otp", "").strip()
+    session_otp = request.session.get("email_otp")
+
+    print("ENTERED OTP:", entered_otp)
+    print("SESSION OTP:", session_otp)
+
+    if not session_otp:
+        return JsonResponse({
+            "success": False,
+            "message": "OTP expired. Please resend OTP."
+        })
+
+    if entered_otp == session_otp:
+        request.session["email_verified"] = True
+        request.session.modified = True
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False, "message": "Invalid OTP"})
+
+
     
 class UserDetails(LoginRequiredMixin,View):
     login_url = 'login'
@@ -578,35 +678,7 @@ class profileView(LoginRequiredMixin,View):
 
             messages.success(request, "Profile updated successfully ✅")
             return redirect("profile")  # reload page with updated info
-    
-# class OEMUserFormView(PermissionRequiredMixin, LoginRequiredMixin, View):
 
-
-#     permission_required = "auth.add_user"
-
-
-#     def post(self, request, pk=None):
-#         is_update = pk is not None
-#         instance = get_object_or_404(CustomUser, pk=pk) if is_update else None
-
-
-#         form = OEMUserForm(request.POST, instance=instance)
-
-
-#         if form.is_valid():
-#             form.save(is_update=is_update)
-#             msg = "User updated successfully" if is_update else "User created successfully"
-#             messages.success(request, msg)
-#             return redirect("user_list")
-
-
-#         # If form errors exist, re-render modal in same page
-#         # Inject errors back into modal
-#         request.session['form_errors'] = form.errors
-#         request.session['form_data'] = request.POST
-
-
-#         return redirect("user_list")
 
 
 class UserPermissionManagementView(PermissionRequiredMixin, LoginRequiredMixin, TemplateView):
@@ -685,3 +757,14 @@ class UserPermissionManagementView(PermissionRequiredMixin, LoginRequiredMixin, 
             messages.error(request, f"Error updating permissions: {str(e)}")
             logger.error(f"Permission update error: {str(e)}")
             return redirect('user_list')
+
+
+
+# def custom_404_view(request, exception=None):
+#     return render(request, "404.html", status=404)
+
+# def custom_403_view(request, exception=None):
+#     return render(request, "403.html", status=403)
+
+# def custom_500_view(request):
+#     return render(request, "500.html", status=500)

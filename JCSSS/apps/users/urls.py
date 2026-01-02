@@ -14,4 +14,13 @@ urlpatterns = [
     path('users/<int:user_id>/permissions/', UserPermissionManagementView.as_view(), name='user_permissions'),
     path('forgot-password/', send_otp, name='forgot-password-send-otp'),
     path('verify-otp/',  verify_otp, name= 'forgot-password-verify'),
+    
+    path("send-otp/", send_email_otp, name="send_email_otp"),
+    path("verify-email-otp/", verify_email_otp, name="verify_email_otp"),
+
+    
+    # path("404/", custom_404_view, name="page_not_found"), 
+    # path("403/", custom_403_view, name="page_not_accessible"), 
+    # path("500/", custom_500_view, name="page_went_wrong"), 
+    
 ]

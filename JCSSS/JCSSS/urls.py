@@ -23,5 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.urls')),
 ]
+
+# handler404 = "apps.users.views.custom_404_view"
+# handler403 = "apps.users.views.custom_403_view"
+# handler500 = "apps.users.views.custom_500_view"
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
