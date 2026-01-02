@@ -52,7 +52,7 @@
 </div>
 
 <!-- Progress Steps -->
-<div class="card mb-4 sticky-top" style="z-index: 1000; top:65px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+<div class="card mb-4 sticky-top sticky-main" style="z-index: 1000; top:65px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
     <div class="card-body card-control">
         <div class="d-flex justify-content-between position-relative">
             <div class="progress position-absolute" style="width: 100%; height: 2px; top: 50%; transform: translateY(-50%); z-index: 0;">
@@ -129,10 +129,10 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="designation" class="form-label required">Designation</label>
+                        <label for="designation" class="form-label required">Rank</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
-                            <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter your designation"  value="{{ event.designation|default:'' }}" {% if is_readonly %}disabled{% endif %} required>
+                            <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter your Rank"  value="{{ event.designation|default:'' }}" {% if is_readonly %}disabled{% endif %} required>
                         </div>
                     </div>
                 </div>
@@ -275,7 +275,7 @@
 
                 </div>
 
-                <div class="row mb-3">
+                {% comment %} <div class="row mb-3">
                     <div class="col-md-3">
                         <label for="uavWeight" class="form-label">UAV Weight (kg)</label>
                         <div class="input-group">
@@ -284,7 +284,6 @@
                         </div>
                     </div>
 
-                    <!-- Weather Parameters -->
                     <div class="col-md-3">
                         <label for="wind" class="form-label">Wind Speed (knots)</label>
                         <div class="input-group">
@@ -306,7 +305,7 @@
                             <input type="number" class="form-control" id="visibility" name="visibility" placeholder="Enter QNH" step="0.01" min="0" value="{{ event.visibility|default:'0' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
 
@@ -387,18 +386,61 @@
             </div>
             <div class="card-body">
                 <div class="mb-4">
-                    <label class="form-label">Event Description</label>
-                    <textarea class="form-control" name="event_description" rows="3" placeholder="Provide a detailed description of what occurred (e.g., The bird crashed during launch. It reached a height of 10–15 meters before losing stability and stalling to the right.)" {% if is_readonly %}disabled{% endif %}>{{ event.event_description|default:'' }}</textarea>
+                    <label class="form-label">
+                        Event Description
+                        <small class="text-muted ms-1">
+                            (<span id="eventDescCount">0</span>/150)
+                        </small>
+                    </label>
+
+                    <textarea
+                        class="form-control char-count"
+                        data-counter="eventDescCount"
+                        name="event_description"
+                        rows="3"
+                        maxlength="150"
+                        placeholder="Provide a detailed description of what occurred..."
+                        {% if is_readonly %}disabled{% endif %}
+                    >{{ event.event_description|default:'' }}</textarea>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Initial Actions Taken</label>
-                    <textarea class="form-control" name="initial_actions_taken" rows="3" placeholder="Describe the immediate actions taken after the incident (e.g., The bird was recovered and damaged parts were assesed.)" {% if is_readonly %}disabled{% endif %}>{{ event.initial_actions_taken|default:'' }}</textarea>
+                    <label class="form-label">
+                        Initial Actions Taken
+                        <small class="text-muted ms-1">
+                            (<span id="initialDescCount">0</span>/150)
+                        </small>
+                    </label>
+
+                    <textarea
+                        class="form-control char-count"
+                        data-counter="initialDescCount"
+                        name="initial_actions_taken"
+                        rows="3"
+                        maxlength="150"
+                        placeholder="Describe the immediate actions taken after the incident..."
+                        {% if is_readonly %}disabled{% endif %}
+                        >{{ event.initial_actions_taken|default:'' }}
+                    </textarea>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Remarks</label>
-                    <textarea class="form-control" name="remarks" rows="2" placeholder="Any additional comments or observations..." {% if is_readonly %}disabled{% endif %}>{{ event.remarks|default:'' }}</textarea>
+                    <label class="form-label">
+                        Remarks
+                        <small class="text-muted ms-1">
+                            (<span id="remarksDescCount">0</span>/150)
+                        </small>
+                    </label>
+
+                    <textarea
+                        class="form-control char-count"
+                        data-counter="remarksDescCount"
+                        name="remarks"
+                        rows="2"
+                        maxlength="150"
+                        placeholder="Any additional comments or observations..."
+                        {% if is_readonly %}disabled{% endif %}
+                    >{{ event.remarks|default:'' }}</textarea>
                 </div>
 
                 <div class="mb-3">
@@ -527,32 +569,9 @@
                     
 
         <!-- Submit Button -->
-        <div class="card mb-4">
+        <div class="card mb-4 card-submit-button">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-
-                    {% if not is_valid %}
-<div class="form-check mb-3">
-    <input 
-        class="form-check-input"
-        type="checkbox"
-        id="termsCheckbox"
-        onchange="toggleSubmitBtn()"
-    >
-
-    <label class="form-check-label" for="termsCheckbox">
-        I agree to 
-        <span 
-            class="text-primary text-decoration-underline"
-            style="cursor: pointer;"
-            onclick="openTermsModal()"
-        >
-            Terms & Conditions
-        </span>
-    </label>
-</div>
-{% endif %}
-
 
                     <!-- Trigger button -->
                     <!-- <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#submitReportModal">
@@ -563,12 +582,64 @@
                         type="submit"
                         id="submitBtn"
                         class="btn btn-primary"
-                        {% if not is_valid %}disabled{% endif %}
-                        {% if is_readonly %}disabled{% endif %}
-                    >
+                        {% if is_valid %}disabled{% endif %}
+                        {% if is_readonly %}disabled{% endif %}>
                         <i class="fas fa-paper-plane me-2"></i>
-                        {% if is_valid %}Update Changes{% else %}Submit Complaint{% endif %}
+                        {% if is_valid %}Update Changes{% else %}Submit Request{% endif %}
                     </button>
+                    {% if is_readonly %}
+                        <button 
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="downloadPDF()">
+                            <i class="fas fa-file-pdf me-2"></i>
+                            Download PDF
+                        </button>
+                    {% endif %}
+
+                <script>
+                function downloadPDF() {
+                    const originalTitle = document.title;
+                    document.title = "Complaint_{{ event.unique_token }}";
+
+                    window.print();
+
+                    document.title = originalTitle;
+                }
+                </script>
+
+                <style>
+                    @media print {
+                        /* Hide buttons & navbar */
+                        button, .btn, nav {
+                            display: none !important;
+                        }
+                        .sticky-main{
+                            display: none !important;
+                        }
+
+                        /* Remove shadows & cards */
+                        .card {
+                            border: 1px solid #000;
+                            box-shadow: none;
+                            /* page-break-inside: avoid; */
+                        }
+
+                        /* Force page breaks between sections */
+                        /* .card {
+                            page-break-after: always;
+                        } */
+
+                        body {
+                            font-size: 12px;
+                            color: #000;
+                        }
+                        #fileUploads, .card-submit-button{
+                            display:none;
+                        }
+                    }
+                </style>
+
                 </div>
             </div>
         </div>
@@ -576,104 +647,6 @@
 </div>
 
 
-<!-- terms and condition modal -->
-<div class="modal fade" id="termsModal" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Terms & Conditions</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="border p-3" style="max-height: 350px; overflow-y: auto; font-size: 14px;">
-    <h6 class="fw-bold">Event Definition & Classification – ICAO Annex 13</h6>
-    <hr>
-
-    <p><strong>(a) Accident</strong><br>
-    An occurrence associated with the operation of an unmanned aircraft from the time it is ready for flight
-    until it comes to rest, in which a person is fatally or seriously injured or the aircraft sustains damage,
-    structural failure, is missing, or inaccessible.</p>
-
-    <ul>
-        <li>Direct contact with any part of the aircraft, including parts which have become detached from the
-aircraft, or</li>
-        <li>The aircraft sustains damage or structural failure which
-(aa) Adversely affect the structure, performance or flight characteristics of the aircraft
-(ab) Would normally require major repair or replacement of the affected component, except for
-engine failure or damage, when the damage is limited to a single engine, (including its cowlings or
-accessories), to propellers, wing tips, antennas, probes, vanes, tires, brakes, wheels, fairings,
-panels, landing gear doors, windscreens, the aircraft skin (such as small dents or puncture holes),
-or for minor damages to main rotor blades, tail rotor blades, landing gear, and those resulting from
-hail or bird strike (including holes in the Radom), or
-(ac) The aircraft is missing or is completely inaccessible.</li>
-    </ul>
-
-    <p><strong>(b) Serious Incidents</strong><br>
-    An incident involving circumstances indicating that an accident nearly occurred.</p>
-
-    <p><strong>(c) Incident</strong><br>
-    An occurrence, other than an accident, associated with the operation of an aircraft which affects or
-could affect the safety of operation.</p>
-
-    <p><strong>(d) Incident Examples</strong></p>
-
-    <p><u>During Pilot-in-Command</u></p>
-    <ul>
-        <li>An incident involving circumstances indicating that an accident nearly occurred
-Near-collisions requiring an avoidance maneuver to avoid a collision or an unsafe situation</li>
-        <li>Aborted take-off on a closed or engaged runway</li>
-        <li>Take-offs from a closed or engaged runway with marginal separation from obstacle(s)</li>
-        <li>Gross failures to achieve predicted performance during take-off or initial climb</li>
-        <li>Aircraft structural failures or engine disintegrations failures not classified as an accident
-Multiple malfunctions of one or more aircraft systems seriously affecting the operation of the aircraft</li>
-        <li>Take-off or landing incidents. Incidents such as undershooting, overrunning or running off the side
-of runways</li>
-        <li>System failures, weather phenomena, operations outside the approved flight envelope or other
-occurrences which could have caused difficulties controlling the aircraft</li>
-<li>Failures of more than one system in a redundant system mandatory for flight guidance and
-navigation</li>
-<li>Technical events that caused aborting of the mission.</li>
-    </ul>
-
-    <p><u>During Maintenance</u></p>
-    <ul>
-        <li>Any airframe, engine, propeller, component or system defect/ malfunction/ damage found during
-        scheduled or unscheduled aircraft (airframe/ engines /components) maintenance activities which
-        could possibly lead to an aircraft operational accident or serious incident (if not promptly rectified)</li>
-    </ul>
-</div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- terms and condition logic -->
-<script>
-    function toggleSubmitBtn() {
-        const checkbox = document.getElementById("termsCheckbox");
-        const submitBtn = document.getElementById("submitBtn");
-
-        if (!checkbox || !submitBtn) return;
-
-        submitBtn.disabled = !checkbox.checked;
-    }
-
-    function openTermsModal() {
-        const modalEl = document.getElementById("termsModal");
-        if (!modalEl) return;
-
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-    }
-</script>
 
 
 
@@ -765,6 +738,32 @@ document.addEventListener("DOMContentLoaded", function () {
             tailInput.value = "";
         }
     });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".char-count").forEach(textarea => {
+        const counterId = textarea.dataset.counter;
+        const counter = document.getElementById(counterId);
+
+        if (!counter) return;
+
+        const maxLength = textarea.maxLength;
+
+        function updateCounter() {
+            const length = textarea.value.length;
+            counter.textContent = length;
+            counter.classList.toggle("text-danger", length >= maxLength);
+        }
+
+        // Initial count (edit/view mode)
+        updateCounter();
+
+        textarea.addEventListener("input", updateCounter);
+    });
+
 });
 </script>
 

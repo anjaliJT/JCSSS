@@ -37,7 +37,16 @@
           <div class="col-md-8 order-2 order-md-1">
             <div class="mt-2 header">
               <span class="status-badge status-active">  {{ latest_status.get_status_display|default:"No Status" }}</span>
-              <span class="location-badge location-oem" id="repairLocationBadge"> <i class="fas fa-map-marker-alt " aria-hidden="true"></i> {{ location_data.location|default:"Not Defined" }}</span>
+              <span 
+                  class="location-badge location-oem" 
+                  id="repairLocationBadge"
+                  data-location="{{ location_data.location|default:'' }}">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span id="repairLocationText">
+                    {{ location_data.location|default:"Not Defined" }}
+                  </span>
+                </span>
+
               {% if timing_status == "Not Started" %}
               <span class="badge bg-secondary location-badge p-2">
                 <i class="fa-solid fa-clock"></i> Not Started
@@ -151,7 +160,7 @@
                         {%if s.status == "ACCEPTED" %}
                           <p class="timeline-info">You will get the diagnosis report within 3 days once we receive the product at our warehouse.</p>
                         {% endif %}
-                        {% if s.status == 'DIAGNOSIS REPORT' and event.customer_pricing.approved_pay == True %}
+                        {% if s.status == 'DIAGNOSIS REPORT' and event.customer_pricing.approved_pay != True %}
                           <p class="timeline-info">When the payment is approved by you, it takes 7 days to repair the product.</p>
                         {% endif %}
 
@@ -308,37 +317,132 @@
               </div>
             </div>
             
-            {% if event.customer_pricing and not event.customer_pricing.approved_pay and not event.customer_pricing.approved_pay_later %}
-            <div class="action-buttons mt-4">
-              <form action="{% url 'customer_price_approve' event.customer_pricing.id %}" method="post">
-                {% csrf_token %}
-                <div class="d-flex flex-column flex-md-row gap-2 mt-4">
-  <button
-    type="submit"
-    name="action"
-    value="pay_now"
-    class="btn btn-success flex-fill"
-  >
-    <i class="fas fa-check-circle"></i>
-    Approve & Pay Now
-  </button>
+            {% comment %} {% if perms.oem.change_customerpricing %} {% endcomment %}
+            {% with pricing=event.customer_pricing %}
+            {% if pricing %}
+            <div class="action-buttons flex-column mt-4">
 
-  <button
-    type="submit"
-    name="action"
-    value="pay_later"
-    class="btn btn-primary flex-fill"
-  >
-    <i class="fas fa-hourglass-half me-2"></i>
-    Approve & Pay Later
-  </button>
-</div>
+    <!-- Payment Conditions -->
+    <div class="alert alert-light border mb-4">
+
+      <h5 class="fw-bold mb-3">
+        Payment Options & Conditions / भुगतान विकल्प एवं शर्तें
+      </h5>
+
+      <ol class="mb-0">
+
+        <li class="mb-3">
+          <strong>Approve & Pay Now</strong><br>
+          <span class="text-dark">
+            You approve the estimated service and/or spare costs. Payment must be
+            completed through the system payment link. Repairs will begin only
+            after confirmation of payment receipt.
+          </span>
+          <br>
+          <span class="text-muted">
+            आप सेवा एवं/या स्पेयर पार्ट्स की अनुमानित लागत को स्वीकृत करते हैं।
+            भुगतान सिस्टम द्वारा उपलब्ध कराए गए भुगतान लिंक के माध्यम से किया जाना
+            अनिवार्य है। भुगतान प्राप्त होने की पुष्टि के बाद ही मरम्मत कार्य प्रारंभ
+            किया जाएगा।
+          </span>
+        </li>
+
+        <li class="mb-3">
+          <strong>Pay on Collection</strong><br>
+          <span class="text-dark">
+            You approve the estimated costs. Payment is required at the time of
+            collection after completion of repairs. Release of equipment is subject
+            to confirmation of payment.
+          </span>
+          <br>
+          <span class="text-muted">
+            आप अनुमानित लागत को स्वीकृत करते हैं। मरम्मत पूर्ण होने के पश्चात उपकरण
+            प्राप्त करते समय भुगतान किया जाना आवश्यक है। भुगतान की पुष्टि के बाद ही
+            उपकरण जारी किया जाएगा।
+          </span>
+        </li>
+
+        <li>
+          <strong>Payment through GeM (Government e-Marketplace)</strong><br>
+          <span class="text-dark">
+            You opt to process payment through the GeM portal. Repairs will
+            commence only after completion of the GeM process and formal award of
+            contract, in accordance with applicable government procurement rules.
+          </span>
+          <br>
+          <span class="text-muted">
+            आप भुगतान प्रक्रिया GeM (Government e-Marketplace) पोर्टल के माध्यम से
+            करने का विकल्प चुनते हैं। सरकारी क्रय नियमों के अनुसार GeM प्रक्रिया पूर्ण
+            होने तथा औपचारिक अनुबंध स्वीकृत होने के बाद ही मरम्मत कार्य प्रारंभ किया
+            जाएगा।
+          </span>
+        </li>
+
+      </ol>
+    </div>
+
+    <!-- Buttons -->
+     {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+      <span class="text-danger fw-bold">
+        The selected payment option is highlighted.
+      </span>
+    {% endif %}
 
 
+    <form action="{% url 'customer_price_approve' pricing.id %}" method="post">
+      {% csrf_token %}
 
-              </form>
-            </div>
-            {% endif %}
+      <div class="d-flex flex-column flex-md-row gap-2">
+
+        <!-- PAY NOW -->
+        <button type="submit"
+          name="action"
+          value="pay_now"
+          class="btn flex-fill
+          {% if pricing.approved_pay %}btn-success active{% else %}btn-outline-success{% endif %}"
+          {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+            disabled
+          {% endif %}>
+          <i class="fas fa-check-circle me-2"></i>
+          Approve & Pay Now
+        </button>
+
+
+        <!-- PAY LATER -->
+        <button type="submit"
+          name="action"
+          value="pay_later"
+          class="btn flex-fill
+          {% if pricing.approved_pay_later %}btn-primary active{% else %}btn-outline-primary{% endif %}"
+          {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+            disabled
+          {% endif %}>
+          <i class="fas fa-hourglass-half me-2"></i>
+          Pay on Collection
+        </button>
+
+
+        <!-- GEM -->
+        <button type="submit"
+          name="action"
+          value="gem"
+          class="btn flex-fill
+          {% if pricing.approved_through_gem %}btn-warning active{% else %}btn-outline-warning{% endif %}"
+          {% if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem %}
+            disabled
+          {% endif %}>
+          <i class="fas fa-landmark me-2"></i>
+          Pay via GeM
+        </button>
+
+
+      </div>
+    </form>
+
+{% endif %}
+{% endwith %}
+
+  </div>
 
 
           </div>
@@ -353,7 +457,7 @@
         <!-- Set Repair Location -->
         <input type="hidden" id="locationData" value="{{ location_data.id }}">
         <div class="card oem-only">
-      {% if  perms.oem.add_repairlocation %}
+        {% if  perms.oem.add_repairlocation %}
           <div class="card-header d-flex justify-content-between align-items-center">
             <div>
               <i class="fas fa-map-marker-alt me-2"></i>Set Repair Location
@@ -371,28 +475,47 @@
               
               <div id="locationSelection" class="d-flex flex-column gap-3 mb-3">
                 <div class="location-option p-3 border rounded" data-location="OEM Site">
-                  <div class="location-icon mb-1">
-                    <i class="fas fa-warehouse fa-lg"></i>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="location-icon mb-1">
+                        <i class="fas fa-warehouse fa-lg"></i>
+                      </div>
+                      <h6 class="mb-1">OEM Site</h6>
+                      <p class="small text-muted mb-0">Repair will be conducted at our service center</p>
+                    </div>
+                     <!-- Bullet indicator -->
+                    <span class="location-radio"></span>
                   </div>
-                  <h6 class="mb-1">OEM Site</h6>
-                  <p class="small text-muted mb-0">Repair will be conducted at our service center</p>
                 </div>
 
                 <div class="location-option p-3 border rounded" data-location="Virtual Assistance">
-                  <div class="location-icon mb-1">
-                    <i class="fas fa-desktop fa-lg"></i>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="location-icon mb-1">
+                        <i class="fas fa-desktop fa-lg"></i>
+                      </div>
+                      <h6 class="mb-1">Virtual Assistance</h6>
+                      <p class="small text-muted mb-0">Remote diagnosis and guidance</p>
+                    </div>
+                    <!-- Bullet indicator -->
+                    <span class="location-radio"></span>
                   </div>
-                  <h6 class="mb-1">Virtual Assistance</h6>
-                  <p class="small text-muted mb-0">Remote diagnosis and guidance</p>
                 </div>
 
                 <div class="location-option p-3 border rounded" data-location="Customer Site">
-                  <div class="location-icon mb-1">
-                    <i class="fas fa-home fa-lg"></i>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div class="location-icon mb-1">
+                        <i class="fas fa-home fa-lg"></i>
+                      </div>
+                      <h6 class="mb-1">Customer Site</h6>
+                      <p class="small text-muted mb-0">On-site repair at customer location</p>
+                    </div>
+                    <!-- Bullet indicator -->
+                    <span class="location-radio"></span>
                   </div>
-                  <h6 class="mb-1">Customer Site</h6>
-                  <p class="small text-muted mb-0">On-site repair at customer location</p>
                 </div>
+
               </div>
 
               <!-- Hidden input to store the selected location -->
@@ -502,7 +625,7 @@
         {% endif %}
         <!-- Set Customer Pricing -->
           {% if perms.oem.add_customerpricing%}
-          {% if event.customer_pricing and not event.customer_pricing.approved_pay and not event.customer_pricing.approved_pay_later %}
+          {% comment %} {% if event.customer_pricing and not event.customer_pricing.approved_pay and not event.customer_pricing.approved_pay_later %} {% endcomment %}
         
           <div class="card oem-only mt-4">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -567,7 +690,7 @@
 
 
 
-      {% endif %}
+      {% comment %} {% endif %} {% endcomment %}
         <!-- Set Customer Pricing Closed --> 
          
         {% endif %}
@@ -617,6 +740,26 @@
 </div>
 
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const badge = document.getElementById("repairLocationBadge");
+    const badgeLocation = badge?.dataset.location?.trim();
+
+    const options = document.querySelectorAll(".location-option");
+    const selectedInput = document.getElementById("selectedLocation");
+
+    if (!badgeLocation) return;
+
+    options.forEach(option => {
+        if (option.dataset.location === badgeLocation) {
+            option.classList.add("selected", "border-primary", "bg-light");
+            selectedInput.value = badgeLocation;
+        }
+    });
+
+});
+</script>
   
 {% block extra_scripts %}
 <!-- JS -->

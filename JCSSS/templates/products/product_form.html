@@ -40,12 +40,12 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label required">Order Name</label>
-                            <input type="text" name="order_name" id="orderName" class="form-control" placeholder="e.g., Order-2024" required>
+                            <label class="form-label required">Contract Number</label>
+                            <input type="text" name="contract_number" id="orderName" class="form-control" placeholder="e.g., Order-2024" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Manufacturing Date</label>
-                            <input type="date" name="manufecturing_Date" id="manufactureDate" class="form-control">
+                            <label class="form-label">Delivery Date</label>
+                            <input type="date" name="delivery_date" id="manufactureDate" class="form-control">
                         </div>
                     </div>
 
@@ -59,10 +59,10 @@
                             <input type="number" name="warranty_period" id="warrantyPeriod" class="form-control" placeholder="e.g., 24" value="24" min="1">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Product Status</label>
-                            <select name="is_sold" id="isSold" class="form-select">
-                                <option value="false">Available</option>
-                                <option value="true">Sold</option>
+                            <label class="form-label">Active Status</label>
+                            <select name="active_status" id="activeStatus" class="form-select">
+                                <option value="True">Active</option>
+                                <option value="False">Discontinued</option>
                             </select>
                         </div>
                     </div>
@@ -77,18 +77,28 @@
                             <input type="text" name="delivery_location" id="deliveryLocation" class="form-control" placeholder="Warehouse">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Army Command</label>
-                            <input type="text" name="army_command" id="armyCommand" class="form-control" placeholder="Command">
+                            <label class="form-label">Current Location</label>
+                            <input type="text" name="current_location" id="currentLocation" class="form-control" placeholder="Current Location">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
+                            <label class="form-label">Army Command</label>
+                            <input type="text" name="army_command" id="armyCommand" class="form-control" placeholder="Command">
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label">Unit Name</label>
                             <input type="text" name="unit_name" id="unitName" class="form-control" placeholder="Unit-A">
                         </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Formation</label>
                             <input type="text" name="formation" id="formation" class="form-control" placeholder="Squadron">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Remarks</label>
+                            <textarea name="remarks" id="remarks" class="form-control" placeholder="Remarks"></textarea>
                         </div>
                     </div>
                 </div>
@@ -109,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formTitle = document.getElementById('formTitle');
     const submitBtn = document.getElementById('submitBtn');
     const tailNumberField = document.getElementById('tailNumber');
+    // const activeStatus = this.dataset.activeStatus;
     const modalElement = document.getElementById('productFormModal');
     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
@@ -129,27 +140,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // 🔹 Edit Product Handler
     const editButtons = document.querySelectorAll('.edit-btn');
     editButtons.forEach(btn => {
-        btn.addEventListener('click', function () {
+    btn.addEventListener('click', function () {
 
-            const id = this.dataset.id;
+        const id = this.dataset.id;
 
-            formTitle.textContent = 'Edit Product';
-            submitBtn.innerHTML = 'Update Product';
-            productForm.action = `/product/${id}/edit/`;
-            tailNumberField.disabled = true;
+        productForm.action = `/product/${id}/edit/`;
+        tailNumberField.disabled = true;
 
-            document.getElementById('orderName').value = this.dataset.order || '';
-            document.getElementById('deliveryLocation').value = this.dataset.deliveryLocation || '';
-            document.getElementById('armyCommand').value = this.dataset.armyCommand || '';
-            document.getElementById('unitName').value = this.dataset.unitName || '';
-            document.getElementById('tailNumber').value = this.dataset.tailNumber || '';
-            document.getElementById('formation').value = this.dataset.formation || '';
-            document.getElementById('manufactureDate').value = this.dataset.manufacture || '';
-            document.getElementById('productModel').value = this.dataset.model || '';
+        document.getElementById('orderName').value = this.dataset.order || '';
+        document.getElementById('deliveryLocation').value = this.dataset.deliveryLocation || '';
+        document.getElementById('currentLocation').value = this.dataset.currentLocation || '';
+        document.getElementById('armyCommand').value = this.dataset.armyCommand || '';
+        document.getElementById('unitName').value = this.dataset.unitName || '';
+        document.getElementById('tailNumber').value = this.dataset.tailNumber || '';
+        document.getElementById('formation').value = this.dataset.formation || '';
+        document.getElementById('manufactureDate').value = this.dataset.manufacture || '';
+        document.getElementById('remarks').value = this.dataset.remarks || '';
+        document.getElementById('productModel').value = this.dataset.model || '';
 
-            modal.show();
-        });
+        // ✅ FIXED ACTIVE STATUS
+        document.getElementById('activeStatus').value =
+            this.dataset.activeStatus === "True" ? "True" : "False";
+
+        modal.show();
     });
+});
 
     // 🔹 Form Submit Confirmation
     productForm.addEventListener('submit', function (e) {
