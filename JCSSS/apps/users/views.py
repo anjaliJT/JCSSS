@@ -273,8 +273,8 @@ def send_email_otp(request):
     print("OTP SENT:", otp)
 
     send_mail(
-        "Your OTP",
-        f"Your OTP is {otp}",
+        "Email Verification JASS",
+        f"Your OTP is {otp}. It is valid for 5 minutes. For security reasons, do not share this OTP with anyone.",
         settings.DEFAULT_FROM_EMAIL,
         [email],
     )

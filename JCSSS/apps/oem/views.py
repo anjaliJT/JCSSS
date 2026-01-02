@@ -114,6 +114,14 @@ class ComplaintStatusView(View):
                         days_since_repair = (today - repair_status.updated_at).days
                         timing_status = "Late" if days_since_repair > 7 else "On Time"
         # --- end timing logic ---
+        
+        pricing = event.customer_pricing
+        is_approved = (
+            pricing.approved_pay or
+            pricing.approved_pay_later or
+            pricing.approved_through_gem
+        )
+
 
 
         # pass timing_status & timing_stage to template so template can show accurate badge/text
@@ -122,6 +130,8 @@ class ComplaintStatusView(View):
             "cost_form": cost_form,
             "event": event,
             "statuses": statuses,
+            "pricing": pricing,
+            "payment_approved": is_approved,
             "repair_cost": repair_cost,
             "total_repair_cost": total_repair_cost,
             "total_customer_cost": total_customer_cost,
@@ -373,11 +383,16 @@ class CustomerCostView(View):
 
 
 def customer_price_approve_view(request, pk):
+    
+    pricing = get_object_or_404(CustomerPricing, pk=pk)
+
+    if pricing.approved_pay or pricing.approved_pay_later or pricing.approved_through_gem:
+        messages.warning(request, "Price has already been approved.")
+        return redirect('fetch_complaint_status', pk=pricing.event.id)
+    
     if request.method != "POST":
         messages.error(request, "Invalid request method.")
         return redirect('fetch_complaint_status', pk=pk)
-
-    pricing = get_object_or_404(CustomerPricing, pk=pk)
 
     action = request.POST.get("action")
 
