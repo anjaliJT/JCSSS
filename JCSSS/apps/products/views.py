@@ -53,11 +53,10 @@ def create_product_view(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Product created successfully.")
-            return redirect("product_list")
         else:
-            form = productForm()
+            messages.error(request, "Please correct the errors in the form.")
 
-    return redirect('product_list')
+    return redirect("product_list")
 
 
 
@@ -83,9 +82,9 @@ def product_list_view(request):
 
     # Filter by status
     if selected_status == "active":
-        products_qs = products_qs.filter(obsolete=False)
+        products_qs = products_qs.filter(active_status=True)
     elif selected_status == "obsolete":
-        products_qs = products_qs.filter(obsolete=True)
+        products_qs = products_qs.filter(active_status=False)
 
     # Warranty filtering using queryset filters (keeps it as a QuerySet for pagination)
     today = date.today()
@@ -110,37 +109,30 @@ def product_list_view(request):
 def edit_product_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
-    """Edit an existing product; on POST save and render the products page."""
-
     if request.method == "POST":
         model_id = request.POST.get('product_model')
         if model_id:
             product.product_model = get_object_or_404(Product_model, pk=model_id)
 
-        product.order_name = request.POST.get('order_name')
+        product.contract_number = request.POST.get('contract_number')
         product.delivery_location = request.POST.get('delivery_location')
         product.army_command = request.POST.get('army_command')
         product.unit_name = request.POST.get('unit_name')
         product.formation = request.POST.get('formation')
+        product.current_location = request.POST.get('current_location')
+        product.remarks = request.POST.get('remarks')
 
-        manufacture_date_str = request.POST.get('manufecturing_Date')
+        # ✅ ACTIVE STATUS FIX
+        active_status = request.POST.get("active_status")
+        product.active_status = True if active_status == "True" else False
+
+        manufacture_date_str = request.POST.get('delivery_date')
         if manufacture_date_str:
-            product.manufecturing_Date = datetime.strptime(manufacture_date_str, '%Y-%m-%d').date()
+            product.delivery_date = datetime.strptime(
+                manufacture_date_str, '%Y-%m-%d'
+            ).date()
 
         product.save()
-
-        # Load data for the list view
-        # products = Product.objects.all()
-        # models = Product_model.objects.all()
-
-        # return render(request, "products/products_main_page.html", {
-        #     "products": products,
-        #     "models": models,
-        #     "selected_model": None,
-        #     "selected_status": None,
-        #     "selected_warranty": None,
-        # })
-        
         return redirect('product_list')
 
     return render(request, 'products/product_form.html', {
@@ -148,140 +140,164 @@ def edit_product_view(request, pk):
         'product_models': Product_model.objects.all()
     })
 
-
+import re
 @login_required(login_url='login')
-def import_products_view(request): 
-    """Import products from an uploaded CSV or Excel file.
+def import_products_view(request):
 
-    The view reads rows, creates or updates `Product` and `Product_model`
-    instances and reports progress via Django messages.
-    """
+    if request.method != "POST":
+        return redirect("product_list")
 
-    if request.method == "POST": 
-        if "import_file" not in request.FILES:
-            messages.error(request, "⚠️ No file uploaded.")
+    if "import_file" not in request.FILES:
+        messages.error(request, "⚠️ No file uploaded.")
+        return redirect("product_list")
+
+    file = request.FILES["import_file"]
+
+    try:
+        # Read file
+        if file.name.endswith(".csv"):
+            df = pd.read_csv(file, dtype=str)
+        elif file.name.endswith((".xls", ".xlsx")):
+            df = pd.read_excel(file, dtype=str)
+        else:
+            messages.error(request, "Invalid file type.")
             return redirect("product_list")
 
-        file = request.FILES["import_file"]
+        # Normalize column names
+        df.columns = df.columns.str.strip().str.lower()
 
-        try:
-            # Read CSV or Excel with proper handling of whitespace and quoted fields
-            if file.name.endswith(".csv"): 
-                df = pd.read_csv(
-                    file,
-                    dtype=str,  # Read all columns as strings initially
-                    skipinitialspace=True,
-                    on_bad_lines='warn'  # Don't fail on problematic lines
+        required_columns = [
+            "tail_number",
+            "model_name",
+            "contract_number",
+            "active_status",
+            "delivery_date",
+            "delivery_location",
+            "warranty_period",
+            "army_command",
+            "unit_name",
+            "formation",
+        ]
+
+        missing = [col for col in required_columns if col not in df.columns]
+        if missing:
+            messages.error(
+                request,
+                f"Missing required columns: {', '.join(missing)}"
+            )
+            return redirect("product_list")
+
+        for index, row in df.iterrows():
+            try:
+                # ---------- Product Model ----------
+                product_model = None
+                model_name = str(row.get("model_name", "")).strip()
+                if model_name:
+                    product_model, _ = Product_model.objects.get_or_create(
+                        model_name=model_name
+                    )
+
+                # ---------- Active Status ----------
+                active_status = str(row.get("active_status", "")).strip().lower()
+                active_status = active_status in ["true", "yes", "1"]
+
+                # ---------- Delivery Date ----------
+                delivery_date = None
+                if pd.notna(row.get("delivery_date")):
+                    delivery_date = pd.to_datetime(
+                        row["delivery_date"], errors="coerce"
+                    )
+                    if delivery_date is not None:
+                        delivery_date = delivery_date.date()
+
+                # ---------- Warranty ----------
+                warranty_period = 24
+                warranty_raw = str(row.get("warranty_period", ""))
+                numbers = re.findall(r"\d+", warranty_raw)
+                if numbers:
+                    warranty_period = int(numbers[0])
+
+                # ---------- Save / Update ----------
+                Product.objects.update_or_create(
+                    tail_number=str(row["tail_number"]).strip(),
+                    defaults={
+                        "product_model": product_model,
+                        "contract_number": str(row["contract_number"]).strip(),
+                        "active_status": active_status,
+                        "delivery_date": delivery_date,
+                        "delivery_location": str(row["delivery_location"]).strip(),
+                        "warranty_period": warranty_period,
+                        "army_command": str(row["army_command"]).strip(),
+                        "unit_name": str(row["unit_name"]).strip(),
+                        "formation": str(row["formation"]).strip(),
+                    }
                 )
-            elif file.name.endswith((".xls", ".xlsx")):
-                df = pd.read_excel(file, dtype=str)
-            else:
-                messages.error(request, "Invalid file type. Please upload CSV or Excel.")
-                return redirect("product_list")
-            
-            # Clean column names by removing any whitespace
-            df.columns = df.columns.str.strip()
 
-            # Check required columns
-            required_columns = [
-            "tail_number","order_name", "manufecturing_Date", "obsolete",
-                 "delivery_date", "delivery_location", "warranty_period", "army_command", "unit_name", "formation"
-            ]
-            
-            # Convert column names to lowercase for case-insensitive comparison
-            df_columns = [col.lower() for col in df.columns]
-            required_columns_lower = [col.lower() for col in required_columns]
-            
-            missing = [col for col in required_columns if col.lower() not in df_columns]
-            if missing:
+            except Exception as row_error:
                 messages.error(
-                    request, 
-                    f"Missing required columns: {', '.join(missing)}. "
-                    f"Download the correct template below."
+                    request,
+                    f"Row {index + 1} failed: {row_error}"
                 )
-                return redirect("product_list")
+                continue
 
-            # Process rows
-            for _, row in df.iterrows():
-                try:
-                    # Handle date formats with flexible parsing
-                    manufecturing_date = pd.to_datetime(row["manufecturing_Date"]).date() if pd.notna(row["manufecturing_Date"]) else None
-                    delivery_date = (
-                        pd.to_datetime(row["delivery_date"]).date()
-                        if pd.notna(row.get("delivery_date"))
-                        else None
-                    )
-                    obsolete = str(row.get("obsolete", "")).upper().strip() in ["TRUE", "YES", "1"]
+        messages.success(request, "✅ Products imported successfully.")
+        return redirect("product_list")
 
-                    
-                    # Try to get product model from order_name
-                    product_model = None
-                    order_name = str(row.get("order_name", "")).strip()
-                    if order_name:
-                        product_model, _ = Product_model.objects.get_or_create(
-                            model_name=order_name,
-                            defaults={'model_name': order_name}
-                        )
-                    
-                    # Handle warranty period conversion
-                    warranty_str = str(row.get("warranty_period", "24 Months"))
-                    warranty_period = 24  # default value
-                    try:
-                        # Extract the first number from the string
-                        import re
-                        numbers = re.findall(r'\d+', warranty_str)
-                        if numbers:
-                            warranty_period = int(numbers[0])
-                    except ValueError:
-                        pass  # Keep default value if conversion fails
-                    
-                    Product.objects.update_or_create(
-                        tail_number=str(row["product_code"]).strip(),
-                        defaults={
-                            "product_model": product_model,
-                            "order_name": order_name,
-                            "manufecturing_Date": manufecturing_date,
-                            "obsolete": obsolete,
-                            "delivery_date": delivery_date,
-                            "delivery_location": str(row["delivery_location"]).strip(),
-                            "warranty_period": warranty_period,
-                            "army_command": str(row["army_command"]).strip(),
-                            "unit_name": str(row["unit_name"]).strip(),
-                            "formation": str(row["formation"]).strip(),
-                        }
-                    )
-
-                except Exception as e:
-                    messages.error(request, f"Error processing row {row['product_code']}: {str(e)}")
-                    print(f"Error processing row {row['product_code']}: {str(e)}")
-                    continue
-
-            messages.success(request, "Products imported successfully.")
-            return redirect("product_list")
-
-        except Exception as e:
-            messages.error(request, f"Error while processing file: {str(e)}")
-            return redirect("product_list")
-
-    return render(request, "products/product_form.html")
+    except Exception as e:
+        messages.error(request, f"❌ Import failed: {e}")
+        return redirect("product_list")
 
 
+
+from dateutil.relativedelta import relativedelta 
 @login_required(login_url='login')
 def export_products_view(request):
+    import pandas as pd
+    from django.http import HttpResponse
+
     from_date = request.GET.get("from_date")
     to_date = request.GET.get("to_date")
 
-    products = Product.objects.all()
+    products = Product.objects.select_related("product_model").all()
 
     if from_date and to_date:
-        products = products.filter(manufecturing_Date__range=[from_date, to_date])
+        products = products.filter(delivery_date__range=[from_date, to_date])
 
-    df = pd.DataFrame(products.values())
+    # ✅ Build data explicitly (column → value)
+    data = []
+    for p in products:
+        data.append({
+            "Model Name": p.product_model.model_name if p.product_model else "",
+            "Tail Number": p.tail_number,
+            "Contract Number": p.contract_number,
+            "Delivery Date": p.delivery_date,
+            "Delivery Location": p.delivery_location,
+            "Current Location": p.current_location,
+            "Army Command": p.army_command,
+            "Unit Name": p.unit_name,
+            "Formation": p.formation,
+            "Warranty (Months)": p.warranty_period,
+            "Warranty Status": (
+                "Expired" if p.delivery_date and
+                (p.delivery_date + relativedelta(months=p.warranty_period)) < date.today()
+                else "Active"
+            ),
+            "Remarks": p.remarks,
+            "Obsolete": "Yes" if p.active_status else "No",
+        })
 
-    response = HttpResponse(content_type="application/vnd.ms-excel")
+    # ✅ Create DataFrame with clean columns
+    df = pd.DataFrame(data)
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
     response["Content-Disposition"] = 'attachment; filename="products.xlsx"'
+
     df.to_excel(response, index=False)
+
     return response
+
 
 @require_POST
 def delete_product_view(request, pk):

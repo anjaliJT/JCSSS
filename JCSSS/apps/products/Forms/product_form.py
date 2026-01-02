@@ -16,14 +16,23 @@ class productForm(forms.ModelForm):
         fields = [
             "product_model",
             "tail_number",
-            "order_name",
-            "manufecturing_Date",
+            "contract_number",
+            "delivery_date",
             "delivery_location",
+            "current_location",
             "army_command",
+            "active_status",
             "unit_name",
             "formation",
             "warranty_period",
+            "remarks",
         ]
+        widgets = {
+            "active_status": forms.Select(
+                choices=[(True, "Active"), (False, "Discontinued")],
+                attrs={"class": "form-select"}
+            )
+        }
 
 
 class uploadFileForm(forms.Form):

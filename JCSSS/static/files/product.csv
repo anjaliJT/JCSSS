@@ -1,1 +1,1 @@
-id, product_model_id, product_code, order_name, manufecturing_Date, is_sold, sold_date, source_location, warranty_period, army_command, unit_name, formation,
+tail_number,model_name,contract_number,active_status,delivery_date,delivery_location,warranty_period,army_command,unit_name,formation

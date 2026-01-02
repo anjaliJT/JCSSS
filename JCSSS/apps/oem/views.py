@@ -139,34 +139,38 @@ class ComplaintStatusView(View):
 
 @require_POST
 def set_complaint_location_view(request, pk):
-    """
-    Save a RepairLocation (if provided) and trigger a notification email in a background thread.
-    """
     event = get_object_or_404(Event, pk=pk)
     location_value = request.POST.get("location")
     remarks = request.POST.get("remarks", "").strip()
 
-    if location_value:
-        RepairLocation.objects.create(
-            event=event,
-            location=location_value,
-            remarks=remarks
-        )
+    if not location_value:
+        messages.warning(request, "No location provided.")
+        return redirect("fetch_complaint_status", pk=pk)
+
+    repair_location, created = RepairLocation.objects.update_or_create(
+        event=event,
+        defaults={
+            "location": location_value,
+            "remarks": remarks
+        }
+    )
+
+    if created:
         messages.success(request, "Location saved successfully.")
     else:
-        messages.warning(request, "No location provided.")
+        messages.success(request, "Location updated successfully.")
 
-    # Compose email content and choose template_type
-    template_type = "location"  # choose appropriate type for this endpoint
-    title = f"Location Set for complaint {event.unique_token}"
-    body = f"Repair location mode is set to: {location_value or 'N/A'}."
-
-    # launch email send in background
-    send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
-        "location": location_value,
-        "remarks": remarks,
-        "updated_by":request.user.first_name
-    })
+    # send_mail_thread(
+    #     event.id,
+    #     template_type="location",
+    #     title=f"Location Set for complaint {event.unique_token}",
+    #     body=f"Repair location mode is set to: {location_value}.",
+    #     extra_context={
+    #         "location": location_value,
+    #         "remarks": remarks,
+    #         "updated_by": request.user.first_name
+    #     }
+    # )
 
     return redirect("fetch_complaint_status", pk=pk)
 
@@ -196,10 +200,10 @@ def update_location_view(request, pk):
     body = f"Repair location mode is now changed to: {location_value or 'N/A'}\nRemarks: {remarks}"
 
     # launch email send in background
-    send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
-        "location": location_value,
-        "remarks": remarks,
-    })
+    # send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
+    #     "location": location_value,
+    #     "remarks": remarks,
+    # })
     
     return redirect("fetch_complaint_status", pk=event.id)
     
@@ -228,16 +232,16 @@ class UpdateStatusView(View):
             #     diagnosis_by = status_instance.updated_by.first_name
 
             # launch email send in background
-            send_mail_thread(event.id, template_type=template_type, title=title, 
-            body=body, 
-            attachments=attachments,
-            extra_context={
-                "Current Status": status_instance.status,
-                "remarks": status_instance.remarks,
-                # "diagnosis_by":diagnosis_by,
-                "updated_by":request.user.first_name,
-            }
-            )
+            # send_mail_thread(event.id, template_type=template_type, title=title, 
+            # body=body, 
+            # attachments=attachments,
+            # extra_context={
+            #     "Current Status": status_instance.status,
+            #     "remarks": status_instance.remarks,
+            #     # "diagnosis_by":diagnosis_by,
+            #     "updated_by":request.user.first_name,
+            # }
+            # )
     
             return redirect("fetch_complaint_status", pk=pk)
         else:
@@ -297,14 +301,14 @@ class AddRepairCostView(View):
                 attachments = repair.attachment
 
             # Launch email sending in background thread
-            send_mail_thread(
-                event_id=event.pk,
-                template_type=template_type,
-                title=title,
-                body=body,
-                extra_context=None,
-                attachments=attachments,
-            )
+            # send_mail_thread(
+            #     event_id=event.pk,
+            #     template_type=template_type,
+            #     title=title,
+            #     body=body,
+            #     extra_context=None,
+            #     attachments=attachments,
+            # )
             
             
         else:
@@ -351,15 +355,15 @@ class CustomerCostView(View):
                 attachments = customer_price.invoice
 
             # Launch email sending in background thread
-            send_mail_thread(
-                event_id=pk,
-                template_type=template_type,
-                title=title,
-                body=body,
-                extra_context={"price_details": price_details,
-                               "user_name":request.user.first_name},
-                attachments=attachments,
-            )
+            # send_mail_thread(
+            #     event_id=pk,
+            #     template_type=template_type,
+            #     title=title,
+            #     body=body,
+            #     extra_context={"price_details": price_details,
+            #                    "user_name":request.user.first_name},
+            #     attachments=attachments,
+            # )
             
         else:
             messages.error(request, "Error saving customer pricing. Please check the form.")
@@ -380,18 +384,27 @@ def customer_price_approve_view(request, pk):
     if action == "pay_now":
         pricing.approved_pay = True
         pricing.approved_pay_later = False
+        pricing.approved_through_gem = False
         approval_text = "Customer approved the repair cost and will pay immediately."
 
     elif action == "pay_later":
         pricing.approved_pay_later = True
         pricing.approved_pay = False
+        pricing.approved_through_gem = False
         approval_text = "Customer approved the repair cost and opted to pay later."
+    
+    elif action == "gem":
+        pricing.approved_through_gem = True
+        pricing.approved_pay_later = False
+        pricing.approved_pay = False
+        approval_text = "Customer approved the repair cost and opted to pay through GEM."
 
     else:
         messages.error(request, "Invalid approval action.")
         return redirect('fetch_complaint_status', pk=pricing.event.id)
 
     pricing.approved_at = timezone.now()
+    pricing.approved_by = request.user
     pricing.save()
 
     # ---- Email content ----
@@ -403,16 +416,16 @@ def customer_price_approve_view(request, pk):
         f"Complaint ID: {pricing.event.unique_token}"
     )
 
-    send_mail_thread(
-        event_id=pricing.event.id,
-        template_type=template_type,
-        title=title,
-        body=body,
-        extra_context={
-            "action": action,
-            "pay_later": action == "pay_later",
-        },
-    )
+    # send_mail_thread(
+    #     event_id=pricing.event.id,
+    #     template_type=template_type,
+    #     title=title,
+    #     body=body,
+    #     extra_context={
+    #         "action": action,
+    #         "pay_later": action == "pay_later",
+    #     },
+    # )
 
 
     return redirect('fetch_complaint_status', pk=pricing.event.id)

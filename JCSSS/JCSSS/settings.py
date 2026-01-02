@@ -25,9 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wh2+caj(i(t^pclf1%yri&inrbps+(lc8c_^rhnly3e^l3_bz3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','52.66.113.10','support.johnnette.com','www.support.johnnette.com','192.168.1.4']
+# ALLOWED_HOSTS = ['127.0.0.1','52.66.113.10','support.johnnette.com','www.support.johnnette.com','192.168.1.4']
+
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 
 # AWS credentials from environment
@@ -216,9 +219,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'asr.johnnette@gmail.com'  # Your email
-EMAIL_HOST_PASSWORD = 'zfcv obap kcah pjqn'  # Your app password
-DEFAULT_FROM_EMAIL = 'asr.johnnette@gmail.com'
+EMAIL_HOST_USER = 'jims@johnnette.com'  # Your email
+EMAIL_HOST_PASSWORD = 'idso pnqe xsio mstb'  # Your app password
+DEFAULT_FROM_EMAIL = 'jims@johnnette.com'
 
 
 # Celery task

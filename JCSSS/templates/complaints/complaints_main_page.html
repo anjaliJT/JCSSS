@@ -17,7 +17,7 @@
         <div class="col-auto">
             <a class="btn btn-primary"
             href="{% url 'complain_submit' %}">
-            <i class="fas fa-plus-circle me-2"></i>New Complaint
+            <i class="fas fa-plus-circle me-2"></i>Service Request
           </a>
           {% endif %}
           
@@ -34,7 +34,7 @@
                 <!-- Search -->
                 <div class="col-md-4 mb-2">
                   <div class="input-group">
-                    <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search complaints...">
+                    <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search services...">
                     <button class="btn btn-outline-primary" type="submit">
                       <i class="fas fa-search"></i>
                     </button>
@@ -45,12 +45,12 @@
                 <div class="col-md-4 mb-2">
                   <label class="form-label">Status</label>
                   <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
-                    <option value="">All Statuses</option>
-                    <option value="REVIEW" {% if current_filters.status == 'IN REVIEW' %}selected{% endif %}>Review</option>
+                    <option value="">All Status</option>
+                    <option value="IN REVIEW" {% if current_filters.status == 'IN REVIEW' %}selected{% endif %}>Review</option>
                     <option value="ACCEPTED" {% if current_filters.status == 'ACCEPTED' %}selected{% endif %}>Accepted</option>
                     <option value="REJECTED" {% if current_filters.status == 'REJECTED' %}selected{% endif %}>Rejected</option>
-                    <option value="UNDER_PROCESS" {% if current_filters.status == 'UNDER_PROCESS' %}selected{% endif %}>Diagnosis</option>
-                    <option value="COMPLETED" {% if current_filters.status == 'COMPLETED' %}selected{% endif %}>Closed</option>
+                    <option value="DIAGNOSIS" {% if current_filters.status == 'DIAGNOSIS' %}selected{% endif %}>Diagnosis</option>
+                    <option value="CLOSED" {% if current_filters.status == 'CLOSED' %}selected{% endif %}>Closed</option>
                   </select>
                 </div>
 
@@ -268,10 +268,10 @@
                     <tr>
                         <td colspan="7" class="text-center py-5">
                             <i class="fas fa-ticket-alt fa-3x text-muted mb-3 d-block"></i>
-                            <h5 class="text-muted">No complaints found</h5>
-                            <p class="text-muted">You haven't submitted any complaints yet.</p>
+                            <h5 class="text-muted">No service request found</h5>
+                            <p class="text-muted">You haven't submitted any service request yet.</p>
                             <a class="btn btn-primary" href="{% url 'complain_submit' %}">
-                                Submit Your First Complaint
+                                Submit Your First Service Request
                             </a>
                         </td>
                     </tr>

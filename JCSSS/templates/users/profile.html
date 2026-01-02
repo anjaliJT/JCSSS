@@ -23,7 +23,7 @@
                         </div>
                         <div class="text-center text-md-start">
                             <h3 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h3>
-                            <p class="mb-1">{{ user.designation|default:"No Designation" }}</p>
+                            <p class="mb-1">{{ user.designation|default:"No Rank" }}</p>
                             <p class="mb-0"><i class="fas fa-envelope me-2"></i>{{ user.email }}</p>
                             <p class="mb-0"><i class="fas fa-user-tie me-2"></i>{{ user.role }}</p>
                         </div>
@@ -92,7 +92,7 @@
                                 <!-- Designation -->
                                 <div class="info-item">
                                     <div class="info-content">
-                                        <p class="detail-label mb-1">Designation</p>
+                                        <p class="detail-label mb-1">Rank</p>
                                         <div class="inline-edit-container">
                                             <span class="inline-edit-value" id="designationValue">{{ user.designation }}</span>
                                             <input type="text" class="inline-edit-input" id="designationInput" value="{{ user.designation }}">

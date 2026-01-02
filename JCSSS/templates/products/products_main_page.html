@@ -95,15 +95,15 @@
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="2"  id="col2">
-                                <label class="form-check-label" for="col2">Order Name</label>
+                                <label class="form-check-label" for="col2">Contract Number</label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="3" checked id="col3">
-                                <label class="form-check-label" for="col3">Manufacturing Date</label>
+                                <label class="form-check-label" for="col3">Delivery Date</label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
-                                <label class="form-check-label" for="col4">Obsolete Status</label>
+                                <label class="form-check-label" for="col4">Active Status </label>
                             </li>
                             <li class="form-check">
                                 <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
@@ -149,9 +149,9 @@
                                         <tr>
                                             <th>Tail Number</th>
                                             <th>Model</th>
-                                            <th>Order Name</th>
-                                            <th>Manufacturing Date</th>
-                                            <th>Obsolete Status</th>
+                                            <th>Contract Number</th>
+                                            <th>Delivery Date</th>
+                                            <th>Active Status</th>
                                             <th>Warranty Status</th>
                                             <th>Warranty Period (M)</th>
                                             <th>Warranty Expiry</th>
@@ -168,13 +168,13 @@
                                             <!-- <td>{{ product.tail_number }}</td> -->
                                             <td> <a href="{% url 'repair_history' product.id  %}">{{ product.tail_number }}</td> </a>
                                             <td>{{ product.product_model }}</td>
-                                            <td>{{ product.order_name }}</td>
-                                            <td>{{ product.manufecturing_Date|date:"Y-m-d" }}</td>
+                                            <td>{{ product.contract_number }}</td>
+                                            <td>{{ product.delivery_date|date:"Y-m-d" }}</td>
                                             <td>
-                                                {% if product.is_sold %}
-                                                    <span class="badge bg-danger text-white">Sold</span>
+                                                {% if product.active_status %}
+                                                    <span class="badge bg-danger text-white">Yes</span>
                                                 {% else %}
-                                                    <span class="badge bg-success text-white">Available</span>
+                                                    <span class="badge bg-success text-white">No</span>
                                                 {% endif %}
                                             </td>
                                             <td>
@@ -197,15 +197,17 @@
                                                     {% else %}
                                                         data-model=""
                                                     {% endif %}
-                                                    data-order="{{ product.order_name }}"
+                                                    data-order="{{ product.contract_number }}"
                                                     data-delivery-location="{{ product.delivery_location }}"
+                                                    data-current-location="{{ product.current_location }}"
                                                     data-army-command="{{ product.army_command }}"
                                                     data-unit-name="{{ product.unit_name }}"
                                                     data-tail-number="{{ product.tail_number }}"
                                                     data-formation="{{ product.formation }}"
-                                                    data-manufacture="{{ product.manufecturing_Date|date:'Y-m-d' }}"
+                                                    data-manufacture="{{ product.delivery_date|date:'Y-m-d' }}"
+                                                    data-remarks="{{ product.remarks }}"
                                                     data-warranty="{{ product.warranty_period }}"
-                                                    data-is-sold="{% if product.is_sold %}true{% else %}false{% endif %}">
+                                                    data-active-status="{{ product.active_status|yesno:'True,False' }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 {% endif %}
@@ -311,7 +313,7 @@
 
                                     <form method="get" action="{% url 'export_products' %}">
                                         <div class="mt-1">
-                                            <label class="form-label">Manufacturing Date Range (From - To)</label>
+                                            <label class="form-label">Delivery Date Range (From - To)</label>
                                             <input type="date" class="form-control" id="fromDate" name="from_date" max="{{ today }}">
                                         </div>
                                         <div class="mt-1">
@@ -339,16 +341,20 @@
                                     <ul class="small">
                                         <li><code>tail_number</code> (required, unique)</li>
                                         <li><code>product_model</code> (required)</li>
-                                        <li><code>order_name</code> (required)</li>
-                                        <li><code>manufacturing_Date</code> (YYYY-MM-DD)</li>
+                                        <li><code>contract_number</code> (required)</li>
+                                        <li><code>delivery_date</code> (YYYY-MM-DD)</li>
+                                        <li><code>army_command</code></li>
+                                        <li><code>unit_name</code></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-6">
                                     <ul class="small">
-                                        <li><code>is_sold</code> (true/false)</li>
-                                        <li><code>delivery_date</code> (YYYY-MM-DD, optional)</li>
+                                        <li><code>Active Status</code> (true/false)</li>
+                                        <li><code>formation</code></li>
+                                        <li><code>current_location</code></li>
                                         <li><code>devlivery_location</code></li>
                                         <li><code>warranty_period</code> (months)</li>
+                                        <li><code>remarks</code></li>
                                     </ul>
                                 </div>
                             </div>
