@@ -24,7 +24,7 @@ class Command(BaseCommand):
             try:
                 user = User.objects.create_user(
                     email='seed_user@example.com',
-                    password='password',
+                    password='12345',
                     first_name='Seed',
                     last_name='User',
                     phone_number='0000000001',
@@ -60,7 +60,7 @@ class Command(BaseCommand):
             uav_type = random.choice(uav_types)
             # gcs_type = random.choice(gcs_types)
             gcs_number = f'GCS-{random.randint(100,999)}'
-            uav_weight = round(random.uniform(0.5, 20.0), 2)
+            # uav_weight = round(random.uniform(0.5, 20.0), 2)
 
             days_ago = random.randint(1, 365)
             date_of_occurrence = date.today() - timedelta(days=days_ago)
@@ -77,8 +77,8 @@ class Command(BaseCommand):
             remarks = 'Seed data'
             organization = f'Org {random.randint(1,10)}'
 
-            wind = random.choice(['Calm', 'Breezy', 'Windy'])
-            temperature = f"{random.randint(10,35)} C"
+            # wind = random.choice(['Calm', 'Breezy', 'Windy'])
+            # temperature = f"{random.randint(10,35)} C"
             # pressure_qnh = f"{random.randint(950,1050)} hPa"
             turbulence = random.choice([True, False])
             windshear = random.choice([True, False])
@@ -102,7 +102,7 @@ class Command(BaseCommand):
                     uav_type=uav_type,
                     # gcs_type=gcs_type,
                     gcs_number=gcs_number,
-                    uav_weight=uav_weight,
+                    # uav_weight=uav_weight,
                     date_of_occurrence=date_of_occurrence,
                     time_of_occurrence=t,
                     field_site=field_site,
@@ -114,8 +114,8 @@ class Command(BaseCommand):
                     initial_actions_taken=initial_actions_taken,
                     remarks=remarks,
                     organization=organization,
-                    wind=wind,
-                    temperature=temperature,
+                    # wind=wind,
+                    # temperature=temperature,
                     # pressure_qnh=pressure_qnh,
                     turbulence=turbulence,
                     windshear=windshear,

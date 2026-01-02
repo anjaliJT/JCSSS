@@ -154,20 +154,20 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     tail_number=tail_number,
                     gcs_number=request.POST.get("gcs_number"),
                     logbook_entry=request.POST.get("logbook-entry"),
-                    uav_weight=to_float(request.POST.get("uav_weight")),
+                    # uav_weight=to_float(request.POST.get("uav_weight")),
                     event_description=request.POST.get("event_description"),
                     initial_actions_taken=request.POST.get("initial_actions_taken"),
                     remarks=request.POST.get("remarks"),
                     organization=request.POST.get("organization"),
-                    visibility = to_float(request.POST.get("visibility")),
+                    # visibility = to_float(request.POST.get("visibility")),
 
                     # if visibility == "":
                     #     visibility = None
 
 
                     # Meteorology
-                    wind=request.POST.get("wind"),
-                    temperature=request.POST.get("temperature"),
+                    # wind=request.POST.get("wind"),
+                    # temperature=request.POST.get("temperature"),
                     turbulence=bool(request.POST.get("turbulence")),
                     windshear=bool(request.POST.get("windshear")),
                     rain=bool(request.POST.get("rain")),
@@ -194,13 +194,13 @@ class ComplaintRegister(LoginRequiredMixin,View):
 
                 messages.success(request, "Complaint submitted successfully!")
 
-                send_mail_thread(
-                    event.id,
-                    template_type="complaint",
-                    title=f"New complaint {event.unique_token}",
-                    body="A new complaint request has been received.",
-                    extra_context={"complaint": event}
-                )
+                # send_mail_thread(
+                #     event.id,
+                #     template_type="complaint",
+                #     title=f"New complaint {event.unique_token}",
+                #     body="A new complaint request has been received.",
+                #     extra_context={"complaint": event}
+                # )
 
                 return redirect("complaint_list")
 
@@ -278,7 +278,7 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 event.organization = request.POST.get("organization", event.organization)
                 event.tail_number = request.POST.get("tail_number", event.tail_number)
                 event.uav_type = request.POST.get("uav_type", event.uav_type)
-                event.visibility = request.POST.get("visibility", event.visibility)
+                # event.visibility = request.POST.get("visibility", event.visibility)
                 event.date_of_occurrence = request.POST.get("date_of_occurrence", event.date_of_occurrence)
                 event.time_of_occurrence = request.POST.get("time_of_occurrence", event.time_of_occurrence)
                 # event.gcs_type = request.POST.get("gcs_type", event.gcs_type)
@@ -290,13 +290,13 @@ class ComplaintEditView(LoginRequiredMixin,View):
     
 
                 # ---------- Numeric fields ----------
-                uav_weight = request.POST.get("uav_weight")
-                if uav_weight:
-                    try:
-                        event.uav_weight = float(uav_weight)
-                    except ValueError:
-                        # ignore and keep old value (or set to 0.0 if you prefer)
-                        pass
+                # uav_weight = request.POST.get("uav_weight")
+                # if uav_weight:
+                #     try:
+                #         event.uav_weight = float(uav_weight)
+                #     except ValueError:
+                #         # ignore and keep old value (or set to 0.0 if you prefer)
+                #         pass
 
                 # ---------- Meteorology booleans (checkboxes) ----------
                 # Checkbox presence in POST means checked

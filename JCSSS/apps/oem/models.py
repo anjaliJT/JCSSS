@@ -68,7 +68,7 @@ class ComplaintStatus(models.Model):
     ]
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="complaint_statuses")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="In REVIEW")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="IN REVIEW")
     remarks = models.TextField(blank=True, null=True)
     attachments = models.FileField(upload_to="attachments/", blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)
@@ -96,7 +96,9 @@ class CustomerPricing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     approved_pay = models.BooleanField(default=False)
     approved_pay_later = models.BooleanField(default=False)
+    approved_through_gem = models.BooleanField(default=False)
     approved_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, blank= True, null= True)
 
     def __str__(self):
         return f"Customer Price for {self.event}: ₹{self.total_price}"

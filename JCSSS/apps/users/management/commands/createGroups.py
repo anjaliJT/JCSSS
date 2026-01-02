@@ -16,6 +16,7 @@ class Command(BaseCommand):
             "view_event",
             "delete_event",
             "view_complaintstatus",  # "status view"
+            "change_customerpricing",  # "status view"
         ],
         "Inventory": [
             "add_repaircost",
@@ -29,6 +30,13 @@ class Command(BaseCommand):
         "Accounts": [
             "add_customerpricing",
             "view_complaintstatus",
+        ],
+        # ✅ VIEW-ONLY GROUP
+        "ViewOnly": [
+            "view_event",
+            "view_complaintstatus",
+            "view_customerpricing",
+            "view_repaircost",
         ],
     }
 

@@ -52,7 +52,7 @@
 </div>
 
 <!-- Progress Steps -->
-<div class="card mb-4 sticky-top" style="z-index: 1000; top:65px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+<div class="card mb-4 sticky-top sticky-main" style="z-index: 1000; top:65px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
     <div class="card-body card-control">
         <div class="d-flex justify-content-between position-relative">
             <div class="progress position-absolute" style="width: 100%; height: 2px; top: 50%; transform: translateY(-50%); z-index: 0;">
@@ -129,10 +129,10 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="designation" class="form-label required">Designation</label>
+                        <label for="designation" class="form-label required">Rank</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
-                            <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter your designation"  value="{{ event.designation|default:'' }}" {% if is_readonly %}disabled{% endif %} required>
+                            <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter your Rank"  value="{{ event.designation|default:'' }}" {% if is_readonly %}disabled{% endif %} required>
                         </div>
                     </div>
                 </div>
@@ -275,7 +275,7 @@
 
                 </div>
 
-                <div class="row mb-3">
+                {% comment %} <div class="row mb-3">
                     <div class="col-md-3">
                         <label for="uavWeight" class="form-label">UAV Weight (kg)</label>
                         <div class="input-group">
@@ -284,7 +284,6 @@
                         </div>
                     </div>
 
-                    <!-- Weather Parameters -->
                     <div class="col-md-3">
                         <label for="wind" class="form-label">Wind Speed (knots)</label>
                         <div class="input-group">
@@ -306,7 +305,7 @@
                             <input type="number" class="form-control" id="visibility" name="visibility" placeholder="Enter QNH" step="0.01" min="0" value="{{ event.visibility|default:'0' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
 
@@ -387,18 +386,61 @@
             </div>
             <div class="card-body">
                 <div class="mb-4">
-                    <label class="form-label">Event Description</label>
-                    <textarea class="form-control" name="event_description" rows="3" placeholder="Provide a detailed description of what occurred (e.g., The bird crashed during launch. It reached a height of 10–15 meters before losing stability and stalling to the right.)" {% if is_readonly %}disabled{% endif %}>{{ event.event_description|default:'' }}</textarea>
+                    <label class="form-label">
+                        Event Description
+                        <small class="text-muted ms-1">
+                            (<span id="eventDescCount">0</span>/150)
+                        </small>
+                    </label>
+
+                    <textarea
+                        class="form-control char-count"
+                        data-counter="eventDescCount"
+                        name="event_description"
+                        rows="3"
+                        maxlength="150"
+                        placeholder="Provide a detailed description of what occurred..."
+                        {% if is_readonly %}disabled{% endif %}
+                    >{{ event.event_description|default:'' }}</textarea>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Initial Actions Taken</label>
-                    <textarea class="form-control" name="initial_actions_taken" rows="3" placeholder="Describe the immediate actions taken after the incident (e.g., The bird was recovered and damaged parts were assesed.)" {% if is_readonly %}disabled{% endif %}>{{ event.initial_actions_taken|default:'' }}</textarea>
+                    <label class="form-label">
+                        Initial Actions Taken
+                        <small class="text-muted ms-1">
+                            (<span id="initialDescCount">0</span>/150)
+                        </small>
+                    </label>
+
+                    <textarea
+                        class="form-control char-count"
+                        data-counter="initialDescCount"
+                        name="initial_actions_taken"
+                        rows="3"
+                        maxlength="150"
+                        placeholder="Describe the immediate actions taken after the incident..."
+                        {% if is_readonly %}disabled{% endif %}
+                        >{{ event.initial_actions_taken|default:'' }}
+                    </textarea>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Remarks</label>
-                    <textarea class="form-control" name="remarks" rows="2" placeholder="Any additional comments or observations..." {% if is_readonly %}disabled{% endif %}>{{ event.remarks|default:'' }}</textarea>
+                    <label class="form-label">
+                        Remarks
+                        <small class="text-muted ms-1">
+                            (<span id="remarksDescCount">0</span>/150)
+                        </small>
+                    </label>
+
+                    <textarea
+                        class="form-control char-count"
+                        data-counter="remarksDescCount"
+                        name="remarks"
+                        rows="2"
+                        maxlength="150"
+                        placeholder="Any additional comments or observations..."
+                        {% if is_readonly %}disabled{% endif %}
+                    >{{ event.remarks|default:'' }}</textarea>
                 </div>
 
                 <div class="mb-3">
@@ -527,22 +569,84 @@
                     
 
         <!-- Submit Button -->
-        <div class="card mb-4">
+        <div class="card mb-4 card-submit-button">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
+
                     <!-- Trigger button -->
                     <!-- <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#submitReportModal">
                         <i class="fas fa-save me-2"></i> Submit Report
                     </button> -->
 
-                    <button type="submit" class="btn btn-primary" {% if is_readonly %}disabled{% endif %}>
-                        <i class="fas fa-paper-plane me-2" ></i>{% if is_valid %}Update Changes {% else %}Submit Complaint{% endif %}
+                    <button 
+                        type="submit"
+                        id="submitBtn"
+                        class="btn btn-primary"
+                        {% if is_valid %}disabled{% endif %}
+                        {% if is_readonly %}disabled{% endif %}>
+                        <i class="fas fa-paper-plane me-2"></i>
+                        {% if is_valid %}Update Changes{% else %}Submit Request{% endif %}
                     </button>
+                    {% if is_readonly %}
+                        <button 
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="downloadPDF()">
+                            <i class="fas fa-file-pdf me-2"></i>
+                            Download PDF
+                        </button>
+                    {% endif %}
+
+                <script>
+                function downloadPDF() {
+                    const originalTitle = document.title;
+                    document.title = "Complaint_{{ event.unique_token }}";
+
+                    window.print();
+
+                    document.title = originalTitle;
+                }
+                </script>
+
+                <style>
+                    @media print {
+                        /* Hide buttons & navbar */
+                        button, .btn, nav {
+                            display: none !important;
+                        }
+                        .sticky-main{
+                            display: none !important;
+                        }
+
+                        /* Remove shadows & cards */
+                        .card {
+                            border: 1px solid #000;
+                            box-shadow: none;
+                            /* page-break-inside: avoid; */
+                        }
+
+                        /* Force page breaks between sections */
+                        /* .card {
+                            page-break-after: always;
+                        } */
+
+                        body {
+                            font-size: 12px;
+                            color: #000;
+                        }
+                        #fileUploads, .card-submit-button{
+                            display:none;
+                        }
+                    }
+                </style>
+
                 </div>
             </div>
         </div>
     </form>
 </div>
+
+
 
 
 
@@ -634,6 +738,32 @@ document.addEventListener("DOMContentLoaded", function () {
             tailInput.value = "";
         }
     });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".char-count").forEach(textarea => {
+        const counterId = textarea.dataset.counter;
+        const counter = document.getElementById(counterId);
+
+        if (!counter) return;
+
+        const maxLength = textarea.maxLength;
+
+        function updateCounter() {
+            const length = textarea.value.length;
+            counter.textContent = length;
+            counter.classList.toggle("text-danger", length >= maxLength);
+        }
+
+        // Initial count (edit/view mode)
+        updateCounter();
+
+        textarea.addEventListener("input", updateCounter);
+    });
+
 });
 </script>
 
