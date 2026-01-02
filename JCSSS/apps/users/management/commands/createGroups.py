@@ -37,6 +37,8 @@ class Command(BaseCommand):
             "view_complaintstatus",
             "view_customerpricing",
             "view_repaircost",
+            "view_customuser",
+            "view_product",
         ],
     }
 
