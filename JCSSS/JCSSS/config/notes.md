@@ -14,3 +14,6 @@ gunicorn JCSSS.wsgi:application
 ✔ Easy debugging
 ✔ Future staging ready
 ✔ Professional-grade Django structure
+
+python manage.py products --file jf2-1.csv
+python manage.py products --file jm-1.csv
