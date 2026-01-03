@@ -235,40 +235,69 @@
                             </table>
                         </div>
 
-                        <!-- Pagination -->
                         {% if products.has_other_pages %}
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <span class="text-muted">
-                                            Page {{ products.number }} of {{ products.paginator.num_pages }}
-                                        </span>
-                                        <nav>
-                                            <ul class="pagination mb-0">
-                                                {% if products.has_previous %}
-                                                <li class="page-item">
-                                                    <a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.show_all %}&show_all=1{% endif %}">&laquo;</a>
-                                                </li>
-                                                {% else %}
-                                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-                                                {% endif %}
+                            <div class="d-flex justify-content-between align-items-center mt-3">
 
-                                                {% for num in products.paginator.page_range %}
-                                                    <li class="page-item {% if products.number == num %}active{% endif %}">
-                                                        <a class="page-link" href="?page={{ num }}{% if request.GET.show_all %}&show_all=1{% endif %}">{{ num }}</a>
-                                                    </li>
-                                                {% endfor %}
+                            <span class="text-muted">
+                                Page {{ products.number }} of {{ products.paginator.num_pages }}
+                            </span>
 
-                                                {% if products.has_next %}
-                                                <li class="page-item">
-                                                    <a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.show_all %}&show_all=1{% endif %}">&raquo;</a>
-                                                </li>
-                                                {% else %}
-                                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-                                                {% endif %}
-                                            </ul>
-                                        </nav>
-                        </div>
+                            <nav>
+                                <ul class="pagination mb-0">
+
+                                {# ---- First & Previous ---- #}
+                                {% if products.has_previous %}
+                                    <li class="page-item">
+                                    <a class="page-link" href="?page=1">First</a>
+                                    </li>
+                                    <li class="page-item">
+                                    <a class="page-link" href="?page={{ products.previous_page_number }}">&laquo;</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><span class="page-link">First</span></li>
+                                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                                {% endif %}
+
+                                {# ---- Page numbers with ellipsis ---- #}
+                                {% for num in products.paginator.page_range %}
+
+                                    {% if num == 1 or num == products.paginator.num_pages %}
+                                    <li class="page-item {% if products.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+
+                                    {% elif num >= products.number|add:"-1" and num <= products.number|add:"1" %}
+                                    <li class="page-item {% if products.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+
+                                    {% elif num == products.number|add:"-2" or num == products.number|add:"2" %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">…</span>
+                                    </li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {# ---- Next & Last ---- #}
+                                {% if products.has_next %}
+                                    <li class="page-item">
+                                    <a class="page-link" href="?page={{ products.next_page_number }}">&raquo;</a>
+                                    </li>
+                                    <li class="page-item">
+                                    <a class="page-link" href="?page={{ products.paginator.num_pages }}">Last</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                                    <li class="page-item disabled"><span class="page-link">Last</span></li>
+                                {% endif %}
+
+                                </ul>
+                            </nav>
+
+                            </div>
                         {% endif %}
-                        </div>
+                    </div>
             </div>
             </div>
     </div>
@@ -376,6 +405,13 @@
         </div>
     </div>
 
+    <style>
+    @media (max-width: 566px) {
+        .page-link {
+    padding: .25rem .35rem;
+}
+    }
+    </style>
     <!-- Include Edit Product Form -->
     {% include "products/product_form.html" %}
 

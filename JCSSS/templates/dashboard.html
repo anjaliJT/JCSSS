@@ -24,7 +24,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title text-muted">Total Complaints</h6>
+                        <h6 class="card-title text-muted">Total Services</h6>
                             <h3 class="fw-bold">{{ user_data.complain.total_count }}</h3>
                             <p class="card-text text-success small"><i class="fas fa-arrow-down me-1"></i>{{ user_data.complain.resolved_this_week_count }} resolved this week</p>
                     </div>
@@ -115,9 +115,9 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-title text-muted">Active Complaints</h6>
+                        <h6 class="card-title text-muted">Active Services</h6>
                         <h3 class="fw-bold">{{ full_data.complain.open_status_count }}</h3>
-                        <p class="card-text text-success small"><i class="fas fa-arrow-up me-1"></i>{{ full_data.complain.open_status_count }} total number of active complaints</p>
+                        <p class="card-text text-success small"><i class="fas fa-arrow-up me-1"></i>{{ full_data.complain.open_status_count }} total number of active services</p>
                     </div>
                     <div class="bg-info p-3 rounded">
                         <i class="fas fa-exclamation-circle fa-2x text-white"></i>
@@ -145,7 +145,7 @@
                             {% include "uav_card.html" %}
                         {% empty %}
                             <div class="col-12 text-center py-5">
-                                <h5>No complaints found.</h5>
+                                <h5>No Service request found.</h5>
                                 <p class="text-muted">You don't have any records yet.</p>
                             </div>
                         {% endfor %}
@@ -155,9 +155,9 @@
                             {% include "uav_card.html" %}
                         {% empty %}
                             <div class="col-12 text-center py-5">
-                                <h5 class="text-danger">No complaints found.</h5>
+                                <h5 class="text-danger">No Service request found.</h5>
                                 <p class="text-success">Everything looks good!  
-                                    If you ever face an issue, feel free to raise a complaint anytime.</p>
+                                    If you ever face an issue, feel free to raise a service request anytime.</p>
                             </div>
                         {% endfor %}
                     {% endif %}
