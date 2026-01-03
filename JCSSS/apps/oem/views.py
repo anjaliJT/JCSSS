@@ -115,13 +115,13 @@ class ComplaintStatusView(View):
                         timing_status = "Late" if days_since_repair > 7 else "On Time"
         # --- end timing logic ---
         
-        pricing = event.customer_pricing
+        pricing = getattr(event, "customer_pricing", None)
+
         is_approved = (
             pricing.approved_pay or
             pricing.approved_pay_later or
             pricing.approved_through_gem
-        )
-
+        ) if pricing else False
 
 
         # pass timing_status & timing_stage to template so template can show accurate badge/text
@@ -131,7 +131,6 @@ class ComplaintStatusView(View):
             "event": event,
             "statuses": statuses,
             "pricing": pricing,
-            "payment_approved": is_approved,
             "repair_cost": repair_cost,
             "total_repair_cost": total_repair_cost,
             "total_customer_cost": total_customer_cost,

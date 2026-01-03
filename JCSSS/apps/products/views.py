@@ -94,7 +94,7 @@ def product_list_view(request):
         products_qs = [p for p in products_qs if p.warranty_expiry_date < today]
     # Pagination: 10 items per page (adjustable)
     page_number = request.GET.get('page', 1)
-    paginator = Paginator(products_qs, 10)
+    paginator = Paginator(products_qs, 15)
     products_page = paginator.get_page(page_number)
 
     return render(request, "products/products_main_page.html", {
