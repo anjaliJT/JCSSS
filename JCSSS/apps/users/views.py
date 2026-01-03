@@ -27,7 +27,12 @@ from apps.stats.core import compute_all_metrics, compute_complain
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.models import Permission
-
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -118,7 +123,8 @@ def send_otp(request):
                 email_message = EmailMultiAlternatives(
                     subject,
                     text_content,
-                    "asr@johnnette.com",
+                    # "jims@johnnette.com",
+                    settings.DEFAULT_FROM_EMAIL,
                     [email]
                 )
                 email_message.attach_alternative(html_content, "text/html")
@@ -205,7 +211,7 @@ def verify_otp(request):
 #         messages.error(self.request, "⚠️ There was an error creating your account. Please check the form.")
 #         return super().form_invalid(form)
 
-from django.views.generic import CreateView
+
 
 class SignupView(CreateView):
     model = CustomUser
@@ -214,24 +220,14 @@ class SignupView(CreateView):
     success_url = reverse_lazy("login")
 
     def get_form_kwargs(self):
-        """
-        Inject the request into the form so that
-        the form can access session (OTP verification).
-        """
         kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
     def form_valid(self, form):
-        """
-        This is called ONLY if:
-        - all form fields are valid
-        - password validators pass
-        - OTP validation in form.clean() passes
-        """
         response = super().form_valid(form)
 
-        # Cleanup OTP session after successful signup
+        # Cleanup OTP session
         self.request.session.pop("email_verified", None)
         self.request.session.pop("email_otp", None)
 
@@ -243,21 +239,26 @@ class SignupView(CreateView):
 
     def form_invalid(self, form):
         """
-        Explicitly render the same page with form errors.
-        (CreateView already does this, but we keep it explicit
-        for clarity and debugging.)
+        Push ALL form errors (including password similarity)
+        into Django messages framework.
         """
+        for field, errors in form.errors.items():
+            for error in errors:
+                if field == "__all__":
+                    messages.error(self.request, error)
+                else:
+                    messages.error(
+                        self.request,
+                        f"{field.replace('_', ' ').title()}: {error}"
+                    )
+
         return self.render_to_response(
             self.get_context_data(form=form)
         )
 
 
 
-import random
-from django.http import JsonResponse
-from django.core.mail import send_mail
-from django.views.decorators.http import require_POST
-from django.conf import settings
+
 
 
 @require_POST
