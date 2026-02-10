@@ -169,17 +169,17 @@ def set_complaint_location_view(request, pk):
     else:
         messages.success(request, "Location updated successfully.")
 
-    # send_mail_thread(
-    #     event.id,
-    #     template_type="location",
-    #     title=f"Location Set for complaint {event.unique_token}",
-    #     body=f"Repair location mode is set to: {location_value}.",
-    #     extra_context={
-    #         "location": location_value,
-    #         "remarks": remarks,
-    #         "updated_by": request.user.first_name
-    #     }
-    # )
+    send_mail_thread(
+        event.id,
+        template_type="location",
+        title=f"Location Set for complaint {event.unique_token}",
+        body=f"Repair location mode is set to: {location_value}.",
+        extra_context={
+            "location": location_value,
+            "remarks": remarks,
+            "updated_by": request.user.first_name
+        }
+    )
 
     return redirect("fetch_complaint_status", pk=pk)
 
@@ -209,10 +209,10 @@ def update_location_view(request, pk):
     body = f"Repair location mode is now changed to: {location_value or 'N/A'}\nRemarks: {remarks}"
 
     # launch email send in background
-    # send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
-    #     "location": location_value,
-    #     "remarks": remarks,
-    # })
+    send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
+        "location": location_value,
+        "remarks": remarks,
+    })
     
     return redirect("fetch_complaint_status", pk=event.id)
     
@@ -241,16 +241,16 @@ class UpdateStatusView(View):
             #     diagnosis_by = status_instance.updated_by.first_name
 
             # launch email send in background
-            # send_mail_thread(event.id, template_type=template_type, title=title, 
-            # body=body, 
-            # attachments=attachments,
-            # extra_context={
-            #     "Current Status": status_instance.status,
-            #     "remarks": status_instance.remarks,
-            #     # "diagnosis_by":diagnosis_by,
-            #     "updated_by":request.user.first_name,
-            # }
-            # )
+            send_mail_thread(event.id, template_type=template_type, title=title, 
+            body=body, 
+            attachments=attachments,
+            extra_context={
+                "Current Status": status_instance.status,
+                "remarks": status_instance.remarks,
+                # "diagnosis_by":diagnosis_by,
+                "updated_by":request.user.first_name,
+            }
+            )
     
             return redirect("fetch_complaint_status", pk=pk)
         else:
@@ -310,14 +310,14 @@ class AddRepairCostView(View):
                 attachments = repair.attachment
 
             # Launch email sending in background thread
-            # send_mail_thread(
-            #     event_id=event.pk,
-            #     template_type=template_type,
-            #     title=title,
-            #     body=body,
-            #     extra_context=None,
-            #     attachments=attachments,
-            # )
+            send_mail_thread(
+                event_id=event.pk,
+                template_type=template_type,
+                title=title,
+                body=body,
+                extra_context=None,
+                attachments=attachments,
+            )
             
             
         else:
@@ -364,15 +364,15 @@ class CustomerCostView(View):
                 attachments = customer_price.invoice
 
             # Launch email sending in background thread
-            # send_mail_thread(
-            #     event_id=pk,
-            #     template_type=template_type,
-            #     title=title,
-            #     body=body,
-            #     extra_context={"price_details": price_details,
-            #                    "user_name":request.user.first_name},
-            #     attachments=attachments,
-            # )
+            send_mail_thread(
+                event_id=pk,
+                template_type=template_type,
+                title=title,
+                body=body,
+                extra_context={"price_details": price_details,
+                               "user_name":request.user.first_name},
+                attachments=attachments,
+            )
             
         else:
             messages.error(request, "Error saving customer pricing. Please check the form.")
@@ -430,16 +430,16 @@ def customer_price_approve_view(request, pk):
         f"Complaint ID: {pricing.event.unique_token}"
     )
 
-    # send_mail_thread(
-    #     event_id=pricing.event.id,
-    #     template_type=template_type,
-    #     title=title,
-    #     body=body,
-    #     extra_context={
-    #         "action": action,
-    #         "pay_later": action == "pay_later",
-    #     },
-    # )
+    send_mail_thread(
+        event_id=pricing.event.id,
+        template_type=template_type,
+        title=title,
+        body=body,
+        extra_context={
+            "action": action,
+            "pay_later": action == "pay_later",
+        },
+    )
 
 
     return redirect('fetch_complaint_status', pk=pricing.event.id)

@@ -33,7 +33,7 @@ from django.views.generic import CreateView
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.conf import settings
-
+from django.contrib.auth.models import Group
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -196,23 +196,6 @@ def verify_otp(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-# class SignupView(CreateView):
-#     model = CustomUser
-#     form_class = CustomUserSignupForm
-#     template_name = "auth/signup.html"
-#     success_url = reverse_lazy("login")  # redirect after successful signup
-
-#     def form_valid(self, form):
-#         user = form.save()
-#         messages.success(self.request, "✅ Account created successfully. Please log in.")
-#         return super().form_valid(form)
-
-#     def form_invalid(self, form):
-#         messages.error(self.request, "⚠️ There was an error creating your account. Please check the form.")
-#         return super().form_invalid(form)
-
-
-
 class SignupView(CreateView):
     model = CustomUser
     form_class = CustomUserSignupForm
@@ -227,6 +210,15 @@ class SignupView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
 
+        # Get created user
+        user = self.object
+
+        # Assign Customer group
+        customer_group, created = Group.objects.get_or_create(
+            name="Customer"
+        )
+        user.groups.add(customer_group)
+
         # Cleanup OTP session
         self.request.session.pop("email_verified", None)
         self.request.session.pop("email_otp", None)
@@ -235,7 +227,9 @@ class SignupView(CreateView):
             self.request,
             "✅ Account created successfully. Please log in."
         )
+
         return response
+
 
     def form_invalid(self, form):
         """

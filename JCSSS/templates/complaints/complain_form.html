@@ -328,7 +328,7 @@
                                     name="rain"
                                     {% if event.rain %}checked{% endif %}
                                     {% if is_readonly %}disabled{% endif %}>
-                                <label class="form-check-label" for="rain">Rain</label>
+                                <label class="form-check-label" for="rain"><i class="fas fa-cloud-rain me-2"></i>Rain</label>
                             </div>
 
                             <div class="form-check">
@@ -419,9 +419,8 @@
                         rows="3"
                         maxlength="150"
                         placeholder="Describe the immediate actions taken after the incident..."
-                        {% if is_readonly %}disabled{% endif %}
-                        >{{ event.initial_actions_taken|default:'' }}
-                    </textarea>
+                        {% if is_readonly %}disabled{% endif %}>{{ event.initial_actions_taken|default:'' }}</textarea>
+
                 </div>
 
                 <div class="mb-4">

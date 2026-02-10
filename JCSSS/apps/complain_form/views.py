@@ -194,13 +194,13 @@ class ComplaintRegister(LoginRequiredMixin,View):
 
                 messages.success(request, "Complaint submitted successfully!")
 
-                # send_mail_thread(
-                #     event.id,
-                #     template_type="complaint",
-                #     title=f"New complaint {event.unique_token}",
-                #     body="A new complaint request has been received.",
-                #     extra_context={"complaint": event}
-                # )
+                send_mail_thread(
+                    event.id,
+                    template_type="complaint",
+                    title=f"New complaint {event.unique_token}",
+                    body="A new complaint request has been received.",
+                    extra_context={"complaint": event}
+                )
 
                 return redirect("complaint_list")
 
