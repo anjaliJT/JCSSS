@@ -172,7 +172,7 @@ def set_complaint_location_view(request, pk):
     send_mail_thread(
         event.id,
         template_type="location",
-        title=f"Location Set for complaint {event.unique_token}",
+        title=f"Location Set for Service {event.unique_token}",
         body=f"Repair location mode is set to: {location_value}.",
         extra_context={
             "location": location_value,
@@ -205,7 +205,7 @@ def update_location_view(request, pk):
     # print(location_value)
     messages.success(request, "Repair location updated.")
     template_type = "location"  # choose appropriate type for this endpoint
-    title = f"Location Updated for complaint {event.unique_token}"
+    title = f"Location Updated for Service {event.unique_token}"
     body = f"Repair location mode is now changed to: {location_value or 'N/A'}\nRemarks: {remarks}"
 
     # launch email send in background
@@ -226,11 +226,11 @@ class UpdateStatusView(View):
             status_instance.event = event
             status_instance.updated_by = request.user   # ✅ FIX
             status_instance.save()
-            messages.success(request, "Complaint status updated successfully.")
+            messages.success(request, "Service status updated successfully.")
             # ✅ Redirect to Status view
             
             template_type = "status"  # choose appropriate type for this endpoint
-            title = f"Status Updated for complaint {event.unique_token}"
+            title = f"Status Updated for Service {event.unique_token}"
             body = f"Model number {event.serial_number} status has been updated to { status_instance.status }."
             attachments = None
             if status_instance.attachments:
@@ -301,7 +301,7 @@ class AddRepairCostView(View):
             total_str = f"₹{total:,.2f}"
 
             template_type = "approval"
-            title = f"Repair Cost Added {event.unique_token}"
+            title = f"Repair Cost Added for Service {event.unique_token}"
             body = f"New repair cost is added: {new_cost_str}. Total repair cost for this product is {total_str}."
 
             # Attach invoice file if present — pass FileField (your helper expects this)
@@ -351,7 +351,7 @@ class CustomerCostView(View):
             messages.success(request, "Customer pricing saved successfully.")
             
             template_type = "customer_price"
-            title = f"Invoice for Complaint {event.unique_token}"
+            title = f"Invoice for Service {event.unique_token}"
             body = f"Total cost in repairing is: ₹{customer_price.total_price}"
 
             # price_details to render inside template
@@ -427,7 +427,7 @@ def customer_price_approve_view(request, pk):
     body = (
         f"{approval_text}\n\n"
         f"Approved Amount: ₹{pricing.total_price}\n"
-        f"Complaint ID: {pricing.event.unique_token}"
+        f"Service ID: {pricing.event.unique_token}"
     )
 
     send_mail_thread(
