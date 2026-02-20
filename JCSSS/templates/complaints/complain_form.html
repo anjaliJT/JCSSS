@@ -726,40 +726,57 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+    const uavSelect = document.getElementById("uavSelect");
     const serialInput = document.getElementById("modelNumber");
     const tailInput = document.getElementById("tailNumber");
 
-    if (!serialInput) return;
+    // Auto-fill serial prefix when UAV type changes
+    if (uavSelect && serialInput) {
+        uavSelect.addEventListener("change", function () {
+            const selectedType = uavSelect.value;
 
-    serialInput.addEventListener("blur", function () {
-
-        let value = serialInput.value;
-
-        if (!value) return;
-
-        // Convert to uppercase
-        value = value.toUpperCase().trim();
-
-        // Remove spaces and special characters
-        value = value.replace(/[^A-Z0-9]/g, "");
-
-        // Match: 2 letters + 1 digit + remaining digits
-        const match = value.match(/^([A-Z]{2})(\d)([A-Z0-9]+)$/);
-
-        if (match) {
-            const formatted = match[1] + "-" + match[2] + "(" + match[3] + ")";
-
-            // Set formatted serial number
-            serialInput.value = formatted;
-
-            // Fill tail number if exists
-            if (tailInput) {
-                tailInput.value = formatted;
+            if (!selectedType) {
+                serialInput.value = "";
+                return;
             }
-        }
-    });
+
+            // Always update prefix
+            serialInput.value = selectedType;
+
+            // Also clear tail number
+            if (tailInput) {
+                tailInput.value = "";
+            }
+
+            serialInput.focus();
+        });
+    }
+
+    // formatting logic
+    if (serialInput) {
+        serialInput.addEventListener("blur", function () {
+
+            let value = serialInput.value;
+            if (!value) return;
+
+            value = value.toUpperCase().trim();
+            value = value.replace(/[^A-Z0-9]/g, "");
+
+            const match = value.match(/^([A-Z]{2})(\d)([A-Z0-9]+)$/);
+
+            if (match) {
+                const formatted = match[1] + "-" + match[2] + "(" + match[3] + ")";
+                serialInput.value = formatted;
+
+                if (tailInput) {
+                    tailInput.value = formatted;
+                }
+            }
+        });
+    }
 });
 </script>
+
 
 
 <script>

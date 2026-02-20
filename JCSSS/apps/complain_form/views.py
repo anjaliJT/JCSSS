@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Event
 from apps.oem.models import  ComplaintStatus
 from apps.complain_form.utils import send_mail_thread
+from apps.products.models import Product
 from django.db.models import Subquery, OuterRef
 
 from django.db.models import Subquery, OuterRef, Q
@@ -105,8 +106,25 @@ class ComplaintRegister(LoginRequiredMixin,View):
 
     def post(self, request):
         tail_number = request.POST.get("tail_number")
+        if not tail_number:
+            messages.error(request, "Tail number is required.")
+            return render(request, self.template_name)
 
-        # 🔹 1️⃣ Check existing complaints for this tail number
+        
+        # Check if UAV exists
+        if not Product.objects.filter(tail_number=tail_number).exists():
+            messages.error(
+                request,
+                "The UAV with the entered serial number does not exist."
+            )
+            # return redirect("complaint_list")  # or redirect back to form
+            return render(request, self.template_name, {
+    "event": request.POST.copy()
+})
+
+
+
+        # Check existing complaints for this tail number
         existing_event = (
             Event.objects
             .filter(tail_number=tail_number)
@@ -115,14 +133,14 @@ class ComplaintRegister(LoginRequiredMixin,View):
         )
 
         if existing_event:
-            # 🔹 2️⃣ Get latest status of that complaint
+            # Get latest status of that complaint
             latest_status = (
                 existing_event.complaint_statuses
                 .order_by("-updated_at")
                 .first()
             )
 
-            # 🔹 3️⃣ Block duplicate if not CLOSED
+            # Block duplicate if not CLOSED
             if latest_status and latest_status.status != "CLOSED":
                 messages.error(
                     request,
@@ -131,7 +149,7 @@ class ComplaintRegister(LoginRequiredMixin,View):
                 )
                 return redirect("complaint_list")  # or back to form
 
-        # 🔹 4️⃣ Create complaint if allowed
+        # Create complaint if allowed
         try:
             with transaction.atomic():
 
@@ -185,7 +203,7 @@ class ComplaintRegister(LoginRequiredMixin,View):
                     damage_potential=request.POST.get("damage_level"),
                 )
 
-                # 🔹 Initial status
+                # Initial status
                 ComplaintStatus.objects.create(
                     event=event,
                     status="IN REVIEW",

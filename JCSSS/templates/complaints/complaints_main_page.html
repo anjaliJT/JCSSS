@@ -130,48 +130,52 @@
               <ul class="dropdown-menu p-3" aria-labelledby="columnFilterDropdown" style="min-width: 200px;">
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="0" checked id="col0">
-                  <label class="form-check-label" for="col0">Ticket ID</label>
+                  <label class="form-check-label" for="col0">Sr. no.</label>
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="1" checked id="col1">
-                  <label class="form-check-label" for="col1">Pilot Name</label>
+                  <label class="form-check-label" for="col1">Ticket ID</label>
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="2" checked id="col2">
-                  <label class="form-check-label" for="col2">Model Number</label>
+                  <label class="form-check-label" for="col2">Pilot Name</label>
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="3" checked id="col3">
-                  <label class="form-check-label" for="col3">UAV Type</label>
+                  <label class="form-check-label" for="col3">Aircraft Number</label>
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="4" checked id="col4">
-                  <label class="form-check-label" for="col4">Tail Number</label>
+                  <label class="form-check-label" for="col4">UAV Type</label>
               </li>
               <li class="form-check">
                   <input class="form-check-input column-toggle" type="checkbox" value="5" checked id="col5">
-                  <label class="form-check-label" for="col5">Status</label>
+                  <label class="form-check-label" for="col5">Tail Number</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="6"  id="col6">
-                  <label class="form-check-label" for="col6">Occurance Date</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="6" checked id="col6">
+                  <label class="form-check-label" for="col6">Status</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="7" checked id="col7">
-                  <label class="form-check-label" for="col7"> Organization</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="7"  id="col7">
+                  <label class="form-check-label" for="col7">Occurance Date</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="8"  id="col8">
-                  <label class="form-check-label" for="col8">Flight Mode</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="8" checked id="col8">
+                  <label class="form-check-label" for="col8"> Organization</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" value="9"  id="col9">
+                  <label class="form-check-label" for="col9">Flight Mode</label>
               </li>
              
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" value="9" checked id="col9">
-                  <label class="form-check-label" for="col9">Damage Level</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="10" checked id="col10">
+                  <label class="form-check-label" for="col10">Damage Level</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" checked value="10" id="col10">
-                  <label class="form-check-label" for="col10">Actions</label>
+                  <input class="form-check-input column-toggle" type="checkbox" checked value="11" id="col11">
+                  <label class="form-check-label" for="col11">Actions</label>
               </li>
               </ul>
         </div>
@@ -181,9 +185,10 @@
             <table class="table table-hover" id="complainTable">
                 <thead>
                     <tr>
+                        <th>Sr. No.</th>
                         <th>Ticket ID</th>
                         <th>Pilot Name</th>
-                        <th>Serial Number</th>
+                        <th>Aircraft Number</th>
                         <th>UAV Type</th>
                         <th>Tail Number</th>
                         <th>Status</th>
@@ -197,6 +202,7 @@
                 <tbody>
                     {% for complaint in complaints %}
                     <tr>
+                      <td>{{ complaints.start_index|add:forloop.counter0 }}</td>
                         <td> <a href="{% url 'fetch_complaint_status' complaint.id %}">{{ complaint.unique_token }}</td> </a>
                         <!-- status -->
                         
@@ -343,6 +349,51 @@
             });
         });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const checkboxes = document.querySelectorAll(".column-toggle");
+    const storageKey = "complaint_table_column_state";
+
+    // 🔹 Restore saved state
+    const savedState = JSON.parse(localStorage.getItem(storageKey));
+
+    if (savedState) {
+        checkboxes.forEach(cb => {
+            if (savedState.hasOwnProperty(cb.value)) {
+                cb.checked = savedState[cb.value];
+                toggleColumn(cb.value, cb.checked);
+            }
+        });
+    }
+
+    // 🔹 Save state on change
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", function () {
+            let state = JSON.parse(localStorage.getItem(storageKey)) || {};
+            state[cb.value] = cb.checked;
+            localStorage.setItem(storageKey, JSON.stringify(state));
+
+            toggleColumn(cb.value, cb.checked);
+        });
+    });
+
+    // 🔹 Function to show/hide column
+    function toggleColumn(index, show) {
+        const rows = document.querySelectorAll("table tr");
+
+        rows.forEach(row => {
+            const cells = row.children;
+            if (cells[index]) {
+                cells[index].style.display = show ? "" : "none";
+            }
+        });
+    }
+
+});
+</script>
+
 
 {% block extra_scripts %}
   <script src="{% static 'js/popup_msg.js' %}"></script>
