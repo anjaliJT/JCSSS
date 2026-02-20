@@ -4,12 +4,25 @@ services:
   web:
     build: .
     container_name: jcsss_web
-    command: gunicorn JCSSS.wsgi:application --bind 0.0.0.0:8001 --workers 3 --timeout 120
+
+    command: >
+      sh -c "
+      python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn JCSSS.wsgi:application
+      --bind 0.0.0.0:8001
+      --workers 3
+      --timeout 120
+      "
+
     ports:
       - "8001:8001"
+
     env_file:
       - JCSSS/.env
+
     restart: unless-stopped
+
     logging:
       driver: json-file
       options:

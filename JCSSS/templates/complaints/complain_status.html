@@ -87,7 +87,7 @@
             <div class="d-flex align-items-center justify-content-end gap-3">
               <!-- Product Image Section -->
               <div class="product-image-wrapper">
-                {% if event.uav_type  == "JF2" %}
+                {% if event.uav_type  == "JF2" or event.uav_type  == "JF-2" %}
                     <img src="{% static 'images/jf2.png' %}" alt="{{ event.tail_number }}" class="product-image">
                 {% elif "JM" in event.uav_type  %}
                     <img src="{% static 'images/jm1.png' %}" alt="{{ event.tail_number }}" class="product-image">

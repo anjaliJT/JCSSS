@@ -146,14 +146,62 @@
                 </h5>
             </div>
             <div class="card-body">
+
+                <!-- UAV Specifications -->
+                <h6 class="mb-3 text-primary">UAV Specifications</h6>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <label for="uavSelect" class="form-label required">UAV Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-plane"></i></span>
+                            <select class="form-select" id="uavSelect" name="uav_type" required {% if is_readonly %}disabled{% endif %}>
+                                <option value="">Select type</option>
+                                <option value="JF-2" {% if event.uav_type == "JF-2" or event.uav_type == "JF2" %}selected{% endif %}>JF-2</option>
+                                <option value="JM-1" {% if event.uav_type == "JM-1" or event.uav_type == "JM1" %}selected{% endif %}>JM-1</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="modelNumber" class="form-label required">Serial Number <small class="text-muted">(Example: JF2165 → JF-2(165))</small></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                            <input type="text" class="form-control" id="modelNumber" name="serial_number" placeholder="Enter serial number" required value="{{ event.serial_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3">
+                        <label for="gcsType" class="form-label required">GCS Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                            <input type="text" class="form-control" id="gcsType" name="gcs_type" placeholder="Enter GCS type" required value="{{ event.gcs_type|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                        </div>
+                    </div> -->
+                    <div class="col-md-3">
+                        <label for="gcsNumber" class="form-label required">GCS Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                            <input type="text" class="form-control" id="gcsNumber" name="gcs_number" placeholder="Enter GCS number" value="{{ event.gcs_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="eventType" class="form-label required">Entry in Logbook <small class="text-muted">(Attach image in Documents)</small> </label>
+                        <select class="form-select" id="logbookEntry" name="logbook-entry" required {% if is_readonly %}disabled{% endif %}>
+                            <option value="">Select type</option>
+                            <option value="Yes" {% if event.logbook_entry == "Yes" %}selected{% endif %}>Yes</option>
+                            <option value="No" {% if event.logbook_entry == "No" %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                </div>
+
                 <!-- Incident Details -->
                 <h6 class="mb-3 text-primary">Incident Details</h6>
                 <div class="row mb-4">
                     <div class="col-md-3">
-                        <label for="modelNumber" class="form-label required">Serial Number</label>
+                        <label for="tailNumber" class="form-label required">Tail Number</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                            <input type="text" class="form-control" id="modelNumber" name="serial_number" placeholder="Enter serial number" required value="{{ event.serial_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <input type="text" class="form-control" style="text-transform: uppercase;" id="tailNumber" name="tail_number" placeholder="Enter tail number" required value="{{ event.tail_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -228,52 +276,6 @@
                     </div>
                 </div>
 
-                <!-- UAV Specifications -->
-                <h6 class="mb-3 text-primary">UAV Specifications</h6>
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <label for="uavSelect" class="form-label required">UAV Type</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-plane"></i></span>
-                            <select class="form-select" id="uavSelect" name="uav_type" required {% if is_readonly %}disabled{% endif %}>
-                                <option value="">Select type</option>
-                                <option value="JF2" {% if event.uav_type == "JF2" %}selected{% endif %}>JF2</option>
-                                <option value="JM1" {% if event.uav_type == "JM1" %}selected{% endif %}>JM1</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="tailNumber" class="form-label required">Tail Number</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
-                            <input type="text" class="form-control" style="text-transform: uppercase;" id="tailNumber" name="tail_number" placeholder="Enter tail number" required value="{{ event.tail_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
-                        </div>
-                    </div>
-                    <!-- <div class="col-md-3">
-                        <label for="gcsType" class="form-label required">GCS Type</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-laptop"></i></span>
-                            <input type="text" class="form-control" id="gcsType" name="gcs_type" placeholder="Enter GCS type" required value="{{ event.gcs_type|default:'' }}" {% if is_readonly %}disabled{% endif %}>
-                        </div>
-                    </div> -->
-                    <div class="col-md-3">
-                        <label for="gcsNumber" class="form-label required">GCS Number</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                            <input type="text" class="form-control" id="gcsNumber" name="gcs_number" placeholder="Enter GCS number" value="{{ event.gcs_number|default:'' }}" {% if is_readonly %}disabled{% endif %}>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label for="eventType" class="form-label required">Entry in Logbook</label>
-                        <select class="form-select" id="logbookEntry" name="logbook-entry" required {% if is_readonly %}disabled{% endif %}>
-                            <option value="">Select type</option>
-                            <option value="Yes" {% if event.logbook_entry == "Yes" %}selected{% endif %}>Yes</option>
-                            <option value="No" {% if event.logbook_entry == "No" %}selected{% endif %}>No</option>
-                        </select>
-                    </div>
-
-                </div>
 
                 {% comment %} <div class="row mb-3">
                     <div class="col-md-3">
@@ -328,7 +330,7 @@
                                     name="rain"
                                     {% if event.rain %}checked{% endif %}
                                     {% if is_readonly %}disabled{% endif %}>
-                                <label class="form-check-label" for="rain">Rain</label>
+                                <label class="form-check-label" for="rain"><i class="fas fa-cloud-rain me-2"></i>Rain</label>
                             </div>
 
                             <div class="form-check">
@@ -419,9 +421,8 @@
                         rows="3"
                         maxlength="150"
                         placeholder="Describe the immediate actions taken after the incident..."
-                        {% if is_readonly %}disabled{% endif %}
-                        >{{ event.initial_actions_taken|default:'' }}
-                    </textarea>
+                        {% if is_readonly %}disabled{% endif %}>{{ event.initial_actions_taken|default:'' }}</textarea>
+
                 </div>
 
                 <div class="mb-4">
@@ -582,7 +583,7 @@
                         type="submit"
                         id="submitBtn"
                         class="btn btn-primary"
-                        {% if is_valid %}disabled{% endif %}
+                        {% comment %} {% if is_valid %}disabled{% endif %} {% endcomment %}
                         {% if is_readonly %}disabled{% endif %}>
                         <i class="fas fa-paper-plane me-2"></i>
                         {% if is_valid %}Update Changes{% else %}Submit Request{% endif %}
@@ -724,22 +725,59 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Automatically enters the tail number -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
+    const uavSelect = document.getElementById("uavSelect");
     const serialInput = document.getElementById("modelNumber");
     const tailInput = document.getElementById("tailNumber");
 
-    serialInput.addEventListener("input", function () {
-        let serialValue = serialInput.value.trim();
+    // Auto-fill serial prefix when UAV type changes
+    if (uavSelect && serialInput) {
+        uavSelect.addEventListener("change", function () {
+            const selectedType = uavSelect.value;
 
-        // Example Auto Logic: 
-        // Make tail number = "TAIL-" + serial number (customize as needed)
-        if (serialValue !== "") {
-            tailInput.value = "" + serialValue.toUpperCase();
-        } else {
-            tailInput.value = "";
-        }
-    });
+            if (!selectedType) {
+                serialInput.value = "";
+                return;
+            }
+
+            // Always update prefix
+            serialInput.value = selectedType;
+
+            // Also clear tail number
+            if (tailInput) {
+                tailInput.value = "";
+            }
+
+            serialInput.focus();
+        });
+    }
+
+    // formatting logic
+    if (serialInput) {
+        serialInput.addEventListener("blur", function () {
+
+            let value = serialInput.value;
+            if (!value) return;
+
+            value = value.toUpperCase().trim();
+            value = value.replace(/[^A-Z0-9]/g, "");
+
+            const match = value.match(/^([A-Z]{2})(\d)([A-Z0-9]+)$/);
+
+            if (match) {
+                const formatted = match[1] + "-" + match[2] + "(" + match[3] + ")";
+                serialInput.value = formatted;
+
+                if (tailInput) {
+                    tailInput.value = formatted;
+                }
+            }
+        });
+    }
 });
 </script>
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {

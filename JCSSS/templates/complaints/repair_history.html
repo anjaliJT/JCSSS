@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Product Repair Summary{% endblock %}
 {% block extra_head %}
@@ -93,11 +94,11 @@
             </div>
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <div class="metric-value cost-metric text-primary">₹{{ total_repair_cost|floatformat:2 }}</div>
+                    <div class="metric-value cost-metric text-primary">₹{{ total_repair_cost|floatformat:2|intcomma }}</div>
                     <div class="metric-label">Total Repair Cost</div>
                     <div class="mt-2">
                         <small class="text-success">
-                            Average: ₹{{ avg_cost|floatformat:2 }} per repair
+                            Average: ₹{{ avg_cost|floatformat:2|intcomma }} per repair
                         </small>
                     </div>
                 </div>
@@ -105,12 +106,12 @@
 
             <div class="col-md-3 col-sm-6">
                 <div class="summary-card text-center">
-                    <div class="metric-value cost-metric text-warning">₹{{ total_client_charge|floatformat:2 }}</div>
+                    <div class="metric-value cost-metric text-warning">₹{{ total_client_charge|floatformat:2|intcomma }}</div>
                     <div class="metric-label">Charged to Client</div>
                     <div class="mt-2">
                         <small class="text-success">
                             <i class="fas fa-check-circle me-1"></i>
-                            {{ total_client_charge|floatformat:2 }} collected
+                            {{ total_client_charge|floatformat:2|intcomma }} collected
                         </small>
                     </div>
                 </div>
@@ -126,7 +127,7 @@
                     {% else %}
                         text-secondary
                     {% endif %}">
-                    ₹{{ net_profit|floatformat:2 }}
+                    ₹{{ net_profit|floatformat:2|intcomma }}
                 </div>
 
                 <div class="metric-label">Net Profit</div>
@@ -138,7 +139,7 @@
                 </div>
 
             </div>
-        </div>
+            </div>
 
         <!-- Repair History -->
         <div class="card">

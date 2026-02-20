@@ -3,6 +3,8 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
     '52.66.113.10',
     'support.johnnette.com',
     'www.support.johnnette.com',
