@@ -174,8 +174,12 @@
                   <label class="form-check-label" for="col10">Damage Level</label>
               </li>
               <li class="form-check">
-                  <input class="form-check-input column-toggle" type="checkbox" checked value="11" id="col11">
-                  <label class="form-check-label" for="col11">Actions</label>
+                  <input class="form-check-input column-toggle" type="checkbox" value="11" checked id="col11">
+                  <label class="form-check-label" for="col11">Service Cost</label>
+              </li>
+              <li class="form-check">
+                  <input class="form-check-input column-toggle" type="checkbox" checked value="12" id="col12">
+                  <label class="form-check-label" for="col12">Actions</label>
               </li>
               </ul>
         </div>
@@ -196,6 +200,7 @@
                         <th>Organization</th>
                         <th>Flight Mode</th>
                         <th>Damage Level</th>
+                        <th>Service Cost</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -217,8 +222,8 @@
                                     {% if latest_status.status == 'IN REVIEW' %}bg-primary
                                     {% elif latest_status.status == 'ACCEPTED' %}bg-info
                                     {% elif latest_status.status == 'REPAIR' %}bg-warning
-                                    {% elif latest_status.status == 'REJECTED' %}bg-danger
-                                    {% elif latest_status.status == 'CLOSED' %}bg-dark
+                                    {% elif latest_status.status == 'REJECTED' %}bg-dark
+                                    {% elif latest_status.status == 'CLOSED' %}bg-danger
                                     {% elif latest_status.status == 'PRODUCT RECEIVED' %}bg-info
                                     {% elif latest_status.status == 'DIAGNOSIS REPORT' %}bg-success
                                     {% elif latest_status.status == 'READY FOR DISPATCH' %}bg-success
@@ -235,6 +240,7 @@
                         <td>{{ complaint.organization }}</td>
                         <td>{{ complaint.flight_mode }}</td>
                         <td>{{ complaint.damage_level }}</td>
+                        <td>{{ complaint.customer_pricing.total_price|default:"-" }}</td>
                         <td>
                                <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-primary btn-sm" title="View Details">
                                     <i class="fas fa-eye"></i>

@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Event
-from apps.oem.models import  ComplaintStatus
+from apps.oem.models import  ComplaintStatus, CustomerPricing
 from apps.complain_form.utils import send_mail_thread
 from apps.products.models import Product
 from django.db.models import Subquery, OuterRef
@@ -44,7 +44,7 @@ class ComplaintListView(LoginRequiredMixin, View):
         # Base queryset annotated with latest_status
         complaints = Event.objects.annotate(
             latest_status=Subquery(latest_status_subquery)
-        ).order_by('-id')
+            ).select_related("customer_pricing").order_by('-id')
         
         # Restrict to only the customer's complaints
         if request.user.role == "CUSTOMER":

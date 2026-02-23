@@ -5,10 +5,14 @@ from .models import ComplaintStatus, RepairCost, CustomerPricing
 class ComplaintStatusForm(forms.ModelForm):
     class Meta:
         model = ComplaintStatus
-        fields = ['status', 'remarks', 'attachments']
+        fields = ['status', 'remarks', 'oem_remarks', 'attachments']
+        labels = {
+            'oem_remarks': 'OEM Remarks',
+        }
         widgets = {
             'status': forms.Select(attrs={'class': 'form-select'}),
             'remarks': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'oem_remarks':forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'attachments': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 

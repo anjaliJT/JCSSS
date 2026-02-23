@@ -264,6 +264,7 @@ def edit_status_view(request, pk):
 
     status_obj.status = request.POST.get("status")
     status_obj.remarks = request.POST.get("remarks")
+    status_obj.oem_remarks = request.POST.get("oemRemarks")
 
     if 'attachments' in request.FILES:
         status_obj.attachments = request.FILES['attachments']
