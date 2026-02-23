@@ -740,10 +740,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Always update prefix
-            serialInput.value = selectedType;
+            const formattedPrefix = selectedType + "()";
+            serialInput.value = formattedPrefix;
 
-            // Also clear tail number
+            // Place cursor inside parentheses
+            const cursorPosition = formattedPrefix.indexOf("(") + 1;
+            serialInput.setSelectionRange(cursorPosition, cursorPosition);
+
+            // Clear tail number
             if (tailInput) {
                 tailInput.value = "";
             }

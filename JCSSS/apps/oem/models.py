@@ -70,6 +70,7 @@ class ComplaintStatus(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="complaint_statuses")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="IN REVIEW")
     remarks = models.TextField(blank=True, null=True)
+    oem_remarks = models.TextField(blank=True, null=True)
     attachments = models.FileField(upload_to="attachments/", blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(CustomUser, on_delete= models.PROTECT,null=True, blank=True)
