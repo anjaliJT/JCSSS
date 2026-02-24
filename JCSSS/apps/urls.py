@@ -5,4 +5,5 @@ urlpatterns = [
     path('complain/', include('apps.complain_form.urls')),
     path('product/',include('apps.products.urls')),
     path('csm/', include('apps.oem.urls')),
+    path('other/', include('apps.other.urls')),
 ]

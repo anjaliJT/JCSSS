@@ -686,6 +686,30 @@
                     {% endif %}
                   </div>
 
+                  <div class="mb-3">
+                    <label for="warrantyType" class="form-label">Warranty Type</label>
+                    <select
+                      name="warranty_type"
+                      id="warrantyType"
+                      class="form-select"
+                      {% if event.customer_pricing.total_price %}disabled{% endif %}
+                    >
+                      <option value="">Select Warranty Type</option>
+                      <option value="FULL"
+                        {% if event.customer_pricing.warranty_type == "FULL" %}selected{% endif %}>
+                        Service covered under Warranty
+                      </option>
+                      <option value="PARTIAL"
+                        {% if event.customer_pricing.warranty_type == "PARTIAL" %}selected{% endif %}>
+                        Service covered under Partial Warranty
+                      </option>
+                      <option value="OUT"
+                        {% if event.customer_pricing.warranty_type == "OUT" %}selected{% endif %}>
+                        Service covered out of Warranty
+                      </option>
+                    </select>
+                  </div>
+
                   <div class="d-grid">
                     <button 
                       type="submit"

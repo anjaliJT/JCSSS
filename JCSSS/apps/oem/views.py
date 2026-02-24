@@ -334,11 +334,57 @@ def delete_repair_cost_view(request, cost_id):
     cost_obj.delete()
     return redirect('fetch_complaint_status', pk=event_id)
 
+# class CustomerCostView(View):
+#     def post(self, request, pk):
+#         event = get_object_or_404(Event, pk=pk)
+
+#         # Check if a record already exists
+#         try:
+#             pricing = event.customer_pricing
+#             form = CustomerPricingForm(request.POST, request.FILES, instance=pricing)
+#         except CustomerPricing.DoesNotExist:
+#             form = CustomerPricingForm(request.POST, request.FILES)
+
+#         if form.is_valid():
+#             customer_price = form.save(commit=False)
+#             customer_price.event = event
+#             customer_price.save()
+#             messages.success(request, "Customer pricing saved successfully.")
+            
+#             template_type = "customer_price"
+#             title = f"Invoice for Service {event.unique_token}"
+#             body = f"Total cost in repairing is: ₹{customer_price.total_price}"
+
+#             # price_details to render inside template
+#             price_details = f"Total: ₹{customer_price.total_price}"
+
+#             # Attach invoice file if present
+#             attachments = None
+#             if customer_price.invoice:
+#                 # pass the FileField itself — helper will open/read it
+#                 attachments = customer_price.invoice
+
+#             # Launch email sending in background thread
+#             send_mail_thread(
+#                 event_id=pk,
+#                 template_type=template_type,
+#                 title=title,
+#                 body=body,
+#                 extra_context={"price_details": price_details,
+#                                "user_name":request.user.first_name},
+#                 attachments=attachments,
+#             )
+            
+#         else:
+#             messages.error(request, "Error saving customer pricing. Please check the form.")
+
+#         # Redirect to your main complaint status page (adjust name if needed)
+#         return redirect("fetch_complaint_status", pk=pk)
+
 class CustomerCostView(View):
     def post(self, request, pk):
         event = get_object_or_404(Event, pk=pk)
 
-        # Check if a record already exists
         try:
             pricing = event.customer_pricing
             form = CustomerPricingForm(request.POST, request.FILES, instance=pricing)
@@ -348,39 +394,48 @@ class CustomerCostView(View):
         if form.is_valid():
             customer_price = form.save(commit=False)
             customer_price.event = event
+
+            # 🔹 Enforce warranty pricing rule
+            if customer_price.warranty_type == "FULL":
+                customer_price.total_price = 0
+
             customer_price.save()
+
             messages.success(request, "Customer pricing saved successfully.")
-            
+
             template_type = "customer_price"
             title = f"Invoice for Service {event.unique_token}"
-            body = f"Total cost in repairing is: ₹{customer_price.total_price}"
 
-            # price_details to render inside template
-            price_details = f"Total: ₹{customer_price.total_price}"
+            # Better email clarity
+            body = (
+                f"Warranty Type: {customer_price.get_warranty_type_display()}\n"
+                f"Total Cost: ₹{customer_price.total_price}"
+            )
 
-            # Attach invoice file if present
-            attachments = None
-            if customer_price.invoice:
-                # pass the FileField itself — helper will open/read it
-                attachments = customer_price.invoice
+            price_details = (
+                f"Warranty: {customer_price.get_warranty_type_display()}<br>"
+                f"Total: ₹{customer_price.total_price}"
+            )
 
-            # Launch email sending in background thread
+            attachments = customer_price.invoice if customer_price.invoice else None
+
             send_mail_thread(
                 event_id=pk,
                 template_type=template_type,
                 title=title,
                 body=body,
-                extra_context={"price_details": price_details,
-                               "user_name":request.user.first_name},
+                extra_context={
+                    "price_details": price_details,
+                    "user_name": request.user.first_name,
+                },
                 attachments=attachments,
             )
-            
+
         else:
             messages.error(request, "Error saving customer pricing. Please check the form.")
 
-        # Redirect to your main complaint status page (adjust name if needed)
         return redirect("fetch_complaint_status", pk=pk)
-
+    
 
 def customer_price_approve_view(request, pk):
     
@@ -449,4 +504,4 @@ def customer_price_approve_view(request, pk):
 
 def attachemnts(instance, filename):
     # Store in a subfolder by event id (or date if you prefer)
-    return f"complaints/{instance.event.id}/{filename}"
+    return f"service/{instance.event.id}/{filename}"

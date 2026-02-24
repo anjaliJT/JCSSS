@@ -45,4 +45,4 @@ class RepairCostForm(forms.ModelForm):
 class CustomerPricingForm(forms.ModelForm):
     class Meta:
         model = CustomerPricing
-        fields = ['total_price', 'invoice']
+        fields = ['total_price', 'invoice','warranty_type']
