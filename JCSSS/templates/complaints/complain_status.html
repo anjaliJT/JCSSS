@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}Complaint Management{% endblock %}
 
 {% block extra_head %}
@@ -236,19 +236,19 @@
                 <div class="cost-breakdown-section">
                   <div class="cost-item">
                     <span class="cost-label">Total Repair Cost:</span>
-                    <span class="cost-value oem-cost" id="totalRepairCost">₹{{ total_repair_cost|floatformat:2 }}</span>
+                    <span class="cost-value oem-cost" id="totalRepairCost">₹{{ total_repair_cost|floatformat:2|intcomma }}</span>
                   </div>
                   <div class="cost-item">
                     <span class="cost-label">Price to Customer:</span>
-                    <span class="cost-value customer-cost" id="priceToCustomer">₹{{ total_customer_cost|floatformat:2 }}</span>
+                    <span class="cost-value customer-cost" id="priceToCustomer">₹{{ total_customer_cost|floatformat:2|intcomma  }}</span>
                   </div>
                   <div class="profit-loss" id="profitLossIndicator">
                     <!-- Profit/Loss indicator will be shown here -->
                   {% if profit_value is not None %}
                     {% if profit_value > 0 %}
                       <div class="alert alert-success mb-0 py-2">
-                        <strong>Profit:</strong> ₹{{ profit_value|floatformat:2 }}
-                        {% if profit_percent %}<small class="ms-2 text-muted">({{ profit_percent|floatformat:2 }}%)</small>{% endif %}
+                        <strong>Profit:</strong> ₹{{ profit_value|floatformat:2|intcomma  }}
+                        {% if profit_percent %}<small class="ms-2 text-muted">({{ profit_percent|floatformat:2|intcomma  }}%)</small>{% endif %}
                       </div>
                     {% elif profit_value < 0 %}
                       <div class="alert alert-danger mb-0 py-2">
@@ -313,7 +313,7 @@
               <div class="cost-breakdown-section">
                 <div class="cost-item">
                   <span class="cost-label">Total Repair Cost:</span>
-                  <span class="cost-value customer-cost" id="customerTotalCost">₹{{ total_customer_cost|floatformat:2 }}</span>
+                  <span class="cost-value customer-cost" id="customerTotalCost">₹{{ total_customer_cost|floatformat:2|intcomma }}</span>
                 </div>
                 <div class="mt-2">
                   {% if event.customer_pricing.invoice %}
@@ -662,7 +662,7 @@
                     <input 
                       type="number"
                       name="total_price"
-                      class="form-control"
+                      class="form-control8"
                       id="customerPrice"
                       value="{{ event.customer_pricing.total_price|default_if_none:'' }}"
                       placeholder="0.00" min="0" step="0.01"

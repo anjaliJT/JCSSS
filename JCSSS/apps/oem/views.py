@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from decimal import Decimal
 from django.http import JsonResponse
 from apps.complain_form.utils import send_mail_thread
+from apps.oem.tasks import send_mail_async
 
 
 
@@ -169,7 +170,7 @@ def set_complaint_location_view(request, pk):
     else:
         messages.success(request, "Location updated successfully.")
 
-    send_mail_thread(
+    send_mail_async(
         event.id,
         template_type="location",
         title=f"Location Set for Service {event.unique_token}",
@@ -209,7 +210,7 @@ def update_location_view(request, pk):
     body = f"Repair location mode is now changed to: {location_value or 'N/A'}\nRemarks: {remarks}"
 
     # launch email send in background
-    send_mail_thread(event.id, template_type=template_type, title=title, body=body, extra_context={
+    send_mail_async(event.id, template_type=template_type, title=title, body=body, extra_context={
         "location": location_value,
         "remarks": remarks,
     })
@@ -241,7 +242,7 @@ class UpdateStatusView(View):
             #     diagnosis_by = status_instance.updated_by.first_name
 
             # launch email send in background
-            send_mail_thread(event.id, template_type=template_type, title=title, 
+            send_mail_async(event.id, template_type=template_type, title=title, 
             body=body, 
             attachments=attachments,
             extra_context={
@@ -311,7 +312,7 @@ class AddRepairCostView(View):
                 attachments = repair.attachment
 
             # Launch email sending in background thread
-            send_mail_thread(
+            send_mail_async(
                 event_id=event.pk,
                 template_type=template_type,
                 title=title,
@@ -365,7 +366,7 @@ def delete_repair_cost_view(request, cost_id):
 #                 attachments = customer_price.invoice
 
 #             # Launch email sending in background thread
-#             send_mail_thread(
+#             send_mail_async(
 #                 event_id=pk,
 #                 template_type=template_type,
 #                 title=title,
@@ -413,13 +414,13 @@ class CustomerCostView(View):
             )
 
             price_details = (
-                f"Warranty: {customer_price.get_warranty_type_display()}<br>"
+                f"Warranty: {customer_price.get_warranty_type_display()}\n"
                 f"Total: ₹{customer_price.total_price}"
             )
 
             attachments = customer_price.invoice if customer_price.invoice else None
 
-            send_mail_thread(
+            send_mail_async(
                 event_id=pk,
                 template_type=template_type,
                 title=title,
@@ -486,7 +487,7 @@ def customer_price_approve_view(request, pk):
         f"Service ID: {pricing.event.unique_token}"
     )
 
-    send_mail_thread(
+    send_mail_async(
         event_id=pricing.event.id,
         template_type=template_type,
         title=title,

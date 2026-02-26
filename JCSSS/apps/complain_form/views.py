@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Event
 from apps.oem.models import  ComplaintStatus, CustomerPricing
 from apps.complain_form.utils import send_mail_thread
+from apps.oem.tasks import send_mail_async
 from apps.products.models import Product
 from django.db.models import Subquery, OuterRef
 
@@ -212,12 +213,12 @@ class ComplaintRegister(LoginRequiredMixin,View):
 
                 messages.success(request, "Complaint submitted successfully!")
 
-                send_mail_thread(
+                send_mail_async(
                     event.id,
                     template_type="complaint",
                     title=f"New complaint {event.unique_token}",
                     body="A new complaint request has been received.",
-                    extra_context={"complaint": event}
+                    # extra_context={"complaint": event}
                 )
 
                 return redirect("complaint_list")
