@@ -11,10 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const statusId = this.dataset.statusId;
       const currentStatus = this.dataset.status?.trim();
       const currentRemarks = this.dataset.remarks || "";
+      const currentOemRemarks = this.dataset.oemRemarks || "";
 
       form.action = `/csm/complaint/${statusId}/edit-status/`;
       hiddenStatusId.value = statusId;
       remarksInput.value = currentRemarks;
+      oemRemarksInput.value = currentOemRemarks;
 
       let matched = false;
       for (let option of statusSelect.options) {

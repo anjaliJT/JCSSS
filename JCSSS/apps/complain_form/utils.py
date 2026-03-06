@@ -92,7 +92,7 @@ def _send_email_sync(event_id, template_type, title, body, extra_context=None, a
         cc_emails = list(cc_qs.values_list("email", flat=True))
     else:
         # CC: Everyone except CUSTOMER and except CSM
-        cc_qs = CustomUser.objects.exclude(role__in=["CUSTOMER", "CSM"])
+        cc_qs = CustomUser.objects.exclude(role__in=["CUSTOMER","DIRECTOR", "CSM"])
         cc_emails = list(cc_qs.values_list("email", flat=True))
     
     to_emails = list(

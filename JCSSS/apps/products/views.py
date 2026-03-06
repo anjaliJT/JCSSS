@@ -75,6 +75,9 @@ def product_list_view(request):
     selected_model = request.GET.get("model")
     selected_status = request.GET.get("status")
     selected_warranty = request.GET.get("warranty")
+    search = (request.GET.get('search') or '').strip()
+    
+    
 
     # Filter by product model
     if selected_model:
@@ -86,24 +89,31 @@ def product_list_view(request):
     elif selected_status == "obsolete":
         products_qs = products_qs.filter(active_status=False)
 
-    # Warranty filtering using queryset filters (keeps it as a QuerySet for pagination)
-    today = date.today()
-    if selected_warranty == "active":
-        products_qs = [p for p in products_qs if p.warranty_expiry_date >= today]
-    elif selected_warranty == "expired":
-        products_qs = [p for p in products_qs if p.warranty_expiry_date < today]
+    # Search by tail number
+    if search:
+        products_qs = products_qs.filter(tail_number__icontains=search)
+
+    # # Warranty filtering
+    # today = date.today()
+    # if selected_warranty == "active":
+    #     products_qs = products_qs.filter(warranty_expiry_date__gte=today)
+    # elif selected_warranty == "expired":
+    #     products_qs = products_qs.filter(warranty_expiry_date__lt=today)
+
     # Pagination: 10 items per page (adjustable)
     page_number = request.GET.get('page', 1)
     paginator = Paginator(products_qs, 15)
     products_page = paginator.get_page(page_number)
 
     return render(request, "products/products_main_page.html", {
-        "products": products_page,
-        "models": models,
-        "selected_model": selected_model,
-        "selected_status": selected_status,
-        "selected_warranty": selected_warranty,
+    "products": products_page,
+    "models": models,
+    "selected_model": selected_model,
+    "selected_status": selected_status,
+    "selected_warranty": selected_warranty,
+    "search": search,
     })
+
 
 
 def edit_product_view(request, pk):

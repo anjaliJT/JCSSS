@@ -70,6 +70,7 @@ class ComplaintStatus(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="complaint_statuses")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="IN REVIEW")
     remarks = models.TextField(blank=True, null=True)
+    oem_remarks = models.TextField(blank=True, null=True)
     attachments = models.FileField(upload_to="attachments/", blank=True, null=True)
     updated_at = models.DateTimeField(default=timezone.now)
     updated_by = models.ForeignKey(CustomUser, on_delete= models.PROTECT,null=True, blank=True)
@@ -90,6 +91,12 @@ class RepairCost(models.Model):
 
 
 class CustomerPricing(models.Model):
+    
+    class WarrantyType(models.TextChoices):
+        FULL = "FULL", "Service covered under Warranty"
+        PARTIAL = "PARTIAL", "Service covered under Partial Warranty"
+        OUT = "OUT", "Service covered out of Warranty"
+        
     event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="customer_pricing")
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     invoice = models.FileField(upload_to="attachments/", blank=True, null=True)
@@ -99,6 +106,13 @@ class CustomerPricing(models.Model):
     approved_through_gem = models.BooleanField(default=False)
     approved_at = models.DateTimeField(null=True, blank=True)
     approved_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, blank= True, null= True)
+     
+    warranty_type = models.CharField(
+        max_length=10,
+        choices=WarrantyType.choices,
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f"Customer Price for {self.event}: ₹{self.total_price}"

@@ -156,6 +156,14 @@
                         <p class="timeline-description">
                           {{ s.remarks|default:"" }}
                         </p>
+                        
+                        {% if perms.oem.add_complaintstatus%}
+                          {% if s.oem_remarks%}
+                          <p class="timeline-description">
+                            {{ s.oem_remarks|default:"" }}
+                          </p>
+                          {% endif %}
+                        {% endif %}
 
                         {%if s.status == "ACCEPTED" %}
                           <p class="timeline-info">You will get the diagnosis report within 3 days once we receive the product at our warehouse.</p>
@@ -180,7 +188,8 @@
                               data-bs-target="#editStatusModal"
                               data-status-id="{{ s.id }}"
                               data-status="{{ s.status }}"
-                              data-remarks="{{ s.remarks|default:''}}">
+                              data-remarks="{{ s.remarks|default:''}}"
+                              data-oem-remarks="{{ s.oem_remarks|default:''}}">
                               <i class="fas fa-edit" ></i>
                             </a>
                             <!-- Delete Button -->
@@ -556,6 +565,11 @@
                   {{ form.remarks.label_tag }}
                   {{ form.remarks }}
                 </div>
+                
+                <div class="mb-3">
+                  {{ form.oem_remarks.label_tag }}
+                  {{ form.oem_remarks }}
+                </div>
 
                 <div class="mb-3">
                   {{ form.attachments.label_tag }}
@@ -672,6 +686,30 @@
                     {% endif %}
                   </div>
 
+                  <div class="mb-3">
+                    <label for="warrantyType" class="form-label">Warranty Type</label>
+                    <select
+                      name="warranty_type"
+                      id="warrantyType"
+                      class="form-select"
+                      {% if event.customer_pricing.total_price %}disabled{% endif %}
+                    >
+                      <option value="">Select Warranty Type</option>
+                      <option value="FULL"
+                        {% if event.customer_pricing.warranty_type == "FULL" %}selected{% endif %}>
+                        Service covered under Warranty
+                      </option>
+                      <option value="PARTIAL"
+                        {% if event.customer_pricing.warranty_type == "PARTIAL" %}selected{% endif %}>
+                        Service covered under Partial Warranty
+                      </option>
+                      <option value="OUT"
+                        {% if event.customer_pricing.warranty_type == "OUT" %}selected{% endif %}>
+                        Service covered out of Warranty
+                      </option>
+                    </select>
+                  </div>
+
                   <div class="d-grid">
                     <button 
                       type="submit"
@@ -723,6 +761,10 @@
           <div class="mb-3">
             <label class="form-label">Remarks</label>
             <textarea name="remarks" id="remarksInput" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">OEM Remarks</label>
+            <textarea name="oemRemarks" id="oemRemarksInput" class="form-control" rows="3"></textarea>
           </div>
         </div>
 
