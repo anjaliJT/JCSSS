@@ -6,10 +6,15 @@ from datetime import datetime
 from django.db import models
 from apps.users.models import CustomUser
 
+class UAVType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Event(models.Model):
     """Complaint model: fields for registering a new complaint."""
-
     unique_token = models.CharField(max_length=100, unique=True, blank=True)
 
     #pilot information
@@ -25,8 +30,9 @@ class Event(models.Model):
     serial_number = models.CharField(max_length=50)
     tail_number = models.CharField(max_length=50, blank=True)
     uav_type = models.CharField(max_length=150, blank=True)
+    uav_type_fk = models.ForeignKey(UAVType,on_delete=models.PROTECT)
     # gcs_type = models.CharField(max_length=100, blank=True)
-    gcs_number = models.CharField(max_length=50, blank=True)
+    gcs_number = models.CharField( max_length=50, blank=True)
     logbook_entry = models.CharField(max_length=50, blank=True)
     # uav_weight = models.FloatField(help_text="Weight in kg", null= True, blank=True)
 
@@ -104,3 +110,4 @@ class Event(models.Model):
 
             # Save again only for unique_token
             super().save(update_fields=["unique_token"])
+
