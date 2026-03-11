@@ -1,0 +1,442 @@
+<!-- Training Request Modal -->
+<div class="modal fade" id="trainingRequestModal" tabindex="-1" aria-labelledby="trainingRequestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-white">
+                <h5 class="modal-title" id="trainingRequestModalLabel">
+                    <i class="fas fa-chalkboard-teacher me-2"></i><span id="formTitle">Create Training Request</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form method="POST" id="trainingRequestForm" novalidate>
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <!-- Basic Information Section -->
+                    <h6 class="card-title mb-3">
+                        <i class="fas fa-info-circle me-2"></i>Basic Information
+                    </h6>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label required">Requested By</label>
+                            <input type="text" name="requested_by" id="requestedBy" class="form-control" placeholder="Enter requester name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required">Unit / Organisation Name</label>
+                            <input type="text" name="organisation_name" id="organisationName" class="form-control" placeholder="Enter unit/organisation name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label required">UAV Type</label>
+                            <select name="uav_type" id="uavType" class="form-select" required>
+                                <option value="">Select UAV type...</option>
+                                {% for uav in uav_types %}
+                                    <option value="{{ uav.id }}">{{ uav.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required">Command Name</label>
+                            <select name="command_name" id="commandName" class="form-select" required>
+                                <option value="">Select command...</option>
+                                <option value="southern">Southern Command</option>
+                                <option value="eastern">Eastern Command</option>
+                                <option value="western">Western Command</option>
+                                <option value="northern">Northern Command</option>
+                                <option value="central">Central Command</option>
+                                <option value="south_western">South Western Command</option>
+                                <option value="training">Training Command</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Training Details Section -->
+                    <h6 class="card-title mb-3 mt-4">
+                        <i class="fas fa-users me-2"></i>Training Details
+                    </h6>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label required">Number of Participants</label>
+                            <input type="number" name="number_of_participants" id="numberOfParticipants" class="form-control" placeholder="Minimum 10" min="10" required>
+                            <small class="text-muted">Minimum 10 participants required</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label required">Preferred Location</label>
+                            <select name="preferred_location" id="preferredLocation" class="form-select" required>
+                                <option value="">Select location...</option>
+                                <option value="oem">OEM Facility</option>
+                                <option value="user_site">User Site</option>
+                                <option value="other">Other Location</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4" id="otherLocationDiv" style="display: none;">
+                            <label class="form-label required">Specify Other Location</label>
+                            <input type="text" name="preferred_location_other" id="preferredLocationOther" class="form-control" placeholder="Enter location details">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label required">Preferred Date</label>
+                            <input type="date" name="preferred_date" id="preferredDate" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label required">Total UAVs in Possession</label>
+                            <input type="number" name="total_uavs_in_possession" id="totalUAVs" class="form-control" placeholder="Enter number" min="0" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label required">Mark Status</label>
+                            <select name="mark_status" id="markStatus" class="form-select" required>
+                                <option value="normal">Normal</option>
+                                <option value="important">Important</option>
+                                <option value="urgent">Urgent</option>
+                                <option value="on_hold">On Hold</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label required">UAV Tail Numbers</label>
+                            <textarea name="uav_tail_numbers" id="uavTailNumbers" class="form-control" rows="2" placeholder="Enter tail numbers (comma separated, one per line)" required></textarea>
+                            <small class="text-muted">e.g., UAV-001, UAV-002, UAV-003 or list one per line</small>
+                        </div>
+                    </div>
+
+                    <!-- Training Type Section -->
+                    <h6 class="card-title mb-3 mt-4">
+                        <i class="fas fa-clock me-2"></i>Training Type
+                    </h6>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="training_type" id="refresherTraining" value="refresher" checked>
+                                                <label class="form-check-label" for="refresherTraining">
+                                                    <strong>Refresher Training</strong>
+                                                    <span class="d-block text-muted small">7-10 Days</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="training_type" id="initialTraining" value="initial">
+                                                <label class="form-check-label" for="initialTraining">
+                                                    <strong>Initial Training</strong>
+                                                    <span class="d-block text-muted small">10-14 Days</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="training_type" id="instructorTraining" value="instructor">
+                                                <label class="form-check-label" for="instructorTraining">
+                                                    <strong>Instructor Grade Training</strong>
+                                                    <span class="d-block text-muted small">20-30 Days</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="training_type" id="customTraining" value="custom">
+                                                <label class="form-check-label" for="customTraining">
+                                                    <strong>Custom Training</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2" id="customTrainingDiv" style="display: none;">
+                                        <div class="col-md-12">
+                                            <textarea name="custom_training_description" id="customTrainingDescription" class="form-control" rows="2" placeholder="Please describe your custom training requirements..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requirements Description Section -->
+                    <h6 class="card-title mb-3 mt-4">
+                        <i class="fas fa-file-alt me-2"></i>Requirements Description
+                    </h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label required">Description of the Requirements by User Unit</label>
+                            <textarea name="description_of_requirements" id="descriptionOfRequirements" class="form-control" rows="4" placeholder="Please provide detailed description of your training requirements, specific focus areas, any special requests..." required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- OEM Update Section (Visible only to OEM/Admin) -->
+                    <div class="oem-section" id="oemSection" style="display: none;">
+                        <h6 class="card-title mb-3 mt-4">
+                            <i class="fas fa-industry me-2"></i>OEM Update Section
+                            <small class="text-muted ms-2">(To be updated by OEM)</small>
+                        </h6>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label required">Status Update</label>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="pending">Pending Review</option>
+                                    <option value="under_review">Under Review by OEM</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="proposed">Proposed Date Sent</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="in_progress">Training In Progress</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Training Duration (by OEM)</label>
+                                <input type="text" name="training_duration" id="trainingDuration" class="form-control" placeholder="e.g., 12 days">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">OEM Proposed Date</label>
+                                <input type="date" name="oem_proposed_date" id="oemProposedDate" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="form-label">OEM Remarks</label>
+                                <textarea name="oem_remarks" id="oemRemarks" class="form-control" rows="2" placeholder="Additional remarks from OEM..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Status Updated By</label>
+                                <input type="text" name="status_updated_by" id="statusUpdatedBy" class="form-control" placeholder="OEM representative name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Status Updated At</label>
+                                <input type="datetime-local" name="status_updated_at" id="statusUpdatedAt" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Created At (Hidden for display, shown for editing) -->
+                    <input type="hidden" name="created_at" id="createdAt">
+                    
+                    <!-- Hidden field for ID (when editing) -->
+                    <input type="hidden" name="request_id" id="requestId">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Create Training Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const trainingForm = document.getElementById('trainingRequestForm');
+    const formTitle = document.getElementById('formTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const modalElement = document.getElementById('trainingRequestModal');
+    const modal = new bootstrap.Modal(modalElement);
+    
+    // Set default created_at to current datetime
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    document.getElementById('createdAt').value = `${year}-${month}-${day}`;
+    
+    // Handle Preferred Location change (show/hide other location field)
+    const preferredLocation = document.getElementById('preferredLocation');
+    const otherLocationDiv = document.getElementById('otherLocationDiv');
+    const preferredLocationOther = document.getElementById('preferredLocationOther');
+    
+    preferredLocation.addEventListener('change', function() {
+        if (this.value === 'other') {
+            otherLocationDiv.style.display = 'block';
+            preferredLocationOther.required = true;
+        } else {
+            otherLocationDiv.style.display = 'none';
+            preferredLocationOther.required = false;
+            preferredLocationOther.value = '';
+        }
+    });
+    
+    // Handle Training Type change (show/hide custom training description)
+    const trainingTypeRadios = document.querySelectorAll('input[name="training_type"]');
+    const customTrainingDiv = document.getElementById('customTrainingDiv');
+    const customTrainingDescription = document.getElementById('customTrainingDescription');
+    
+    trainingTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customTrainingDiv.style.display = 'block';
+                customTrainingDescription.required = true;
+            } else {
+                customTrainingDiv.style.display = 'none';
+                customTrainingDescription.required = false;
+                customTrainingDescription.value = '';
+            }
+        });
+    });
+    
+    // Show OEM section for OEM users (you can control this based on user role)
+    // For demo, we'll show it with a checkbox or you can set based on user group
+    const isOEMUser = false; // Set this based on your user authentication
+    
+    if (isOEMUser) {
+        document.getElementById('oemSection').style.display = 'block';
+    }
+    
+    // Form validation and submission
+    trainingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!trainingForm.checkValidity()) {
+            trainingForm.classList.add('was-validated');
+            return;
+        }
+        
+        // Validate participants count
+        const participants = document.getElementById('numberOfParticipants').value;
+        if (participants < 10) {
+            alert('Number of participants must be at least 10');
+            return;
+        }
+        
+        openPopup("Are you sure you want to submit this training request?", function() {
+            trainingForm.submit();
+        });
+    });
+});
+
+// Function to create new training request
+function createTrainingRequest(event) {
+    if (event) event.preventDefault();
+    
+    resetForm();
+    document.getElementById('formTitle').textContent = 'Create Training Request';
+    document.getElementById('submitBtn').innerHTML = 'Create Request';
+    document.getElementById('trainingRequestForm').action = "{% url 'create_training_request' %}";
+    
+    // Set default values
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    document.getElementById('preferredDate').min = `${year}-${month}-${day}`;
+    
+    const modal = new bootstrap.Modal(document.getElementById('trainingRequestModal'));
+    modal.show();
+}
+
+// Function to edit existing training request
+function editTrainingRequest(requestId) {
+    fetch(`/training/${requestId}/data/`)
+        .then(response => response.json())
+        .then(data => {
+            resetForm();
+            
+            document.getElementById('formTitle').textContent = 'Edit Training Request';
+            document.getElementById('submitBtn').innerHTML = 'Update Request';
+            document.getElementById('trainingRequestForm').action = `/training/${requestId}/edit/`;
+            document.getElementById('requestId').value = requestId;
+            
+            // Populate basic info
+            document.getElementById('requestedBy').value = data.requested_by || '';
+            document.getElementById('organisationName').value = data.organisation_name || '';
+            document.getElementById('uavType').value = data.uav_type || '';
+            document.getElementById('commandName').value = data.command_name || '';
+            
+            // Populate training details
+            document.getElementById('numberOfParticipants').value = data.number_of_participants || '';
+            document.getElementById('preferredLocation').value = data.preferred_location || '';
+            
+            if (data.preferred_location === 'other' && data.preferred_location_other) {
+                document.getElementById('otherLocationDiv').style.display = 'block';
+                document.getElementById('preferredLocationOther').value = data.preferred_location_other;
+            }
+            
+            document.getElementById('preferredDate').value = data.preferred_date || '';
+            document.getElementById('totalUAVs').value = data.total_uavs_in_possession || '';
+            document.getElementById('uavTailNumbers').value = data.uav_tail_numbers || '';
+            document.getElementById('markStatus').value = data.mark_status || 'normal';
+            
+            // Populate training type
+            const trainingTypeRadios = document.querySelectorAll('input[name="training_type"]');
+            trainingTypeRadios.forEach(radio => {
+                if (radio.value === data.training_type) {
+                    radio.checked = true;
+                    if (radio.value === 'custom') {
+                        document.getElementById('customTrainingDiv').style.display = 'block';
+                        document.getElementById('customTrainingDescription').value = data.custom_training_description || '';
+                    }
+                }
+            });
+            
+            // Populate requirements
+            document.getElementById('descriptionOfRequirements').value = data.description_of_requirements || '';
+            
+            // Populate OEM fields if they exist
+            if (data.status) {
+                document.getElementById('status').value = data.status;
+                document.getElementById('trainingDuration').value = data.training_duration || '';
+                document.getElementById('oemProposedDate').value = data.oem_proposed_date || '';
+                document.getElementById('oemRemarks').value = data.oem_remarks || '';
+                document.getElementById('statusUpdatedBy').value = data.status_updated_by || '';
+                document.getElementById('statusUpdatedAt').value = data.status_updated_at || '';
+                
+                // Show OEM section if there's OEM data
+                if (data.status || data.training_duration) {
+                    document.getElementById('oemSection').style.display = 'block';
+                }
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('trainingRequestModal'));
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching request data:', error);
+            alert('Error loading request data. Please try again.');
+        });
+}
+
+// Function to reset form
+function resetForm() {
+    document.getElementById('trainingRequestForm').reset();
+    document.getElementById('trainingRequestForm').classList.remove('was-validated');
+    
+    // Reset dynamic fields
+    document.getElementById('otherLocationDiv').style.display = 'none';
+    document.getElementById('customTrainingDiv').style.display = 'none';
+    
+    // Reset to current date
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    document.getElementById('createdAt').value = `${year}-${month}-${day}`;
+    
+    // Clear validation states
+    document.querySelectorAll('.form-control, .form-select').forEach(field => {
+        field.classList.remove('is-invalid', 'is-valid');
+    });
+}
+
+// Function to open confirmation popup (use your existing popup function)
+function openPopup(message, callback) {
+    if (confirm(message)) {
+        callback();
+    }
+}
+</script>
