@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.complain_form.views import ComplaintRegister, ComplaintListView, ComplaintDetailView,ComplaintEditView,delete_complaint_view
+from apps.complain_form.views import *
 
 # app_name = "complaints"
 
@@ -11,4 +11,8 @@ urlpatterns = [
     path("complain/<int:pk>/detail/", ComplaintDetailView.as_view(), name="complaint_detail"),
     path("complain/<int:pk>/edit/", ComplaintEditView.as_view(), name="complaint_edit"),
     path("complain/<int:pk>/delete/", delete_complaint_view, name="complaint_delete"),
+
+    #spare part
+    path("spare-parts-request/",create_spare_request,name="create_spare_parts_request"),
+    path("training-request/",create_training_request,name="create_training_request")
 ]

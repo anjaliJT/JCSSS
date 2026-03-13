@@ -5,6 +5,11 @@ from apps.complain_form.models import *
 class EventAdmin(admin.ModelAdmin):
     list_display = ("unique_token",)
  
-# admin.site.register(Meteorology)   
-# admin.site.register(Attachment)   
+admin.site.register(UAVType)   
+admin.site.register(Items)   
+admin.site.register(SparePartsRequest)
+admin.site.register(SparePartRequestItems)
+admin.site.register(TrainingRequest)
+
+
 # admin.site.register(EventSeverityClassification)   

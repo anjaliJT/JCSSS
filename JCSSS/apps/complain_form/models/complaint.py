@@ -30,7 +30,7 @@ class Event(models.Model):
     serial_number = models.CharField(max_length=50)
     tail_number = models.CharField(max_length=50, blank=True)
     uav_type = models.CharField(max_length=150, blank=True)
-    uav_type_fk = models.ForeignKey(UAVType,on_delete=models.PROTECT)
+    uav_type_fk = models.ForeignKey(UAVType,on_delete=models.PROTECT, null=True, blank=True)
     # gcs_type = models.CharField(max_length=100, blank=True)
     gcs_number = models.CharField( max_length=50, blank=True)
     logbook_entry = models.CharField(max_length=50, blank=True)

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        {% comment %} <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">UAV Training Request Form</h4>
+        </div> {% endcomment %}
+
+        <div class="card-body">
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Requester Information -->
+                <h5 class="mb-3">Requester Information</h5>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Requested By</label>
+                        <input type="text" name="requested_by" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Command Name</label>
+                        <input type="text" name="command_name" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Unit Name</label>
+                        <input type="text" name="unit_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- UAV Information -->
+                <h5 class="mb-3 mt-4">UAV Details</h5>
+
+                <div class="row mb-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label">UAV Type</label>
+                        <select name="uav_type" class="form-select">
+                            {% for uav in uav_types %}
+                            <option value="{{uav.id}}">{{uav.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Number of Participants</label>
+                        <input type="number" name="number_of_participants" min="10" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Total UAVs</label>
+                        <input type="number" name="total_uavs" class="form-control" required>
+                    </div>
+
+                </div>
+
+                <!-- Training Details -->
+                <h5 class="mb-3 mt-4">Training Details</h5>
+
+                <div class="row mb-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Training Type</label>
+                        <select name="training_type" class="form-select">
+
+                            <option value="initial">Initial Training</option>
+                            <option value="refresher">Refresher Training</option>
+                            <option value="instructor">Instructor Training</option>
+                            <option value="custom">Custom Training</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Preferred Date</label>
+                        <input type="date" name="preferred_date" class="form-control" required>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Training Description (Required for Custom)</label>
+                    <textarea name="training_description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <!-- Location Details -->
+                <h5 class="mb-3 mt-4">Training Location</h5>
+
+                <div class="row mb-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Preferred Location</label>
+                        <select name="preferred_location" class="form-select">
+                            <option value="oem">OEM Facility</option>
+                            <option value="user_site">User Site</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Location Description (If Other)</label>
+                    <textarea name="location_description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="mt-4">
+                    <button class="btn btn-success">Submit Training Request</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

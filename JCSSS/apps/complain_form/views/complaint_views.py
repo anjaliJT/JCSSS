@@ -5,7 +5,7 @@ from django.db import transaction
 from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Event
+from ..models import Event 
 from apps.oem.models import  ComplaintStatus, CustomerPricing
 from apps.complain_form.utils import send_mail_thread
 from apps.oem.tasks import send_mail_async

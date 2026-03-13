@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="card shadow-sm">
+    {% comment %} <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Spare Parts Request</h4>
+    </div> {% endcomment %}
+
+    <div class="card-body">
+      <form>
+
+        <!-- Request Information -->
+        <h5 class="mb-3">Request Information</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Requested By</label>
+            <input type="text" class="form-control" placeholder="Enter name">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Unit / Organization Name</label>
+            <input type="text" class="form-control" placeholder="Enter unit name">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Service Request ID (optional)</label>
+            <input type="text" class="form-control" placeholder="SR-1234">
+          </div>
+        </div>
+
+        <!-- UAV Information -->
+        <h5 class="mb-3">UAV Information</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label">UAV Type</label>
+            
+            <select class="form-select">
+              <option selected disabled>Select UAV Type</option>
+                   {% for uav_type in uav_types %}
+            <option value="{{ uav_type.id }}">
+                {{ uav_type.name }}
+            </option>
+        {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Tail Number</label>
+            <input type="text" class="form-control" placeholder="Enter tail number">
+          </div>
+        </div>
+
+        <!-- Spare Parts Selection -->
+        <h5 class="mb-3">Spare Parts Selection</h5>
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Item Name</th>
+                <th width="150">Quantity</th>
+                <th width="100">Action</th>
+              </tr>
+            </thead>
+            <tbody id="itemsTable">
+              <tr>
+                <td>
+                  <select class="form-select">
+                    <option selected disabled>Select Item</option>
+                    <option>Battery</option>
+                    <option>Camera Module</option>
+                    <option>Propeller</option>
+                  </select>
+                </td>
+                <td>
+                  <input type="number" class="form-control" min="1" value="1">
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRow()">Add Item</button>
+        </div>
+
+        <!-- Remarks -->
+        <h5 class="mb-3">Additional Remarks</h5> 
+        <div class="mb-4">
+          <textarea class="form-control" rows="3" placeholder="Enter remarks or description"></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function addRow() {
+  const table = document.getElementById("itemsTable");
+  const row = table.insertRow();
+
+  row.innerHTML = `
+    <td>
+      <select class="form-select">
+        <option selected disabled>Select Item</option>
+        <option>Battery</option>
+        <option>Camera Module</option>
+        <option>Propeller</option>
+      </select>
+    </td>
+    <td>
+      <input type="number" class="form-control" min="1" value="1">
+    </td>
+    <td class="text-center">
+      <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+    </td>
+  `;
+}
+
+function removeRow(button) {
+  const row = button.closest("tr");
+  row.remove();
+}
+</script>
+{% endblock %}
