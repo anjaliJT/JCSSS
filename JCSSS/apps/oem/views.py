@@ -143,6 +143,7 @@ class ComplaintStatusView(View):
             "total_days": total_days,
             "timing_status": timing_status,
             "timing_stage": timing_stage,
+            "page_title": "Service Status",
         })
 
 

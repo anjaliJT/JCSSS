@@ -9,8 +9,8 @@
     <!-- Page Header -->
     <div class="row mb-4">
         <div class="col">
-            <h2 class="mb-0">Services</h2>
-            <p class="text-muted">View and manage all your support tickets</p>
+            <!-- <h2 class="mb-0">Services</h2>
+            <p class="text-muted">View and manage all your support tickets</p> -->
         </div>
         {% if user.role == "CSM" or user.role == "CUSTOMER" %}
         
@@ -32,7 +32,7 @@
               <div class="row align-items-end pt-2">
                 
                 <!-- Search -->
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4 mt-2 mb-1">
                   <div class="input-group">
                     <input type="text" name="search" class="form-control" value="{{ current_filters.search }}" placeholder="Search services...">
                     <button class="btn btn-outline-primary" type="submit">
@@ -42,8 +42,8 @@
                 </div>
 
                 <!-- Status Filter -->
-                <div class="col-md-4 mb-2">
-                  <label class="form-label">Status</label>
+                <div class="col-md-4 mb-1">
+                  <!-- <label class="form-label">Status</label> -->
                   <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
                     <option value="">All Status</option>
                     <option value="IN REVIEW" {% if current_filters.status == 'IN REVIEW' %}selected{% endif %}>Review</option>
@@ -55,8 +55,8 @@
                 </div>
 
                 <!-- UAV Filter -->
-                <div class="col-md-4 mb-2">
-                  <label class="form-label">UAV Type</label>
+                <div class="col-md-4 mb-1">
+                  <!-- <label class="form-label">UAV Type</label> -->
                   <select class="form-select" name="uav" onchange="document.getElementById('filterForm').submit()">
                     <option value="">All UAVs</option>
                     {% for uav_name in uavs %}

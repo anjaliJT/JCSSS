@@ -20,8 +20,8 @@
     <!-- Page Header -->
     <div class="row mb-4">
         <div class="col">
-            <h2 class="mb-0">User Management</h2>
-            <p class="text-muted">Manage and track all users in your system</p>
+            <!-- <h2 class="mb-0">User Management</h2>
+            <p class="text-muted">Manage and track all users in your system</p> -->
         </div>
         <div class="col-auto">
             <button class="btn btn-primary" id="createUserBtn" data-bs-toggle="modal" data-bs-target="#userFormModal">
@@ -36,8 +36,8 @@
             <form method="get" id="filterForm" class="row g-3">
                 <div class="row align-items-end">
                     <!-- Search -->
-                    <div class="col-md-4 mb-2">
-                        <label class="form-label">Search</label>
+                    <div class="col-md-4 mt-3">
+                        <!-- <label class="form-label">Search</label> -->
                         <div class="input-group">
                             <input type="text" name="q" class="form-control" value="{{ current_filters.q }}" placeholder="Search users...">
                             <button class="btn btn-outline-primary" type="submit">
@@ -47,8 +47,8 @@
                     </div>
 
                     <!-- Role Filter -->
-                    <div class="col-md-4 mb-2">
-                        <label class="form-label">Role</label>
+                    <div class="col-md-4 mt-3">
+                        <!-- <label class="form-label">Role</label> -->
                         <select class="form-select" name="role" onchange="document.getElementById('filterForm').submit()">
                             <option value="">All Roles</option>
                             {% for value, label in role_choices %}
@@ -58,8 +58,8 @@
                     </div>
 
                     <!-- Status Filter -->
-                    <div class="col-md-4 mb-2">
-                        <label class="form-label">Status</label>
+                    <div class="col-md-4 mt-3">
+                        <!-- <label class="form-label">Status</label> -->
                         <select class="form-select" name="status" onchange="document.getElementById('filterForm').submit()">
                             <option value="">All Statuses</option>
                             <option value="active" {% if current_filters.status == "active" %}selected{% endif %}>Active</option>

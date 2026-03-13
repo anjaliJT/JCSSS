@@ -47,15 +47,19 @@ class StatisticsView(View):
             return render(request, "auth/login.html")
 
         user = request.user
+        
+        context = {
+        "page_title": "Dashboard"
+    }
 
         # If user is not CUSTOMER → show full stats
         if user.role != "CUSTOMER":
             full_data = compute_all_metrics(user)
-            return render(request, "dashboard.html", {"full_data": full_data})
+            return render(request, "dashboard.html", {"full_data": full_data,"page_title": "Dashboard"})
 
         # If user is CUSTOMER → show limited stats
         user_data = compute_complain(user)
-        return render(request, "dashboard.html", {"user_data": user_data})
+        return render(request, "dashboard.html", {"user_data": user_data, "page_title": "Dashboard"})
 
 
 class Login(View):
@@ -338,6 +342,7 @@ class UserManagementListView(PermissionRequiredMixin, LoginRequiredMixin, Templa
             "role_choices": CustomUser.ROLE_CHOICES,
             "sort_options": self.get_sort_options(),
             "query_string": filter_processor.get_query_string(),
+            "page_title": "User Details"
         })
         return context
 
@@ -701,6 +706,7 @@ class UserPermissionManagementView(PermissionRequiredMixin, LoginRequiredMixin, 
             "user": user,
             "permissions_by_model": permissions_by_model,
             "user_permissions": user_permissions,
+            "page_title": "Manage Permissions"
         })
         return context
     

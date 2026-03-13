@@ -25,28 +25,6 @@ from openpyxl.utils import get_column_letter
 
 
 @login_required(login_url='login')
-# def create_product_view(request):
-#     """Handle creation of a new Product via POST and redirect to product list.
-
-#     On successful creation the user is redirected to the product list.
-#     Validation errors are added to the messages framework.
-#     """
-#     if request.method == "POST":
-#         form = productForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 form.save()
-#                 messages.success(request, "Product created successfully.")
-#                 return redirect("product_list")
-#             except IntegrityError:
-#                 messages.error(request, "Tail Number already exists.")
-#         else:
-#             messages.error(request, "Tail Number already exists.")
-#     else:
-#         form = productForm()
-
-#     return redirect('product_list')
-
 def create_product_view(request):
     if request.method == "POST":
         form = productForm(request.POST)
@@ -112,6 +90,7 @@ def product_list_view(request):
     "selected_status": selected_status,
     "selected_warranty": selected_warranty,
     "search": search,
+    "page_title": "Products",
     })
 
 
@@ -385,6 +364,7 @@ def repair_history_view(request, pk):
     "net_profit": net_profit,
     "avg_cost": avg_cost,
     "margin": margin,
+    "page_title": "Product Record",
 }
 
     return render(request, "complaints/repair_history.html", context)
