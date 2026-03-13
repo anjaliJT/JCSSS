@@ -86,6 +86,7 @@ class ComplaintListView(LoginRequiredMixin, View):
 
         context = {
             'complaints': complaints_page,
+            'page_title': "Services",
             'histories': histories,
             'uavs': uavs,
             'current_filters': {
@@ -102,7 +103,10 @@ class ComplaintRegister(LoginRequiredMixin,View):
     template_name = "complaints/complain_form.html"
 
     def get(self, request):
-        return render(request, "complaints/complain_form.html")
+        context = {
+        "page_title": "Submit Service Request"
+    }
+        return render(request, "complaints/complain_form.html", context)
 
     def post(self, request):
         tail_number = request.POST.get("tail_number")
@@ -244,6 +248,7 @@ class ComplaintDetailView(LoginRequiredMixin,View):
                 "event": event,
                 "is_readonly": True,
                 "is_completed": is_completed,
+                "page_title": "Service Details"
             },
         )
 
@@ -265,6 +270,7 @@ class ComplaintEditView(LoginRequiredMixin,View):
                 "is_readonly": False,
                 "is_valid": True,
                 "is_completed": is_completed,
+                "page_title": "Service Detail Edit"
             },
         )
 
